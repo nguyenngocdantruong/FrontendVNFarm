@@ -1,0 +1,716 @@
+@{
+    ViewData["Title"] = "Product Details";
+    ViewBag.Title = "Chi tiết sản phẩm";
+}
+
+
+<!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h1 class="section-title white-color">Chi tiết sản phẩm</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                                <li>Chi tiết sản phẩm</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- SHOP DETAILS AREA START -->
+    <div class="ltn__shop-details-area pb-85">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__shop-details-inner mb-60">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="ltn__shop-details-img-gallery">
+                                    <div class="ltn__shop-details-large-img">
+                                        <div class="single-large-img">
+                                            <img id="productImage" src="~/img/product/1.png" onerror="this.src='/Custom/no-image.webp'" alt="Image">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="modal-product-info shop-details-info pl-0">
+                                    <div class="product-ratting">
+                                        <ul id="productRating">
+                                            <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                            <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                            <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                            <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                            <li><a href="#"><i class="far fa-star"></i></a></li>
+                                            <li class="review-total"> <a href="#"> ( 95 Reviews )</a></li>
+                                        </ul>
+                                    </div>
+                                    <h3 id="productName"></h3>
+                                    <div class="product-price">
+                                        <span id="productPrice"></span>
+                                        <del id="productOldPrice"></del>
+                                    </div>
+                                    <div class="modal-product-meta ltn__product-details-menu-1">
+                                        <ul>
+                                            <li>
+                                                <strong>Danh mục:</strong> 
+                                                <span id="productCategory">
+                                                    
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <strong>Xuất xứ:</strong> 
+                                                <span id="productOrigin">
+                                                    
+                                                </span>
+                                            </li>
+                                            <li>
+                                                <strong>Đánh giá trung bình:</strong> 
+                                                <span id="productRatingAverage">
+                                                    
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="ltn__product-details-menu-2">
+                                        <ul>
+                                            <li>
+                                                <div class="cart-plus-minus">
+                                                    <input type="text" value="1" name="qtybutton" id="quantityInput" class="cart-plus-minus-box">
+                                                </div>
+                                            </li>
+                                            <li>
+                                                <a href="#" class="theme-btn-1 btn btn-effect-1 add-to-cart-btn" title="Add to Cart" id="addToCartBtn">
+                                                    <i class="fas fa-shopping-cart"></i>
+                                                    <span>THÊM VÀO GIỎ HÀNG</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <div class="ltn__product-details-menu-3">
+                                        <ul>
+                                            <li>
+                                                <a href="#" class="chat-with-seller-btn" title="Chat">
+                                                    <i class="far fa-comment-dots"></i>
+                                                    <span>Chat với người bán</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <hr>
+                                    <div class="ltn__safe-checkout">
+                                        <h5>Đảm bảo thanh toán an toàn</h5>
+                                        <img src="~/img/icons/payment-2.png" alt="Payment Image">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shop Tab Start -->
+                    <div class="ltn__shop-details-tab-inner ltn__shop-details-tab-inner-2">
+                        <div class="ltn__shop-details-tab-menu">
+                            <div class="nav">
+                                <a class="active show" data-bs-toggle="tab" href="#liton_tab_details_1_1">Mô tả</a>
+                                <a data-bs-toggle="tab" href="#liton_tab_details_1_2" class="">Đánh giá</a>
+                            </div>
+                        </div>
+                        <div class="tab-content">
+                            <div class="tab-pane fade active show" id="liton_tab_details_1_1">
+                                <div class="ltn__shop-details-tab-content-inner">
+                                    <h4 class="title-2">Mô tả sản phẩm</h4>
+                                    <p id="productDescription"></p>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="liton_tab_details_1_2">
+                                <div class="ltn__shop-details-tab-content-inner">
+                                    <h4 class="title-2">Đánh giá khách hàng</h4>
+                                    <div class="product-ratting">
+                                        <ul id="productRatingTab">
+                                            <!-- Rating stars will be inserted here -->
+                                        </ul>
+                                        <span class="review-total">(<span id="totalReviewsTab">0</span> Reviews)</span>
+                                    </div>
+                                    <hr>
+                                    <!-- comment-area -->
+                                    <div class="ltn__comment-area mb-30">
+                                        <div class="ltn__comment-inner">
+                                            <ul id="reviewList">
+                                                <!-- Review items sẽ được render ở đây -->
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Shop Tab End -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SHOP DETAILS AREA END -->
+
+    <!-- PRODUCT SLIDER AREA START -->
+    <div class="ltn__product-slider-area ltn__product-gutter pb-70" style="display: none;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title-area ltn__section-title-2">
+                        <h6 class="section-subtitle ltn__secondary-color">//  cars</h6>
+                        <h1 class="section-title">Related Products<span>.</span></h1>
+                    </div>
+                </div>
+            </div>
+            <div class="row ltn__related-product-slider-one-active slick-arrow-1">
+                <!-- ltn__product-item -->
+                <div class="col-lg-12">
+                    <div class="ltn__product-item ltn__product-item-3 text-center">
+                        <div class="product-img">
+                            <a href="product-details.html"><img src="~/img/product/7.png" alt="#"></a>
+                            <div class="product-badge">
+                                <ul>
+                                    <li class="sale-badge">New</li>
+                                </ul>
+                            </div>
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                            <i class="far fa-heart"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-ratting">
+                                <ul>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                </ul>
+                            </div>
+                            <h2 class="product-title"><a href="product-details.html">Red Hot Tomato</a></h2>
+                            <div class="product-price">
+                                <span>$149.00</span>
+                                <del>$162.00</del>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ltn__product-item -->
+                <div class="col-lg-12">
+                    <div class="ltn__product-item ltn__product-item-3 text-center">
+                        <div class="product-img">
+                            <a href="product-details.html"><img src="~/img/product/8.png" alt="#"></a>
+                            <div class="product-badge">
+                                <ul>
+                                    <li class="sale-badge">New</li>
+                                </ul>
+                            </div>
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                            <i class="far fa-heart"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-ratting">
+                                <ul>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                </ul>
+                            </div>
+                            <h2 class="product-title"><a href="product-details.html">Vegetables Juices</a></h2>
+                            <div class="product-price">
+                                <span>$62.00</span>
+                                <del>$85.00</del>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ltn__product-item -->
+                <div class="col-lg-12">
+                    <div class="ltn__product-item ltn__product-item-3 text-center">
+                        <div class="product-img">
+                            <a href="product-details.html"><img src="~/img/product/9.png" alt="#"></a>
+                            <div class="product-badge">
+                                <ul>
+                                    <li class="sale-badge">New</li>
+                                </ul>
+                            </div>
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                            <i class="far fa-heart"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-ratting">
+                                <ul>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                </ul>
+                            </div>
+                            <h2 class="product-title"><a href="product-details.html">Orange Fresh Juice</a></h2>
+                            <div class="product-price">
+                                <span>$75.00</span>
+                                <del>$92.00</del>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ltn__product-item -->
+                <div class="col-lg-12">
+                    <div class="ltn__product-item ltn__product-item-3 text-center">
+                        <div class="product-img">
+                            <a href="product-details.html"><img src="~/img/product/10.png" alt="#"></a>
+                            <div class="product-badge">
+                                <ul>
+                                    <li class="sale-badge">New</li>
+                                </ul>
+                            </div>
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                            <i class="far fa-heart"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-ratting">
+                                <ul>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                </ul>
+                            </div>
+                            <h2 class="product-title"><a href="product-details.html">Poltry Farm Meat</a></h2>
+                            <div class="product-price">
+                                <span>$78.00</span>
+                                <del>$85.00</del>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ltn__product-item -->
+                <div class="col-lg-12">
+                    <div class="ltn__product-item ltn__product-item-3 text-center">
+                        <div class="product-img">
+                            <a href="product-details.html"><img src="~/img/product/5.png" alt="#"></a>
+                            <div class="product-badge">
+                                <ul>
+                                    <li class="sale-badge">New</li>
+                                </ul>
+                            </div>
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                            <i class="far fa-heart"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-ratting">
+                                <ul>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                </ul>
+                            </div>
+                            <h2 class="product-title"><a href="product-details.html">Fresh Butter Cake</a></h2>
+                            <div class="product-price">
+                                <span>$150.00</span>
+                                <del>$180.00</del>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- ltn__product-item -->
+                <div class="col-lg-12">
+                    <div class="ltn__product-item ltn__product-item-3 text-center">
+                        <div class="product-img">
+                            <a href="product-details.html"><img src="~/img/product/6.png" alt="#"></a>
+                            <div class="product-badge">
+                                <ul>
+                                    <li class="sale-badge">New</li>
+                                </ul>
+                            </div>
+                            <div class="product-hover-action">
+                                <ul>
+                                    <li>
+                                        <a href="#" title="Quick View" data-bs-toggle="modal" data-bs-target="#quick_view_modal">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Add to Cart" data-bs-toggle="modal" data-bs-target="#add_to_cart_modal">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" title="Wishlist" data-bs-toggle="modal" data-bs-target="#liton_wishlist_modal">
+                                            <i class="far fa-heart"></i></a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="product-info">
+                            <div class="product-ratting">
+                                <ul>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star"></i></a></li>
+                                    <li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>
+                                    <li><a href="#"><i class="far fa-star"></i></a></li>
+                                </ul>
+                            </div>
+                            <h2 class="product-title"><a href="product-details.html">Orange Sliced Mix</a></h2>
+                            <div class="product-price">
+                                <span>$150.00</span>
+                                <del>$180.00</del>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+            </div>
+        </div>
+    </div>
+    <!-- PRODUCT SLIDER AREA END -->
+
+    <!-- FEATURE AREA START ( Feature - 3) -->
+    <div class="ltn__feature-area before-bg-bottom-2 mb--30--- plr--5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__feature-item-box-wrap ltn__border-between-column white-bg">
+                        <div class="row">
+                            <div class="col-xl-3 col-md-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-8">
+                                    <div class="ltn__feature-icon">
+                                        <img src="~/img/icons/icon-img/11.png" alt="#">
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h4>Curated Products</h4>
+                                        <p>Provide Curated Products for
+                                            all product over $100</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-8">
+                                    <div class="ltn__feature-icon">
+                                        <img src="~/img/icons/icon-img/12.png" alt="#">
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h4>Handmade</h4>
+                                        <p>We ensure the product quality
+                                            that is our main goal</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-8">
+                                    <div class="ltn__feature-icon">
+                                        <img src="~/img/icons/icon-img/13.png" alt="#">
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h4>Natural Food</h4>
+                                        <p>Return product within 3 days
+                                            for any product you buy</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-8">
+                                    <div class="ltn__feature-icon">
+                                        <img src="~/img/icons/icon-img/14.png" alt="#">
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h4>Free home delivery</h4>
+                                        <p>We ensure the product quality
+                                            that you can trust easily</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FEATURE AREA END -->
+
+    <script type="module">
+        import { BaseService } from "/Custom/BaseService.js";
+        import key from "/Custom/jwt.js";
+        import url from "/Custom/endpoints.js";
+        import Toast from "/Custom/Toast.js";
+
+        const productUrl = url.base + "/Product";
+        const productService = new BaseService(productUrl, key);
+        const cartUrl = url.base + "/Cart";
+        const cartService = new BaseService(cartUrl, key);
+        const chatUrl = url.base + "/Chat";
+        const chatService = new BaseService(chatUrl, key);
+
+        // Ẩn Top Rated Product Widget
+        document.addEventListener("DOMContentLoaded", function() {
+            const topRatedWidget = document.querySelector('.ltn__top-rated-product-widget');
+            if (topRatedWidget) topRatedWidget.style.display = "none";
+            const bannerWidget = document.querySelector('.ltn__banner-widget');
+            if (bannerWidget) bannerWidget.style.display = "none";
+            // Ẩn sidebar luôn cho chắc cú >< 
+            const sidebar = document.querySelector('.ltn__shop-sidebar');
+            if (sidebar) sidebar.style.display = "none";
+        });
+
+        const app = {
+            productId: null,
+            sellerId: null,
+            init: function() {
+                this.loadProductDetails();
+                this.setupAddToCart();
+                this.setupChatWithSeller();
+            },
+            loadProductDetails: function() {
+                // Lấy product id từ URL parameter 🔍
+                const urlParams = new URLSearchParams(window.location.search);
+                this.productId = urlParams.get('id');
+                
+                if (this.productId) {
+                    // Lấy thông tin sản phẩm 
+                    productService.getById(this.productId).then(response => {
+                        if (response && response.success && response.data) {
+                            app.renderProductDetails(response.data);
+                            app.sellerId = response.data.storeId; // Lưu sellerId
+                        }
+                    });
+                    // Lấy đánh giá sản phẩm
+                    productService.fetchApi(`/${this.productId}/reviews`, 'GET').then(response => {
+                        if (response && response.success && response.data) {
+                            app.renderProductReviews(response.data);
+                        }
+                    });
+                } else {
+                    alert("Không tìm thấy thông tin sản phẩm !");
+                    window.location.href = "/Product/Index";
+                }
+            },
+            setupAddToCart: function() {
+                // Thêm sự kiện click cho nút Add to Cart
+                document.getElementById('addToCartBtn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Lấy số lượng từ input
+                    const quantity = parseInt(document.getElementById('quantityInput').value) || 1;
+                    
+                    // Gọi API thêm vào giỏ hàng
+                    cartService.fetchApi("/items", "POST", {
+                        "productId": parseInt(app.productId),
+                        "quantity": quantity
+                    }).then(response => {
+                        console.log("Add to cart response:", response);
+                        if (response.success) {
+                            // Hiển thị thông báo thành công
+                            Toast.success("Sản phẩm đã được thêm vào giỏ hàng!");
+                        } else {
+                            Toast.error("Không thể thêm sản phẩm vào giỏ hàng. Vui lòng thử lại sau!");
+                        }
+                    }).catch(error => {
+                        console.error("Error adding to cart:", error);
+                        Toast.error("Đã xảy ra lỗi khi thêm sản phẩm vào giỏ hàng!");
+                    });
+                });
+            },
+            setupChatWithSeller: function() {
+                document.querySelector('.chat-with-seller-btn').addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const token = localStorage.getItem('accessToken');
+                    if (!token) {
+                        Toast.error("Vui lòng đăng nhập để chat với người bán!");
+                        window.location.href = "/Home/Login";
+                        return;
+                    }
+                    
+                    if (!app.sellerId) {
+                        Toast.error("Không tìm thấy thông tin người bán!");
+                        return;
+                    }
+                    
+                    // Lấy thông tin người dùng hiện tại
+                    const userId = localStorage.getItem('id');
+                    
+                    if (!userId) {
+                        Toast.error("Bạn cần đăng nhập để chat với người bán!");
+                        window.location.href = "/Home/Login";
+                        return;
+                    }
+                    
+                    // Tạo phòng chat
+                    const data = {
+                        targetUserId: parseInt(app.sellerId),
+                        currentUserId: parseInt(userId),
+                        roomName: `Chat với người bán - Sản phẩm: ${document.getElementById('productName').textContent}`,
+                        description: `Chat về sản phẩm: ${document.getElementById('productName').textContent}`
+                    };
+                    
+                    chatService.fetchApi("/create", 'POST', data)
+                        .then(response => {
+                            if (response) {
+                                // Chuyển hướng đến trang chat
+                                window.location.href = `/Account/Chat?room=${response.id}`;
+                            } else {
+                                Toast.error("Không thể tạo phòng chat. Vui lòng thử lại sau!");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Lỗi khi tạo phòng chat:", error);
+                            Toast.error("Đã xảy ra lỗi khi tạo phòng chat!");
+                        });
+                });
+            },
+            renderProductDetails: function(data) {
+                // Hiển thị thông tin sản phẩm
+                document.getElementById('productName').textContent = data.name;
+                document.getElementById('productDescription').textContent = data.description;
+                document.getElementById('productPrice').textContent = data.price.toLocaleString('vi-VN') + " đ";
+                document.getElementById('productCategory').textContent = data.category ? data.category.name : '';
+                document.getElementById('productOrigin').textContent = data.origin || '';
+                document.getElementById('productRatingAverage').textContent = data.averageRating || 0;
+                document.getElementById('productImage').src = url.baseUrl + "/img/Products/" + (data.imageUrl || "no-image.png");
+
+                // Hiển thị rating
+                app.renderRating('productRating', data.averageRating);
+                app.renderRating('productRatingTab', data.averageRating);
+                document.getElementById('totalReviewsTab').textContent = (data.reviews ? data.reviews.length : 0);
+            },
+            renderProductReviews: function(data) {
+                // Hiển thị danh sách đánh giá
+                const reviewList = document.getElementById('reviewList');
+                reviewList.innerHTML = '';
+                if (data.reviews && data.reviews.length > 0) {
+                    data.reviews.forEach(review => {
+                        const li = document.createElement('li');
+                        li.innerHTML = `
+                            <div class="ltn__comment-item clearfix">
+                                <div class="ltn__commenter-img">
+                                    <img src="${url.baseUrl}/img/Users/default.jpg" alt="Image">
+                                </div>
+                                <div class="ltn__commenter-comment">
+                                    <h6><a href="#">Khách hàng ${review.userId || ''}</a></h6>
+                                    <div class="product-ratting">
+                                        ${app.getStarHtml(review.rating)}
+                                    </div>
+                                    <p>${review.content}</p>
+                                    <span class="ltn__comment-reply-btn">${new Date(review.createdAt).toLocaleDateString('vi-VN')}</span>
+                                    ${review.shopResponse ? `<div class="shop-response" style="margin-top:8px; color: #2e8b57;"><b>Phản hồi shop:</b> ${review.shopResponse}</div>` : ''}
+                                </div>
+                            </div>
+                        `;
+                        reviewList.appendChild(li);
+                    });
+                } else {
+                    reviewList.innerHTML = '<li>Chưa có đánh giá nào cho sản phẩm này</li>';
+                }
+            },
+            renderRating: function(elementId, rating) {
+                const ul = document.getElementById(elementId);
+                if (!ul) return;
+                ul.innerHTML = app.getStarHtml(rating);
+            },
+            getStarHtml: function(rating) {
+                let html = '';
+                let full = Math.floor(rating);
+                let half = rating - full >= 0.5 ? 1 : 0;
+                let empty = 5 - full - half;
+                for (let i = 0; i < full; i++) html += '<li><a href="#"><i class="fas fa-star"></i></a></li>';
+                if (half) html += '<li><a href="#"><i class="fas fa-star-half-alt"></i></a></li>';
+                for (let i = 0; i < empty; i++) html += '<li><a href="#"><i class="far fa-star"></i></a></li>';
+                return html;
+            }
+        };
+        app.init();
+    </script>

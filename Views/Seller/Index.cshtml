@@ -1,0 +1,395 @@
+@{
+    Layout = "_LayoutSeller";
+    ViewBag.Title = "Tổng quan";
+}
+
+<main class="nxl-container">
+    <div class="nxl-content">
+        <!-- [ page-header ] start -->
+        <div class="page-header">
+            <div class="page-header-left d-flex align-items-center">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Dashboard Người Bán</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item">Dashboard</li>
+                </ul>
+            </div>
+            <div class="page-header-right ms-auto">
+                <div class="page-header-right-items">
+                    <div class="d-flex d-md-none">
+                        <a href="javascript:void(0)" class="page-header-right-close-toggle">
+                            <i class="feather-arrow-left me-2"></i>
+                            <span>Back</span>
+                        </a>
+                    </div>
+                    
+                </div>
+                <div class="d-md-none d-flex align-items-center">
+                    <a href="javascript:void(0)" class="page-header-right-open-toggle">
+                        <i class="feather-align-right fs-20"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <!-- [ page-header ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="main-content">
+            <div class="row">
+                <!-- [Đơn Hàng Gần Đây] start -->
+                <div class="col-xxl-12">
+                    <div class="card stretch stretch-full">
+                        <div class="card-header">
+                            <h5 class="card-title">Đơn Hàng Gần Đây</h5>
+                            <div class="card-header-action d-flex gap-2">
+                                <!-- Xóa thanh tìm kiếm và nút lọc, chỉ giữ lại nút làm mới -->
+                                <div data-bs-toggle="tooltip" title="Làm mới">
+                                    <a href="javascript:void(0);" class="avatar-text avatar-xs bg-warning"
+                                        data-bs-toggle="refresh"> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body custom-card-action p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Đơn</th>
+                                            <th>Khách Hàng</th>
+                                            <th>Tổng Tiền</th>
+                                            <th>Trạng Thái</th>
+                                            <th>Thao Tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orders-table-body">
+                                        <!-- Dữ liệu đơn hàng sẽ được thêm vào đây bằng JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mb-0" id="orders-pagination">
+                                    <!-- Phân trang sẽ được thêm vào đây bằng JavaScript -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <!-- [Đơn Hàng Gần Đây] end -->
+                <!-- [Danh Sách Thông Báo] start -->
+                <div class="col-xxl-12">
+                    <div class="card stretch stretch-full">
+                        <div class="card-header">
+                            <h5 class="card-title">Thông Báo Hệ Thống</h5>
+                            <div class="card-header-action d-flex gap-2">
+                                <!-- Xóa thanh tìm kiếm và nút lọc, chỉ giữ lại nút làm mới -->
+                                <div data-bs-toggle="tooltip" title="Làm mới">
+                                    <a href="javascript:void(0);" class="avatar-text avatar-xs bg-warning"
+                                        data-bs-toggle="refresh"> </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body custom-card-action p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Thời Gian</th>
+                                            <th>Nội Dung</th>
+                                            <th>Trạng Thái</th>
+                                            <th>Thao Tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="notifications-table-body">
+                                        <!-- Dữ liệu thông báo sẽ được thêm vào đây bằng JavaScript -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mb-0" id="notifications-pagination">
+                                    <!-- Phân trang sẽ được thêm vào đây bằng JavaScript -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+                <!-- [Danh Sách Thông Báo] end -->
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+    <!-- [ Footer ] start -->
+    <footer class="footer">
+        <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
+            <span>Copyright ©</span>
+        </p>
+        <div class="d-flex align-items-center gap-4">
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+        </div>
+    </footer>
+    <!-- [ Footer ] end -->
+</main>
+<script type="module">
+    let filter = {
+        "sortBy": 2,
+        "page": 1,
+        "pageSize": 5,
+        "storeId": app.storeId,
+    }
+    
+    const orderApp = {
+        orders: [],
+        totalCount: 0,
+        currentPage: 1,
+        pageSize: 5,
+        
+        init: function() {
+            this.loadOrders();
+            this.setupEventListeners();
+        },
+        
+        setupEventListeners: function() {
+            // Chỉ giữ lại nút làm mới
+            document.querySelector('[data-bs-toggle="refresh"]').addEventListener('click', () => {
+                filter.page = 1; // Reset về trang đầu tiên khi làm mới
+                this.loadOrders();
+            });
+        },
+        
+        loadOrders: function() {
+            app.services.order.find(filter).then(response => {
+                if (response.success) {
+                    this.orders = response.data;
+                    this.totalCount = response.totalCount;
+                    this.currentPage = filter.page;
+                    this.renderOrders();
+                    this.updateStats();
+                }
+            });
+        },
+        
+        renderOrders: function() {
+            const tableBody = document.getElementById('orders-table-body');
+            let html = '';
+            
+            if (this.orders.length === 0) {
+                html = `<tr><td colspan="5" class="text-center">Không có đơn hàng nào</td></tr>`;
+            } else {
+                this.orders.forEach(order => {
+                    html += `
+                        <tr>
+                            <td>${order.orderCode}</td>
+                            <td>${order.buyer.fullName}</td>
+                            <td>${this.formatCurrency(order.finalAmount)}</td>
+                            <td>${this.getStatusBadge(order.status)}</td>
+                            <td>
+                                <a href="/Seller/OrderDetail?id=${order.id}" class="btn btn-sm btn-primary">Chi tiết</a>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            tableBody.innerHTML = html;
+            
+            // Render phân trang
+            this.renderPagination();
+        },
+        
+        renderPagination: function() {
+            const paginationContainer = document.getElementById('orders-pagination');
+            const totalPages = Math.ceil(this.totalCount / this.pageSize);
+            let paginationHtml = '';
+            
+            // Nút Previous
+            paginationHtml += `
+                <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0);" data-page="${this.currentPage - 1}">
+                        <i class="feather-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+            
+            // Các nút số trang
+            for (let i = 1; i <= totalPages; i++) {
+                paginationHtml += `
+                    <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+                        <a class="page-link" href="javascript:void(0);" data-page="${i}">${i}</a>
+                    </li>
+                `;
+            }
+            
+            // Nút Next
+            paginationHtml += `
+                <li class="page-item ${this.currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0);" data-page="${this.currentPage + 1}">
+                        <i class="feather-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+            
+            paginationContainer.innerHTML = paginationHtml;
+            
+            // Thêm sự kiện click cho các nút phân trang
+            document.querySelectorAll('#orders-pagination .page-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(e.target.getAttribute('data-page') || e.target.closest('.page-link').getAttribute('data-page'));
+                    
+                    if (page >= 1 && page <= totalPages && page !== this.currentPage) {
+                        this.currentPage = page;
+                        filter.page = page;
+                        this.loadOrders();
+                    }
+                });
+            });
+        },
+        
+        updateStats: function() {
+           
+        },
+        
+        getStatusBadge: function(status) {
+            const statusMap = {
+                0: '<span class="badge bg-warning">Chờ xử lý</span>',
+                1: '<span class="badge bg-info">Đang xử lý</span>',
+                2: '<span class="badge bg-primary">Đã đóng gói</span>',
+                3: '<span class="badge bg-info">Đang giao hàng</span>',
+                4: '<span class="badge bg-success">Đã giao hàng</span>',
+                5: '<span class="badge bg-success">Hoàn thành</span>',
+                6: '<span class="badge bg-danger">Đã hủy</span>',
+                7: '<span class="badge bg-secondary">Hoàn trả</span>',
+                8: '<span class="badge bg-info">Đã xác nhận</span>'
+            };
+            return statusMap[status] || '<span class="badge bg-secondary">Không xác định</span>';
+        },
+        
+        formatCurrency: function(amount) {
+            return amount.toLocaleString('vi-VN') + 'đ';
+        }
+    };
+    
+    const notificationApp = {
+        notifications: [],
+        totalCount: 0,
+        
+        init: function() {
+            this.loadNotifications();
+            this.setupEventListeners();
+        },
+        
+        setupEventListeners: function() {
+            // Chỉ giữ lại nút làm mới
+            document.querySelectorAll('[data-bs-toggle="refresh"]')[1].addEventListener('click', () => {
+                filter.page = 1; // Reset về trang đầu tiên khi làm mới
+                this.loadNotifications();
+            });
+        },
+        
+        loadNotifications: function() {
+            app.services.notification.find(filter).then(response => {
+                if (response.success) {
+                    this.notifications = response.data;
+                    this.totalCount = response.totalCount;
+                    this.renderNotifications(this.notifications);
+                }
+            });
+        },
+        
+        renderNotifications: function(notifications) {
+            const tableBody = document.getElementById('notifications-table-body');
+            let html = '';
+            
+            if (notifications.length === 0) {
+                html = `<tr><td colspan="4" class="text-center">Không có thông báo nào</td></tr>`;
+            } else {
+                notifications.forEach(notification => {
+                    html += `
+                        <tr>
+                            <td>${this.formatDateTime(notification.updatedAt)}</td>
+                            <td>${notification.content}</td>
+                            <td>${notification.isRead ? 
+                                '<span class="badge bg-success">Đã đọc</span>' : 
+                                '<span class="badge bg-danger">Chưa đọc</span>'}</td>
+                            <td>
+                                <a href="${notification.linkUrl || 'javascript:void(0);'}" class="btn btn-sm btn-primary">
+                                    Xem chi tiết
+                                </a>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            
+            tableBody.innerHTML = html;
+            
+            // Render phân trang cho thông báo
+            this.renderPagination();
+        },
+        
+        renderPagination: function() {
+            const paginationContainer = document.getElementById('notifications-pagination');
+            const totalPages = Math.ceil(this.totalCount / filter.pageSize);
+            let paginationHtml = '';
+            
+            // Nút Previous
+            paginationHtml += `
+                <li class="page-item ${filter.page === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0);" data-page="${filter.page - 1}">
+                        <i class="feather-chevron-left"></i>
+                    </a>
+                </li>
+            `;
+            
+            // Các nút số trang
+            for (let i = 1; i <= totalPages; i++) {
+                paginationHtml += `
+                    <li class="page-item ${i === filter.page ? 'active' : ''}">
+                        <a class="page-link" href="javascript:void(0);" data-page="${i}">${i}</a>
+                    </li>
+                `;
+            }
+            
+            // Nút Next
+            paginationHtml += `
+                <li class="page-item ${filter.page === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="javascript:void(0);" data-page="${filter.page + 1}">
+                        <i class="feather-chevron-right"></i>
+                    </a>
+                </li>
+            `;
+            
+            paginationContainer.innerHTML = paginationHtml;
+            
+            // Thêm sự kiện click cho các nút phân trang
+            document.querySelectorAll('#notifications-pagination .page-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(e.target.getAttribute('data-page') || e.target.closest('.page-link').getAttribute('data-page'));
+                    
+                    if (page >= 1 && page <= totalPages && page !== filter.page) {
+                        filter.page = page;
+                        this.loadNotifications();
+                    }
+                });
+            });
+        },
+        
+        formatDateTime: function(dateTimeStr) {
+            const date = new Date(dateTimeStr);
+            return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')} - ${date.getDate().toString().padStart(2, '0')}/${(date.getMonth() + 1).toString().padStart(2, '0')}/${date.getFullYear()}`;
+        }
+    };
+    
+    // Khởi tạo ứng dụng khi trang đã tải xong
+    document.addEventListener('DOMContentLoaded', function() {
+        orderApp.init();
+        notificationApp.init();
+    });
+</script>

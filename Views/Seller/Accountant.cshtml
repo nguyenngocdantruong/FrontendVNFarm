@@ -1,0 +1,252 @@
+@{
+    Layout = "_LayoutSeller";
+    ViewBag.Title = "Tài chính";
+}
+
+<main class="nxl-container">
+    <div class="nxl-content">
+        <!-- [ page-header ] start -->
+        <div class="page-header">
+            <div class="page-header-left d-flex align-items-center">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Quản Lý Tài Chính</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item">Tài chính</li>
+                </ul>
+            </div>
+        </div>
+        <!-- [ page-header ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="main-content">
+            <!-- Thống kê tổng quan -->
+            <div class="row mb-4">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar avatar-lg bg-primary bg-opacity-10">
+                                        <i class="feather-dollar-sign"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Doanh thu tháng</h6>
+                                    <h4 class="mb-0" id="monthlyRevenue">Đang tải...</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar avatar-lg bg-success bg-opacity-10">
+                                        <i class="feather-shopping-cart"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Tổng đơn hàng</h6>
+                                    <h4 class="mb-0" id="totalOrders">Đang tải...</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar avatar-lg bg-warning bg-opacity-10">
+                                        <i class="feather-package"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Tổng sản phẩm</h6>
+                                    <h4 class="mb-0" id="totalProducts">Đang tải...</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <div class="flex-shrink-0">
+                                    <div class="avatar avatar-lg bg-info bg-opacity-10">
+                                        <i class="feather-alert-triangle"></i>
+                                    </div>
+                                </div>
+                                <div class="flex-grow-1 ms-3">
+                                    <h6 class="mb-1">Sản phẩm hết hàng</h6>
+                                    <h4 class="mb-0" id="emptyStockProducts">Đang tải...</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title">Thống Kê Doanh Thu</h5>
+                            <div class="card-toolbar">
+                                <div class="btn-group">
+                                    <button class="btn btn-light btn-sm active">Tháng</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div id="revenueChart" style="height: 300px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+    <!-- [ Footer ] start -->
+    <footer class="footer">
+        <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
+            <span>Copyright ©</span>
+            
+        </p>
+        <div class="d-flex align-items-center gap-4">
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+        </div>
+    </footer>
+    <!-- [ Footer ] end -->
+</main>
+
+<style>
+    .avatar {
+        width: 48px;
+        height: 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+    .avatar i {
+        font-size: 24px;
+    }
+    .chart-container {
+        position: relative;
+    }
+</style>
+
+<script>
+    // Định dạng số tiền
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', { 
+            style: 'currency', 
+            currency: 'VND',
+            maximumFractionDigits: 0
+        }).format(amount);
+    }
+
+    // Lấy dữ liệu thống kê từ API
+    async function fetchStoreStatistics() {
+        try {
+            const response = await app.services.store.fetchApi(`/${app.storeId}/get-statistics-store`);
+            console.log(response);
+            
+            if (response && response.success && response.data) {
+                const data = response.data;
+                
+                // Cập nhật các thông số
+                document.getElementById('totalOrders').textContent = data.totalOrders;
+                document.getElementById('totalProducts').textContent = data.totalProduct;
+                document.getElementById('emptyStockProducts').textContent = data.totalProductEmptyStock;
+                document.getElementById('monthlyRevenue').textContent = formatCurrency(data.totalRenenvue);
+                
+                // Cập nhật biểu đồ
+                updateRevenueChart(data.listRenenvueInYear);
+            }
+        } catch (error) {
+            console.error("Lỗi khi lấy dữ liệu thống kê:", error);
+        }
+    }
+    
+    // Cập nhật biểu đồ với dữ liệu mới
+    function updateRevenueChart(revenueData) {
+        // Lấy năm hiện tại
+        const currentYear = new Date().getFullYear();
+        
+        // Tạo mảng label cho các tháng
+        const monthLabels = Array.from({length: 12}, (_, i) => `T${i+1}/${currentYear}`);
+        
+        // Chuyển đổi dữ liệu doanh thu sang đơn vị triệu đồng cho dễ hiển thị
+        const revenueInMillions = revenueData.map(value => value / 1000000);
+        
+        // Cấu hình biểu đồ
+        var revenueOptions = {
+            series: [{
+                name: 'Doanh thu (triệu đồng)',
+                data: revenueInMillions
+            }],
+            chart: {
+                type: 'area',
+                height: 300,
+                toolbar: {
+                    show: false
+                }
+            },
+            colors: ['#0d6efd'],
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shadeIntensity: 1,
+                    opacityFrom: 0.7,
+                    opacityTo: 0.3,
+                    stops: [0, 90, 100]
+                }
+            },
+            dataLabels: {
+                enabled: false
+            },
+            stroke: {
+                curve: 'smooth',
+                width: 2
+            },
+            xaxis: {
+                categories: monthLabels
+            },
+            yaxis: {
+                min: 0
+            },
+            tooltip: {
+                theme: 'light',
+                y: {
+                    formatter: function(val) {
+                        return val + ' triệu đồng'
+                    }
+                }
+            }
+        };
+
+        // Tạo biểu đồ mới
+        var revenueChart = new ApexCharts(document.querySelector("#revenueChart"), revenueOptions);
+        revenueChart.render();
+    }
+
+    // Gọi hàm lấy dữ liệu khi trang được tải
+    document.addEventListener('DOMContentLoaded', fetchStoreStatistics);
+
+    // Xử lý chuyển đổi thời gian thống kê
+    document.querySelectorAll('.card-toolbar .btn-group .btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.card-toolbar .btn-group .btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+        });
+    });
+</script> 

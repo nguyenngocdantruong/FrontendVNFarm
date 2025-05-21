@@ -1,0 +1,975 @@
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+
+<!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h6 class="section-subtitle ltn__secondary-color">//  Thông tin đơn hàng của bạn</h6>
+                            <h1 class="section-title white-color">Chi tiết đơn hàng</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li>Chi tiết đơn hàng</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- ORDER DETAILS AREA START -->
+    <div class="ltn__order-details-area mb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="order-container">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                            <p class="mt-2">Đang tải thông tin đơn hàng...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ORDER DETAILS AREA END -->
+    
+    <script type="module">
+        import Toast from "/Custom/Toast.js";
+        import {BaseService} from "/Custom/BaseService.js";
+        import url from "/Custom/endpoints.js";
+        import key from "/Custom/jwt.js";
+
+        const orderUrl = url.base + "/Order";
+        const paymentUrl = url.base + "/Payment";
+        const orderService = new BaseService(orderUrl, key);
+        const paymentService = new BaseService(paymentUrl, key);
+
+        const app = {
+            order: null,
+            provinces: [],
+            districts: [],
+            wards: [],
+            
+            init: function(){
+                // Lấy id từ query parameter
+                const urlParams = new URLSearchParams(window.location.search);
+                const orderId = urlParams.get('id');
+                
+                if (!orderId) {
+                    Toast.error("Không tìm thấy mã đơn hàng");
+                    document.getElementById('order-container').innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                            <h4>Không tìm thấy thông tin đơn hàng</h4>
+                            <a href="/Account/Orders" class="btn theme-btn-1 btn-effect-1 text-uppercase mt-3">Xem tất cả đơn hàng</a>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                this.getOrderDetails(orderId);
+            },
+            
+            getOrderDetails: function(orderId){
+                orderService.getById(orderId).then(response => {
+                    console.log("Order response:", response);
+                    if (response && response.success) {
+                        this.order = response.data;
+                        this.renderOrderDetails();
+                        Toast.success("Đã tải thông tin đơn hàng thành công");
+                    } else {
+                        Toast.error("Không thể tải thông tin đơn hàng");
+                        document.getElementById('order-container').innerHTML = `
+                            <div class="text-center py-5">
+                                <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                                <h4>Không thể tải thông tin đơn hàng</h4>
+                                <a href="/Account/Orders" class="btn theme-btn-1 btn-effect-1 text-uppercase mt-3">Xem tất cả đơn hàng</a>
+                            </div>
+                        `;
+                    }
+                }).catch(error => {
+                    console.error("Lỗi khi tải thông tin đơn hàng:", error);
+                    Toast.error("Đã xảy ra lỗi khi tải thông tin đơn hàng");
+                    document.getElementById('order-container').innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                            <h4>Đã xảy ra lỗi</h4>
+                            <p>Không thể tải thông tin đơn hàng</p>
+                            <a href="/Account/Orders" class="btn theme-btn-1 btn-effect-1 text-uppercase mt-3">Xem tất cả đơn hàng</a>
+                        </div>
+                    `;
+                });
+            },
+            
+            getAddressText: function() {
+                if (!this.order || !this.order.address) return "Không có thông tin địa chỉ";
+                
+                const address = this.order.address;
+                // Tạo địa chỉ đầy đủ bao gồm địa chỉ chi tiết, phường/xã, quận/huyện, tỉnh/thành phố
+                const fullAddress = [
+                    address.shippingAddress,
+                    address.shippingWard,
+                    address.shippingDistrict,
+                    address.shippingProvince
+                ].filter(Boolean).join(', ');
+                
+                return fullAddress || "Không có thông tin địa chỉ";
+            },
+            
+            getStatusText: function(status) {
+                const statusMap = {
+                    0: '<span class="badge bg-warning">Chờ xác nhận</span>',
+                    1: '<span class="badge bg-info">Đang xử lý</span>',
+                    2: '<span class="badge bg-primary">Đã đóng gói</span>',
+                    3: '<span class="badge bg-info">Đang giao hàng</span>',
+                    4: '<span class="badge bg-success">Đã giao hàng</span>',
+                    5: '<span class="badge bg-success">Hoàn thành</span>',
+                    6: '<span class="badge bg-danger">Đã hủy</span>',
+                    7: '<span class="badge bg-secondary">Hoàn trả</span>',
+                    8: '<span class="badge bg-info">Đã xác nhận</span>'
+                };
+                
+                return statusMap[status] || '<span class="badge bg-secondary">Không xác định</span>';
+            },
+            
+            getPaymentStatusText: function(status) {
+                const statusMap = {
+                    1: '<span class="badge bg-warning">Chưa thanh toán</span>',
+                    2: '<span class="badge bg-info">Thanh toán một phần</span>',
+                    3: '<span class="badge bg-success">Đã thanh toán</span>',
+                    4: '<span class="badge bg-secondary">Đã hoàn tiền</span>',
+                    5: '<span class="badge bg-danger">Thanh toán thất bại</span>'
+                };
+                
+                return statusMap[status] || '<span class="badge bg-secondary">Không xác định</span>';
+            },
+            
+            getPaymentMethodText: function(method) {
+                const methodMap = {
+                    1: 'Thanh toán khi nhận hàng (COD)',
+                    2: 'Chuyển khoản ngân hàng',
+                    3: 'Thanh toán qua VNPay'
+                };
+                
+                return methodMap[method] || 'Không xác định';
+            },
+            
+            getPackagingStatusText: function(status) {
+                const statusMap = {
+                    0: '<span class="badge bg-warning">Chờ xử lý</span>',
+                    1: '<span class="badge bg-info">Đang xử lý</span>',
+                    2: '<span class="badge bg-primary">Đã đóng gói</span>',
+                    3: '<span class="badge bg-info">Đang giao hàng</span>',
+                    4: '<span class="badge bg-success">Đã giao hàng</span>',
+                    5: '<span class="badge bg-danger">Đã hủy</span>',
+                    6: '<span class="badge bg-secondary">Đã hoàn trả</span>'
+                };
+                
+                return statusMap[status] || '<span class="badge bg-secondary">Không xác định</span>';
+            },
+            
+            renderOrderDetails: function() {
+                if (!this.order) {
+                    return;
+                }
+                
+                const order = this.order;
+                const container = document.getElementById('order-container');
+                
+                // Tạo HTML hiển thị thông tin đơn hàng
+                let html = `
+                <div class="row mb-5">
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    Thông tin đơn hàng
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Mã đơn hàng:</div>
+                                    <div class="col-sm-7">${order.orderCode}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Ngày đặt hàng:</div>
+                                    <div class="col-sm-7">${new Date(order.createdAt).toLocaleString('vi-VN')}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Trạng thái:</div>
+                                    <div class="col-sm-7">${this.getStatusText(order.status)}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Thanh toán:</div>
+                                    <div class="col-sm-7">${this.getPaymentStatusText(order.paymentStatus)}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Phương thức:</div>
+                                    <div class="col-sm-7">${this.getPaymentMethodText(order.paymentMethod)}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Ghi chú:</div>
+                                    <div class="col-sm-7">${order.notes || 'Không có ghi chú'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-shipping-fast me-2"></i>
+                                    Thông tin giao hàng
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Người nhận:</div>
+                                    <div class="col-sm-7">${order.address.shippingName}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Số điện thoại:</div>
+                                    <div class="col-sm-7">${order.address.shippingPhone}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Phường/Xã:</div>
+                                    <div class="col-sm-7">${order.address.shippingWard}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Quận/Huyện:</div>
+                                    <div class="col-sm-7">${order.address.shippingDistrict}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Tỉnh/Thành phố:</div>
+                                    <div class="col-sm-7">${order.address.shippingProvince}</div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-sm-5 fw-bold">Địa chỉ đầy đủ:</div>
+                                    <div class="col-sm-7" id="shipping-address">${this.getAddressText()}</div>
+                                </div>`;
+                
+                // Thêm thẻ div cho thông tin vận chuyển
+                html += `
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-truck me-2"></i>
+                                Thông tin vận chuyển
+                            </h5>
+                        </div>
+                        <div class="card-body">`;
+
+                // Kiểm tra nếu có thông tin vận chuyển
+                if (order.shipping) {
+                    html += `
+                            <div class="row mb-2">
+                                <div class="col-sm-5 fw-bold">Mã vận đơn:</div>
+                                <div class="col-sm-7">${order.shipping.trackingNumber || 'Chưa cập nhật'}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-5 fw-bold">Phương thức vận chuyển:</div>
+                                <div class="col-sm-7">${order.shipping.shippingMethod || 'Chưa cập nhật'}</div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-sm-5 fw-bold">Đơn vị vận chuyển:</div>
+                                <div class="col-sm-7">${order.shipping.shippingPartner || 'Chưa cập nhật'}</div>
+                            </div>`;
+                } else {
+                    html += `
+                            <div class="text-center py-3">
+                                <p>Chưa có thông tin vận chuyển</p>
+                            </div>`;
+                }
+                
+                html += `
+                        </div>
+                    </div>`;
+                
+                html += `
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tiến trình đơn hàng -->
+                <div class="card mb-5">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-history me-2"></i>
+                            Tiến trình đơn hàng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="timeline-steps">`;
+                
+                // Hiển thị timeline đơn hàng
+                if (order.orderTimelines && order.orderTimelines.length > 0) {
+                    // Sắp xếp timeline theo thời gian
+                    const sortedTimelines = [...order.orderTimelines].sort((a, b) => 
+                        new Date(a.createdAt) - new Date(b.createdAt)
+                    );
+                    
+                    sortedTimelines.forEach(timeline => {
+                        // Xác định icon phù hợp dựa trên mô tả hoặc trạng thái
+                        let iconClass = 'fas fa-check-circle';
+                        
+                        const description = timeline.description.toLowerCase();
+                        if (description.includes('đặt hàng') || description.includes('tạo đơn')) {
+                            iconClass = 'fas fa-shopping-cart';
+                        } else if (description.includes('xác nhận')) {
+                            iconClass = 'fas fa-check';
+                        } else if (description.includes('đóng gói') || description.includes('chuẩn bị')) {
+                            iconClass = 'fas fa-box';
+                        } else if (description.includes('giao hàng') || description.includes('vận chuyển')) {
+                            iconClass = 'fas fa-shipping-fast';
+                        } else if (description.includes('đã giao') || description.includes('hoàn thành')) {
+                            iconClass = 'fas fa-home';
+                        } else if (description.includes('hủy') || description.includes('thất bại')) {
+                            iconClass = 'fas fa-times-circle';
+                        } else if (description.includes('hoàn trả') || description.includes('trả hàng')) {
+                            iconClass = 'fas fa-undo';
+                        } else if (description.includes('thanh toán')) {
+                            iconClass = 'fas fa-credit-card';
+                        }
+                        
+                        const timelineDate = new Date(timeline.createdAt);
+                        timelineDate.setHours(timelineDate.getHours() + 7); // Cộng thêm 7 tiếng
+                        
+                        html += `
+                            <div class="timeline-step">
+                                <div class="timeline-content">
+                                    <div class="inner-circle">
+                                        <i class="${iconClass}"></i>
+                                    </div>
+                                    <p class="h6 mt-3 mb-1">${timeline.description}</p>
+                                    <p class="text-muted mb-0">${timelineDate.toLocaleString('vi-VN')}</p>
+                                </div>
+                            </div>`;
+                    });
+                } else {
+                    html += `
+                            <div class="text-center py-3">
+                                <p>Chưa có thông tin tiến trình đơn hàng</p>
+                            </div>`;
+                }
+                
+                html += `
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chi tiết sản phẩm -->
+                <div class="card mb-5">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-shopping-basket me-2"></i>
+                            Chi tiết sản phẩm
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Sản phẩm</th>
+                                        <th>Cửa hàng</th>
+                                        <th class="text-center">Số lượng</th>
+                                        <th class="text-end">Đơn giá</th>
+                                        <th class="text-end">Thuế</th>
+                                        <th class="text-center">Trạng thái</th>
+                                        <th class="text-end">Thành tiền</th>
+                                    </tr>
+                                </thead>
+                                <tbody>`;
+                
+                // Nhóm sản phẩm theo cửa hàng
+                const shopGroups = {};
+                order.orderItems.forEach(item => {
+                    if (!shopGroups[item.shopId]) {
+                        shopGroups[item.shopId] = {
+                            shop: item.shop,
+                            items: []
+                        };
+                    }
+                    shopGroups[item.shopId].items.push(item);
+                });
+                
+                // Hiển thị sản phẩm theo từng cửa hàng
+                Object.values(shopGroups).forEach(group => {
+                    group.items.forEach(item => {
+                        const subtotal = item.subtotal || (item.unitPrice * item.quantity);
+                        html += `
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="${url.baseUrl}/img/Products/${item.product.imageUrl}" alt="${item.product.name}" class="me-3" style="width: 50px; height: 50px; object-fit: cover;">
+                                                <div>
+                                                    <h6 class="mb-0">${item.product.name}</h6>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>${group.shop.name}</td>
+                                        <td class="text-center">${item.quantity} ${item.unit === 1 ? 'kg' : 'gói'}</td>
+                                        <td class="text-end">${item.unitPrice.toLocaleString('vi-VN')}đ</td>
+                                        <td class="text-end">${(item.taxAmount || 0).toLocaleString('vi-VN')}đ</td>
+                                        <td class="text-center">${this.getPackagingStatusText(item.packagingStatus)}</td>
+                                        <td class="text-end">${subtotal.toLocaleString('vi-VN')}đ</td>
+                                    </tr>`;
+                    });
+                });
+                
+                html += `
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="6" class="text-end fw-bold">Tổng tiền hàng:</td>
+                                        <td class="text-end">${order.totalAmount.toLocaleString('vi-VN')}đ</td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="6" class="text-end fw-bold">Phí vận chuyển:</td>
+                                        <td class="text-end">${order.shippingFee.toLocaleString('vi-VN')}đ</td>
+                                    </tr>`;
+                
+                // Hiển thị giảm giá nếu có
+                if (order.discountAmount > 0) {
+                    html += `
+                                    <tr>
+                                        <td colspan="6" class="text-end fw-bold">Giảm giá ${order.discount ? `(${order.discount.code})` : ''}:</td>
+                                        <td class="text-end">-${order.discountAmount.toLocaleString('vi-VN')}đ</td>
+                                    </tr>`;
+                }
+                
+                html += `
+                                    <tr>
+                                        <td colspan="6" class="text-end fw-bold">Tổng thanh toán:</td>
+                                        <td class="text-end fw-bold fs-5">${order.finalAmount.toLocaleString('vi-VN')}đ</td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Chức năng -->
+                <div class="card mb-5">
+                    <div class="card-header bg-light">
+                        <h5 class="mb-0">
+                            <i class="fas fa-tools me-2"></i>
+                            Chức năng
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center gap-3">
+                            <button class="btn theme-btn-1 btn-effect-1 text-uppercase" id="printOrderBtn">
+                                <i class="fas fa-print me-2"></i> In đơn hàng
+                            </button>
+                            ${order.paymentStatus === 1 ? `
+                            <button id="paymentBtn" class="btn theme-btn-2 btn-effect-2 text-uppercase">
+                                <i class="fas fa-credit-card me-2"></i> Thanh toán
+                            </button>
+                            ` : ''}
+                            ${order.status === 5 ? `
+                            <button id="reviewBtn" class="btn theme-btn-3 btn-effect-3 text-uppercase">
+                                <i class="fas fa-star me-2"></i> Đánh giá sản phẩm
+                            </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Nút điều hướng -->
+                <div class="text-center">
+                    <a href="/Account/Orders" class="btn theme-btn-1 btn-effect-1 text-uppercase me-3">
+                        <i class="fas fa-list me-2"></i> Xem tất cả đơn hàng
+                    </a>
+                    <a href="/" class="btn theme-btn-2 btn-effect-2 text-uppercase">
+                        <i class="fas fa-shopping-cart me-2"></i> Tiếp tục mua sắm
+                    </a>
+                </div>`;
+                
+                // Cập nhật nội dung
+                container.innerHTML = html;
+                
+                // Thêm sự kiện cho nút in đơn hàng
+                document.getElementById('printOrderBtn').addEventListener('click', this.printOrder.bind(this));
+                
+                // Thêm sự kiện cho nút thanh toán nếu có
+                if (order.paymentStatus === 1) {
+                    document.getElementById('paymentBtn').addEventListener('click', this.createPaymentRequest.bind(this));
+                }
+                
+                // Thêm sự kiện cho nút đánh giá nếu đơn hàng đã hoàn tất
+                if (order.status === 5) {
+                    document.getElementById('reviewBtn').addEventListener('click', this.openReviewModal.bind(this));
+                }
+            },
+            
+            openReviewModal: function() {
+                // Gọi API để lấy danh sách sản phẩm có thể đánh giá
+                const reviewUrl = url.base + "/Review";
+                const reviewService = new BaseService(reviewUrl, key);
+                
+                Toast.info("Đang tải danh sách sản phẩm có thể đánh giá...");
+                
+                reviewService.fetchApi(`/reviewable/${this.order.id}`, 'GET')
+                    .then(response => {
+                        if (response && response.success) {
+                            const reviewableItems = response.data;
+                            
+                            // Kiểm tra nếu không có sản phẩm nào để đánh giá
+                            if (!reviewableItems || reviewableItems.length === 0) {
+                                Toast.warning("Bạn đã đánh giá hết các sản phẩm trong đơn hàng này rồi");
+                                return;
+                            }
+                            
+                            // Tạo modal đánh giá sản phẩm
+                            this.createReviewModal(reviewableItems);
+                        } else {
+                            Toast.error('Không thể tải danh sách sản phẩm đánh giá');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi tải danh sách sản phẩm đánh giá:', error);
+                        Toast.error('Đã xảy ra lỗi khi tải danh sách sản phẩm đánh giá');
+                    });
+            },
+            
+            createReviewModal: function(reviewableItems) {
+                // Tạo modal đánh giá sản phẩm
+                const modalHtml = `
+                <div class="modal fade" id="reviewModal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title p-3" id="reviewModalLabel">Đánh giá sản phẩm</h5>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                        <p>Vui lòng đánh giá các sản phẩm trong đơn hàng của bạn:</p>
+                                        <div class="product-review-list">
+                                            ${reviewableItems.map(item => `
+                                                <div class="product-review-item p-3 mb-3 border rounded" id="review-item-${item.productId}">
+                                                    <div class="d-flex align-items-center mb-3">
+                                                        <img src="${url.baseUrl}/img/Products/${item.product.imageUrl}" alt="${item.product.name}" class="me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                                                        <div>
+                                                            <h6 class="mb-1">${item.product.name}</h6>
+                                                            <p class="mb-0 text-muted">Cửa hàng: ${item.shop.name}</p>
+                                                        </div>
+                                                    </div>
+                                                    <form class="review-form">
+                                                        <input type="hidden" name="UserId" value="${localStorage.getItem('id')}">
+                                                        <input type="hidden" name="ProductId" value="${item.productId}">
+                                                        <input type="hidden" name="OrderId" value="${item.orderId}">
+                                                        
+                                                        <div class="rating-select mb-3">
+                                                            <label class="mb-2">Đánh giá của bạn:</label>
+                                                            <div class="rating">
+                                                                ${[1, 2, 3, 4, 5].map(star => `
+                                                                    <i class="far fa-star rating-star" data-rating="${star}"></i>
+                                                                `).join('')}
+                                                            </div>
+                                                            <input type="hidden" name="Rating" class="rating-value" value="0">
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Nhận xét của bạn:</label>
+                                                            <textarea class="form-control" name="Content" rows="3" placeholder="Nhập nhận xét của bạn về sản phẩm..."></textarea>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Thêm hình ảnh (không bắt buộc):</label>
+                                                            <input type="file" class="form-control" name="ImageFile" accept="image/*">
+                                                        </div>
+                                                        <button type="button" class="btn theme-btn-1 btn-sm submit-review">
+                                                            Gửi đánh giá
+                                                        </button>
+                                                    </form>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>`;
+                
+                // Thêm modal vào DOM
+                document.body.insertAdjacentHTML('beforeend', modalHtml);
+                
+                // Khởi tạo modal
+                const reviewModal = new bootstrap.Modal(document.getElementById('reviewModal'));
+                reviewModal.show();
+                
+                // Xử lý đánh giá sao
+                document.querySelectorAll('.rating-star').forEach(star => {
+                    star.addEventListener('mouseover', function() {
+                        const rating = parseInt(this.dataset.rating);
+                        const stars = this.parentElement.querySelectorAll('.rating-star');
+                        
+                        stars.forEach((s, index) => {
+                            if (index < rating) {
+                                s.classList.remove('far');
+                                s.classList.add('fas', 'text-warning');
+                            } else {
+                                s.classList.remove('fas', 'text-warning');
+                                s.classList.add('far');
+                            }
+                        });
+                    });
+                    
+                    star.addEventListener('mouseout', function() {
+                        const ratingValue = parseInt(this.parentElement.nextElementSibling.value);
+                        const stars = this.parentElement.querySelectorAll('.rating-star');
+                        
+                        stars.forEach((s, index) => {
+                            if (index < ratingValue) {
+                                s.classList.remove('far');
+                                s.classList.add('fas', 'text-warning');
+                            } else {
+                                s.classList.remove('fas', 'text-warning');
+                                s.classList.add('far');
+                            }
+                        });
+                    });
+                    
+                    star.addEventListener('click', function() {
+                        const rating = parseInt(this.dataset.rating);
+                        this.parentElement.nextElementSibling.value = rating;
+                        
+                        const stars = this.parentElement.querySelectorAll('.rating-star');
+                        stars.forEach((s, index) => {
+                            if (index < rating) {
+                                s.classList.remove('far');
+                                s.classList.add('fas', 'text-warning');
+                            } else {
+                                s.classList.remove('fas', 'text-warning');
+                                s.classList.add('far');
+                            }
+                        });
+                    });
+                });
+                
+                // Xử lý nút gửi đánh giá
+                document.querySelectorAll('.submit-review').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const form = this.closest('.review-form');
+                        const rating = form.querySelector('[name="Rating"]').value;
+                        const content = form.querySelector('[name="Content"]').value;
+                        const productId = form.querySelector('[name="ProductId"]').value;
+                        
+                        if (rating === '0') {
+                            Toast.error('Vui lòng chọn số sao đánh giá');
+                            return;
+                        }
+                        
+                        if (!content.trim()) {
+                            Toast.error('Vui lòng nhập nội dung đánh giá');
+                            return;
+                        }
+                        
+                        // Tạo FormData để gửi dữ liệu kèm hình ảnh
+                        const formData = new FormData(form);
+                        
+                        // Gửi đánh giá lên server
+                        const reviewUrl = url.base + "/Review";
+                        const reviewService = new BaseService(reviewUrl, key);
+                        
+                        Toast.info("Đang gửi đánh giá...");
+                        
+                        reviewService.fetchApi('/order-item', 'POST', formData, true)
+                            .then(response => {
+                                if (response && response.success) {
+                                    Toast.success('Gửi đánh giá thành công');
+                                    
+                                    // Cập nhật giao diện - ẩn form đánh giá đã gửi
+                                    const reviewItem = document.getElementById(`review-item-${productId}`);
+                                    reviewItem.innerHTML = `
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-check-circle me-2"></i> 
+                                            Cảm ơn bạn đã đánh giá sản phẩm này!
+                                        </div>
+                                    `;
+                                    
+                                    // Kiểm tra nếu đã đánh giá hết tất cả sản phẩm thì đóng modal
+                                    const remainingForms = document.querySelectorAll('.review-form');
+                                    if (remainingForms.length === 0) {
+                                        setTimeout(() => {
+                                            bootstrap.Modal.getInstance(document.getElementById('reviewModal')).hide();
+                                        }, 2000);
+                                    }
+                                } else {
+                                    Toast.error(response?.message || 'Gửi đánh giá thất bại');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Lỗi khi gửi đánh giá:', error);
+                                Toast.error('Đã xảy ra lỗi khi gửi đánh giá');
+                            });
+                    });
+                });
+                
+                // Xử lý khi đóng modal
+                document.getElementById('reviewModal').addEventListener('hidden.bs.modal', function() {
+                    this.remove();
+                });
+            },
+            
+            createPaymentRequest: function() {
+                let data = {
+                    OrderId: this.order.orderCode,
+                }
+                paymentService.fetchApi("/CreatePaymentUrl", 'POST', data)
+                .then(response => {
+                    if (response.success) {
+                        window.location.href = response.data;
+                    } else {
+                        Toast.error('Lỗi khi tạo yêu cầu thanh toán: ' + response.message);
+                    }
+                })
+                .catch(error => {
+                    Toast.error('Lỗi khi tạo yêu cầu thanh toán: ' + error.message);
+                });
+            },
+            
+            printOrder: function() {
+                // Tạo một cửa sổ in mới
+                const printWindow = window.open('', '_blank');
+                const order = this.order;
+                
+                // Tạo nội dung HTML cho trang in
+                const orderDate = new Date(order.createdAt);
+                orderDate.setHours(orderDate.getHours() + 7); // Cộng thêm 7 tiếng
+                
+                let printContent = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Đơn hàng #${order.orderCode}</title>
+                    <meta charset="utf-8">
+                    <style>
+                        body {
+                            font-family: Arial, sans-serif;
+                            line-height: 1.6;
+                            color: #333;
+                            margin: 0;
+                            padding: 20px;
+                        }
+                        .container {
+                            max-width: 800px;
+                            margin: 0 auto;
+                        }
+                        .header {
+                            text-align: center;
+                            margin-bottom: 30px;
+                            border-bottom: 2px solid #ddd;
+                            padding-bottom: 10px;
+                        }
+                        .order-info, .shipping-info {
+                            margin-bottom: 20px;
+                        }
+                        table {
+                            width: 100%;
+                            border-collapse: collapse;
+                            margin-bottom: 20px;
+                        }
+                        th, td {
+                            border: 1px solid #ddd;
+                            padding: 8px;
+                            text-align: left;
+                        }
+                        th {
+                            background-color: #f2f2f2;
+                        }
+                        .text-right {
+                            text-align: right;
+                        }
+                        .footer {
+                            margin-top: 30px;
+                            text-align: center;
+                            font-size: 12px;
+                            color: #777;
+                        }
+                        .row {
+                            display: flex;
+                            margin-bottom: 10px;
+                        }
+                        .col {
+                            flex: 1;
+                        }
+                        .bold {
+                            font-weight: bold;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="container">
+                        <div class="header">
+                            <h1>HÓA ĐƠN ĐẶT HÀNG</h1>
+                            <h2>Mã đơn hàng: ${order.orderCode}</h2>
+                            <p>Ngày đặt hàng: ${orderDate.toLocaleString('vi-VN')}</p>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col order-info">
+                                <h3>Thông tin đơn hàng</h3>
+                                <p><span class="bold">Trạng thái:</span> ${order.status === 6 ? 'Đã hủy' : order.status === 5 ? 'Hoàn thành' : order.status === 4 ? 'Đã giao hàng' : order.status === 3 ? 'Đang giao hàng' : order.status === 2 ? 'Đã đóng gói' : order.status === 1 ? 'Đang xử lý' : 'Chờ xác nhận'}</p>
+                                <p><span class="bold">Thanh toán:</span> ${order.paymentStatus === 3 ? 'Đã thanh toán' : order.paymentStatus === 2 ? 'Thanh toán một phần' : order.paymentStatus === 4 ? 'Đã hoàn tiền' : order.paymentStatus === 5 ? 'Thanh toán thất bại' : 'Chưa thanh toán'}</p>
+                                <p><span class="bold">Phương thức:</span> ${this.getPaymentMethodText(order.paymentMethod)}</p>
+                                <p><span class="bold">Ghi chú:</span> ${order.notes || 'Không có ghi chú'}</p>
+                            </div>
+                            
+                            <div class="col shipping-info">
+                                <h3>Thông tin giao hàng</h3>
+                                <p><span class="bold">Người nhận:</span> ${order.address.shippingName}</p>
+                                <p><span class="bold">Số điện thoại:</span> ${order.address.shippingPhone}</p>
+                                <p><span class="bold">Địa chỉ:</span> ${this.getAddressText()}</p>
+                            </div>
+                        </div>
+                        
+                        <h3>Chi tiết sản phẩm</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Sản phẩm</th>
+                                    <th>Cửa hàng</th>
+                                    <th>Số lượng</th>
+                                    <th>Đơn giá</th>
+                                    <th>Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+                
+                // Thêm các sản phẩm vào bảng
+                order.orderItems.forEach(item => {
+                    const subtotal = item.unitPrice * item.quantity;
+                    printContent += `
+                                <tr>
+                                    <td>${item.product.name}</td>
+                                    <td>${item.shop.name}</td>
+                                    <td>${item.quantity}</td>
+                                    <td class="text-right">${item.unitPrice.toLocaleString('vi-VN')}đ</td>
+                                    <td class="text-right">${subtotal.toLocaleString('vi-VN')}đ</td>
+                                </tr>`;
+                });
+                
+                printContent += `
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="4" class="text-right bold">Tổng tiền hàng:</td>
+                                    <td class="text-right">${order.totalAmount.toLocaleString('vi-VN')}đ</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="4" class="text-right bold">Phí vận chuyển:</td>
+                                    <td class="text-right">${order.shippingFee.toLocaleString('vi-VN')}đ</td>
+                                </tr>`;
+                
+                // Thêm giảm giá nếu có
+                if (order.discountAmount > 0) {
+                    printContent += `
+                                <tr>
+                                    <td colspan="4" class="text-right bold">Giảm giá ${order.discount ? `(${order.discount.code})` : ''}:</td>
+                                    <td class="text-right">-${order.discountAmount.toLocaleString('vi-VN')}đ</td>
+                                </tr>`;
+                }
+                
+                printContent += `
+                                <tr>
+                                    <td colspan="4" class="text-right bold">Tổng thanh toán:</td>
+                                    <td class="text-right bold">${order.finalAmount.toLocaleString('vi-VN')}đ</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                        <div class="footer">
+                            <p>Cảm ơn quý khách đã mua sắm tại cửa hàng chúng tôi!</p>
+                            <p>Mọi thắc mắc xin vui lòng liên hệ hotline: 0795 155 630</p>
+                        </div>
+                    </div>
+                </body>
+                </html>`;
+                
+                // Ghi nội dung vào cửa sổ in và đóng document ngay lập tức để tránh thêm script tự động
+                printWindow.document.open();
+                printWindow.document.write(printContent);
+                printWindow.document.close();
+                
+                // Kích hoạt in sau khi trang đã tải xong
+                printWindow.onload = function() {
+                    printWindow.print();
+                };
+            }
+        };
+
+        app.init();
+    </script>
+    
+    <style>
+        /* CSS cho timeline */
+        .timeline-steps {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-step {
+            text-align: center;
+            position: relative;
+            flex: 1;
+            padding: 0 10px;
+        }
+        
+        .timeline-step:not(:last-child):after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -50%;
+            width: 100%;
+            height: 3px;
+            background-color: #e5e5e5;
+            z-index: 0;
+        }
+        
+        .timeline-step .inner-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #f8f9fa;
+            border: 3px solid #e5e5e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .timeline-step .inner-circle i {
+            color: #6c757d;
+        }
+        
+        @@media (max-width: 768px) {
+            .timeline-step {
+                flex-basis: 50%;
+                margin-bottom: 30px;
+            }
+            
+            .timeline-step:not(:last-child):after {
+                display: none;
+            }
+        }
+    </style>

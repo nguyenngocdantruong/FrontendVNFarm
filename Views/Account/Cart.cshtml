@@ -1,0 +1,421 @@
+@{
+    ViewData["Title"] = "Giỏ hàng";
+}
+
+<!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h6 class="section-subtitle ltn__secondary-color">//  Welcome to our company</h6>
+                            <h1 class="section-title white-color">Giỏ hàng</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li>Giỏ hàng</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- SHOPING CART AREA START -->
+    <div class="liton__shoping-cart-area mb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div id="cart-container">
+                        <div class="text-center py-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Đang tải...</span>
+                            </div>
+                            <p class="mt-2">Đang tải giỏ hàng...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- SHOPING CART AREA END -->
+    
+    <!-- ORDER SUMMARY STICKY FOOTER -->
+    <div id="order-summary-footer" class="position-fixed bottom-0 start-0 w-100 bg-white border-top shadow-lg py-3" style="z-index: 1000; display: none;">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <h5 class="mb-0">Thông tin đơn hàng</h5>
+                    <div id="order-total-amount">Tổng thanh toán (<span id="selected-items-count">0</span> sản phẩm): <strong>0đ</strong></div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <a href="javascript:void(0)" id="checkout-btn" class="theme-btn-1 btn btn-effect-1">Tiến hành thanh toán</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import Toast from "/Custom/Toast.js";
+        import {BaseService} from "/Custom/BaseService.js";
+        import url from "/Custom/endpoints.js";
+        import key from "/Custom/jwt.js";
+
+        const cartUrl = url.base + "/Cart";
+        const cartService = new BaseService(cartUrl, key);
+
+        const app = {
+            cart: null,
+            selectedItems: {}, // Lưu trữ các sản phẩm được chọn dưới dạng {shopId_productId: true}
+            init: function(){
+                this.getCart();
+                
+                // Xử lý nút thanh toán
+                document.getElementById('checkout-btn').addEventListener('click', () => {
+                    // Chọn tất cả sản phẩm khi nhấn thanh toán
+                    this.selectAllItems();
+                    
+                    const selectedItems = this.prepareCheckoutData();
+                    if (!selectedItems || selectedItems.shopCarts.length === 0) {
+                        Toast.warning("Không có sản phẩm nào trong giỏ hàng");
+                        return;
+                    }
+                    
+                    // Lưu các sản phẩm đã chọn vào localStorage để sử dụng ở trang thanh toán
+                    localStorage.setItem('selectedCartItems', JSON.stringify(selectedItems));
+                    window.location.href = '/Account/Checkout';
+                });
+            },
+            getCart: function(){
+                cartService.getAll().then(response => {
+                    if (response && response.success) {
+                        this.cart = response.data;
+                        this.renderCart();
+                        this.updateOrderSummary();
+                    } else {
+                        Toast.error("Không thể tải giỏ hàng");
+                        document.getElementById('cart-container').innerHTML = `
+                            <div class="text-center py-5">
+                                <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                                <h4>Không thể tải giỏ hàng</h4>
+                                <p>Vui lòng thử lại sau</p>
+                            </div>
+                        `;
+                        document.getElementById('order-summary-footer').style.display = 'none';
+                    }
+                }).catch(error => {
+                    console.error("Lỗi khi tải giỏ hàng:", error);
+                    Toast.error("Đã xảy ra lỗi khi tải giỏ hàng");
+                    document.getElementById('cart-container').innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                            <h4>Đã xảy ra lỗi</h4>
+                            <p>Không thể tải giỏ hàng của bạn</p>
+                        </div>
+                    `;
+                    document.getElementById('order-summary-footer').style.display = 'none';
+                });
+            },
+            renderCart: function() {
+                const container = document.getElementById('cart-container');
+                
+                if (!this.cart || !this.cart.shopCarts || this.cart.shopCarts.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                            <h4>Giỏ hàng trống</h4>
+                            <p>Bạn chưa có sản phẩm nào trong giỏ hàng</p>
+                            <a href="/Product" class="theme-btn-1 btn btn-effect-1">Tiếp tục mua sắm</a>
+                        </div>
+                    `;
+                    document.getElementById('order-summary-footer').style.display = 'none';
+                    return;
+                }
+                
+                let cartHTML = '';
+                
+                // Duyệt qua từng cửa hàng trong giỏ hàng
+                this.cart.shopCarts.forEach(shopCart => {
+                    let shopTotal = 0;
+                    
+                    cartHTML += `
+                    <div class="shoping-cart-inner mb-4">
+                        <div class="shop-header d-flex align-items-center mb-3 p-3 bg-light">
+                            <img src="${url.baseUrl}/img/Stores/${shopCart.shop.logoUrl}" alt="${shopCart.shop.name}" class="shop-logo me-2" style="width: 30px; height: 30px; border-radius: 50%;" onerror="this.src='${url.baseUrl}/img/Stores/default.jpg'">
+                            <h5 class="mb-0">${shopCart.shop.name}</h5>
+                        </div>
+                        <div class="shoping-cart-table table-responsive">
+                            <table class="table">
+                                <tbody>
+                    `;
+                    
+                    // Duyệt qua từng sản phẩm trong cửa hàng
+                    shopCart.cartItems.forEach(item => {
+                        const product = item.product;
+                        const subtotal = product.price * item.quantity;
+                        shopTotal += subtotal;
+                        const itemKey = `${shopCart.shopId}_${product.id}`;
+                        
+                        cartHTML += `
+                        <tr class="cart-item-row" data-product-id="${product.id}" data-shop-id="${shopCart.shopId}" data-item-key="${itemKey}" data-cart-item-id="${item.id}">
+                            <td class="cart-product-remove">
+                                <a href="javascript:void(0)" class="remove-item" onclick="app.removeItem(${shopCart.shopId}, ${product.id})">x</a>
+                            </td>
+                            <td class="cart-product-image">
+                                <a href="/Products/Detail/${product.id}"><img src="${url.baseUrl}/img/Products/${product.imageUrl}" alt="${product.name}"></a>
+                            </td>
+                            <td class="cart-product-info">
+                                <h4><a href="/Products/Detail/${product.id}">${product.name}</a></h4>
+                                <small>${product.description.substring(0, 50)}${product.description.length > 50 ? '...' : ''}</small>
+                            </td>
+                            <td class="cart-product-price">${product.price.toLocaleString('vi-VN')}đ</td>
+                            <td class="cart-product-quantity">
+                                <div class="cart-plus-minus">
+                                    <input type="text" value="${item.quantity}" name="qtybutton" class="cart-plus-minus-box" 
+                                        onchange="app.updateQuantity(${item.id}, ${product.id}, this.value)"
+                                        data-shop-id="${shopCart.shopId}" data-product-id="${product.id}" 
+                                        data-price="${product.price}" data-quantity="${item.quantity}"
+                                        data-shop-cart-id="${shopCart.id}">
+                                    <div class="dec qtybutton" onclick="app.decreaseQuantity(${item.id}, ${product.id})">-</div>
+                                    <div class="inc qtybutton" onclick="app.increaseQuantity(${item.id}, ${product.id})">+</div>
+                                </div>
+                            </td>
+                            <td class="cart-product-subtotal">${subtotal.toLocaleString('vi-VN')}đ</td>
+                        </tr>
+                        `;
+                    });
+                    
+                    cartHTML += `
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="text-end p-3">
+                            <strong class="shop-total" data-shop-id="${shopCart.shopId}">Tổng tiền cửa hàng: ${shopTotal.toLocaleString('vi-VN')}đ</strong>
+                        </div>
+                    </div>
+                    `;
+                });
+                
+                container.innerHTML = cartHTML;
+                
+                // Hiển thị thanh tổng đơn hàng
+                document.getElementById('order-summary-footer').style.display = 'block';
+                
+                // Tính tổng số lượng sản phẩm và tổng tiền
+                this.calculateCartTotal();
+            },
+            selectAllItems: function() {
+                this.selectedItems = {};
+                
+                // Chọn tất cả sản phẩm trong giỏ hàng
+                if (this.cart && this.cart.shopCarts) {
+                    this.cart.shopCarts.forEach(shopCart => {
+                        shopCart.cartItems.forEach(item => {
+                            const itemKey = `${shopCart.shopId}_${item.productId}`;
+                            this.selectedItems[itemKey] = true;
+                        });
+                    });
+                }
+            },
+            calculateCartTotal: function() {
+                if (!this.cart || !this.cart.shopCarts || this.cart.shopCarts.length === 0) {
+                    document.getElementById('order-summary-footer').style.display = 'none';
+                    return;
+                }
+                
+                let totalAmount = 0;
+                let totalItems = 0;
+                
+                // Tính tổng tiền và số lượng sản phẩm trong giỏ hàng
+                this.cart.shopCarts.forEach(shopCart => {
+                    shopCart.cartItems.forEach(item => {
+                        totalAmount += item.product.price * item.quantity;
+                        totalItems += item.quantity;
+                    });
+                });
+                
+                // Cập nhật tổng tiền và số lượng sản phẩm trong thanh footer
+                document.getElementById('selected-items-count').textContent = totalItems;
+                document.getElementById('order-total-amount').innerHTML = `Tổng thanh toán (<span id="selected-items-count">${totalItems}</span> sản phẩm): <strong>${totalAmount.toLocaleString('vi-VN')}đ</strong>`;
+                
+                // Hiển thị thanh tổng đơn hàng
+                document.getElementById('order-summary-footer').style.display = 'block';
+            },
+            updateShopTotal: function(shopId) {
+                // Tính lại tổng tiền của cửa hàng
+                let shopTotal = 0;
+                const shopCart = this.cart.shopCarts.find(sc => sc.shopId === shopId);
+                
+                if (shopCart) {
+                    shopCart.cartItems.forEach(item => {
+                        shopTotal += item.product.price * item.quantity;
+                    });
+                    
+                    // Cập nhật hiển thị tổng tiền cửa hàng
+                    const shopTotalElement = document.querySelector(`.shop-total[data-shop-id="${shopId}"]`);
+                    if (shopTotalElement) {
+                        shopTotalElement.textContent = `Tổng tiền cửa hàng: ${shopTotal.toLocaleString('vi-VN')}đ`;
+                    }
+                }
+            },
+            prepareCheckoutData: function() {
+                // Chọn tất cả sản phẩm trước khi chuẩn bị dữ liệu
+                this.selectAllItems();
+                
+                // Tạo cấu trúc dữ liệu cho checkout theo yêu cầu
+                const checkoutData = {
+                    userId: this.cart.userId,
+                    shopCarts: []
+                };
+                
+                // Thêm tất cả sản phẩm vào dữ liệu thanh toán
+                if (this.cart && this.cart.shopCarts) {
+                    this.cart.shopCarts.forEach(shopCart => {
+                        const shopCartData = {
+                            shopId: shopCart.shopId,
+                            cartId: shopCart.cartId,
+                            cartItems: []
+                        };
+                        
+                        shopCart.cartItems.forEach(item => {
+                            shopCartData.cartItems.push({
+                                productId: item.productId,
+                                quantity: item.quantity,
+                                shopCartId: item.shopCartId,
+                            });
+                        });
+                        
+                        checkoutData.shopCarts.push(shopCartData);
+                    });
+                }
+                
+                return checkoutData;
+            },
+            updateOrderSummary: function() {
+                this.calculateCartTotal();
+            },
+            updateQuantity: function(cartItemId, productId, quantity) {
+                quantity = parseInt(quantity);
+                if (isNaN(quantity) || quantity < 1) quantity = 1;
+                let data = {
+                    productId: productId,
+                    quantity: quantity
+                }
+                
+                // Gọi API cập nhật số lượng
+                cartService.update(`items/${cartItemId}`, data)
+                    .then(response => {
+                        if (response && response.success) {
+                            // Cập nhật dữ liệu trong bộ nhớ
+                            // Tìm shopCart chứa cartItem dựa vào cartItemId thay vì shopId
+                            let foundShopCart = null;
+                            let foundCartItem = null;
+                            
+                            for (const shopCart of this.cart.shopCarts) {
+                                const cartItem = shopCart.cartItems.find(ci => ci.id === cartItemId);
+                                if (cartItem) {
+                                    foundShopCart = shopCart;
+                                    foundCartItem = cartItem;
+                                    break;
+                                }
+                            }
+                            
+                            if (foundShopCart && foundCartItem) {
+                                const shopId = foundShopCart.shopId;
+                                foundCartItem.quantity = quantity;
+                                
+                                // Cập nhật data-quantity cho input
+                                const input = document.querySelector(`.cart-plus-minus-box[data-shop-id="${shopId}"][data-product-id="${productId}"]`);
+                                if (input) {
+                                    input.setAttribute('data-quantity', quantity);
+                                }
+                                
+                                // Cập nhật hiển thị tổng tiền sản phẩm
+                                const row = document.querySelector(`tr[data-shop-id="${shopId}"][data-product-id="${productId}"]`);
+                                if (row) {
+                                    const subtotalCell = row.querySelector('.cart-product-subtotal');
+                                    const subtotal = foundCartItem.product.price * quantity;
+                                    subtotalCell.textContent = `${subtotal.toLocaleString('vi-VN')}đ`;
+                                }
+                                
+                                // Cập nhật tổng tiền cửa hàng
+                                this.updateShopTotal(shopId);
+                                
+                                // Cập nhật tổng tiền đơn hàng
+                                this.updateOrderSummary();
+                                
+                                Toast.success("Đã cập nhật số lượng");
+                            }
+                        } else {
+                            Toast.error("Không thể cập nhật số lượng");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi cập nhật số lượng:", error);
+                        Toast.error("Đã xảy ra lỗi khi cập nhật");
+                    });
+            },
+            increaseQuantity: function(cartItemId, productId) {
+                const row = document.querySelector(`.cart-item-row[data-cart-item-id="${cartItemId}"]`);
+                const input = row.querySelector('.cart-plus-minus-box');
+                let quantity = parseInt(input.value) + 1;
+                input.value = quantity;
+                this.updateQuantity(cartItemId, productId, quantity);
+            },
+            decreaseQuantity: function(cartItemId, productId) {
+                const row = document.querySelector(`.cart-item-row[data-cart-item-id="${cartItemId}"]`);
+                const input = row.querySelector('.cart-plus-minus-box');
+                let quantity = parseInt(input.value) - 1;
+                if (quantity < 1) quantity = 1;
+                input.value = quantity;
+                this.updateQuantity(cartItemId, productId, quantity);
+            },
+            removeItem: function(shopId, productId) {
+                if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
+                    cartService.delete(`${shopId}/${productId}`)
+                        .then(response => {
+                            if (response && response.success) {
+                                // Xóa sản phẩm khỏi danh sách đã chọn
+                                const itemKey = `${shopId}_${productId}`;
+                                delete this.selectedItems[itemKey];
+                                
+                                // Xóa sản phẩm khỏi dữ liệu giỏ hàng
+                                const shopCartIndex = this.cart.shopCarts.findIndex(sc => sc.shopId === shopId);
+                                if (shopCartIndex !== -1) {
+                                    const shopCart = this.cart.shopCarts[shopCartIndex];
+                                    const itemIndex = shopCart.cartItems.findIndex(ci => ci.productId === productId);
+                                    
+                                    if (itemIndex !== -1) {
+                                        shopCart.cartItems.splice(itemIndex, 1);
+                                        
+                                        // Nếu không còn sản phẩm nào trong cửa hàng, xóa cửa hàng khỏi giỏ hàng
+                                        if (shopCart.cartItems.length === 0) {
+                                            this.cart.shopCarts.splice(shopCartIndex, 1);
+                                        }
+                                        
+                                        // Cập nhật lại giao diện
+                                        this.renderCart();
+                                        this.updateOrderSummary();
+                                        Toast.success("Đã xóa sản phẩm khỏi giỏ hàng");
+                                    }
+                                }
+                            } else {
+                                Toast.error("Không thể xóa sản phẩm");
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Lỗi khi xóa sản phẩm:", error);
+                            Toast.error("Đã xảy ra lỗi khi xóa sản phẩm");
+                        });
+                }
+            }
+        }
+        app.init();
+        
+        // Đưa app ra global scope để có thể gọi từ các sự kiện onclick
+        window.app = app;
+    </script>

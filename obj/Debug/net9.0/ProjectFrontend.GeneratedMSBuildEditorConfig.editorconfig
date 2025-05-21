@@ -1,0 +1,233 @@
+is_global = true
+build_property.TargetFramework = net9.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = ProjectFrontend
+build_property.RootNamespace = ProjectFrontend
+build_property.ProjectDir = D:\DoAnCNTT\template\ProjectFrontend\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 9.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = true
+build_property.MSBuildProjectDirectory = D:\DoAnCNTT\template\ProjectFrontend
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 9.0
+build_property.EnableCodeStyleSeverity = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Account/Cart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDYXJ0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Account/ChatWithSeller.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDaGF0V2l0aFNlbGxlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Account/Checkout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxDaGVja291dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Account/Logout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Account/Order.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxPcmRlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Account/Orders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxPcmRlcnMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Account/ProfileUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxQcm9maWxlVXNlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/ActivationUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWN0aXZhdGlvblVzZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/CategoryCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ2F0ZWdvcnlDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/CategoryEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ2F0ZWdvcnlFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/CategoryList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ2F0ZWdvcnlMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/DiscountAdd.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGlzY291bnRBZGQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/DiscountEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGlzY291bnRFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/DiscountList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGlzY291bnRMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/OrderDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cT3JkZXJEZXRhaWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/OrderList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cT3JkZXJMaXN0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/ProductAdd.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUHJvZHVjdEFkZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/ProductDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUHJvZHVjdERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/ProductEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUHJvZHVjdEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/ProductList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUHJvZHVjdExpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/ProductReviewList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUHJvZHVjdFJldmlld0xpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/Settings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2V0dGluZ3MuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/Shop.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2hvcC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/ShopDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cU2hvcERldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/UserDetail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlckRldGFpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Admin/UserList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cVXNlckxpc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Home/About.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxBYm91dC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Home/ContactUs.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxDb250YWN0VXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Home/Faq.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGYXEuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Home/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxGb3Jnb3RQYXNzd29yZC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Home/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Home/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Home/Result.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxSZXN1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Product/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Product/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/Accountant.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXEFjY291bnRhbnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/Chat.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXENoYXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/OrderDetailSeller.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXE9yZGVyRGV0YWlsU2VsbGVyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/Orders.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXE9yZGVycy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/ProductCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFByb2R1Y3RDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/ProductEdit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFByb2R1Y3RFZGl0LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/Products.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFByb2R1Y3RzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Seller/Settings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VsbGVyXFNldHRpbmdzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Shared/_LayoutAdmin.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRBZG1pbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Shared/_LayoutSeller.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXRTZWxsZXIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/DoAnCNTT/template/ProjectFrontend/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-5ekxgn7siq

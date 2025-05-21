@@ -1,0 +1,511 @@
+@{
+    Layout = "_LayoutSeller";
+    ViewBag.Title = "Đơn hàng";
+}
+
+<main class="nxl-container">
+    <div class="nxl-content">
+        <!-- [ page-header ] start -->
+        <div class="page-header">
+            <div class="page-header-left d-flex align-items-center">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Quản Lý Đơn Hàng</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item">Đơn hàng</li>
+                </ul>
+            </div>
+            <div class="page-header-right ms-auto">
+                <div class="page-header-right-items">
+                    <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm đơn hàng...">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ page-header ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="main-content">
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="card mb-4">
+                        <div class="card-body p-3">
+                            <form id="orderFilterForm">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="mb-2">
+                                            <label class="form-label small">Trạng thái đơn hàng</label>
+                                            <select class="form-select form-select-sm" id="orderStatus" name="status">
+                                                <option value="-999">Tất cả trạng thái</option>
+                                                <option value="1">Đang xử lý</option>
+                                                <option value="2">Đã đóng gói</option>
+                                                <option value="3">Đang vận chuyển</option>
+                                                <option value="4">Đã giao</option>
+                                                <option value="5">Hoàn thành</option>
+                                                <option value="6">Đã hủy</option>
+                                                <option value="7">Đã hoàn tiền</option>
+                                                <option value="8">Đã xác nhận</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small">Trạng thái thanh toán</label>
+                                            <select class="form-select form-select-sm" id="paymentStatus" name="paymentStatus">
+                                                <option value="">Đang tải...</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small">Phương thức thanh toán</label>
+                                            <select class="form-select form-select-sm" id="paymentMethod" name="paymentMethod">
+                                                <option value="">Đang tải...</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-2">
+                                            <label class="form-label small">Khoảng thời gian</label>
+                                            <div class="input-group input-group-sm">
+                                                <input type="date" id="startDate" name="startDate" class="form-control" style="padding: 12px 15px !important;">
+                                                <span class="input-group-text">đến</span>
+                                                <input type="date" id="endDate" name="endDate" class="form-control" style="padding: 12px 15px !important;">
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small">Khoảng giá</label>
+                                            <div class="input-group input-group-sm">
+                                                <input type="number" id="minTotal" name="minTotal" class="form-control" style="padding: 12px 15px !important;" placeholder="Từ" >
+                                                <span class="input-group-text">đến</span>
+                                                <input type="number" id="maxTotal" name="maxTotal" class="form-control" style="padding: 12px 15px !important;" placeholder="Đến">
+                                                <span class="input-group-text">VNĐ</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-2">
+                                            <label class="form-label small">Sắp xếp theo</label>
+                                            <select class="form-select form-select-sm" id="sortBy" name="sortBy">
+                                                <option value="2">Mới nhất</option>
+                                                <option value="3">Cũ nhất</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-2">
+                                            <label class="form-label small">Số kết quả hiển thị</label>
+                                            <select class="form-select form-select-sm" id="pageSize" name="pageSize">
+                                                <option value="5">5 kết quả</option>
+                                                <option value="10">10 kết quả</option>
+                                                <option value="15">15 kết quả</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="mb-2 d-flex gap-2">
+                                            <button type="submit" class="btn btn-primary btn-sm flex-grow-1">
+                                                <i class="feather-filter me-2"></i>
+                                                Áp dụng bộ lọc
+                                            </button>
+                                            <button type="button" id="resetFilterBtn" class="btn btn-secondary btn-sm">
+                                                <i class="feather-refresh-cw me-2"></i>
+                                                Đặt lại
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card p-2">
+                        <div class="card-body custom-card-action p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã Đơn</th>
+                                            <th>Khách Hàng</th>
+                                            <th>Ngày Đặt</th>
+                                            <th>Tổng Tiền</th>
+                                            <th>Trạng Thái</th>
+                                            <th>Thanh Toán</th>
+                                            <th>Thao Tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orderTableBody">
+                                        <tr>
+                                            <td colspan="7" class="text-center">Đang tải dữ liệu...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="text-muted" id="paginationInfo">
+                                    Đang tải...
+                                </div>
+                                <nav aria-label="Page navigation">
+                                    <ul class="pagination pagination-sm justify-content-center mb-0" id="pagination">
+                                        <!-- Pagination will be generated here -->
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+    <!-- [ Footer ] start -->
+    <footer class="footer">
+        <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
+            <span>Copyright ©</span>
+            
+        </p>
+        <div class="d-flex align-items-center gap-4">
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+        </div>
+    </footer>
+    <!-- [ Footer ] end -->
+</main> 
+
+<script type="module">
+    // Định dạng tiền tệ
+    function formatCurrency(amount) {
+        return new Intl.NumberFormat('vi-VN', { 
+            style: 'currency', 
+            currency: 'VND',
+            maximumFractionDigits: 0
+        }).format(amount);
+    }
+    
+    // Định dạng ngày tháng
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('vi-VN', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+        });
+    }
+    
+    // Trạng thái đơn hàng
+    const orderStatusClasses = {
+        [-999]: 'bg-secondary', // Tất cả
+        [-1]: 'bg-light',      // Giỏ hàng tạm
+        0: 'bg-warning',     // Chờ xử lý
+        1: 'bg-info',        // Đang xử lý
+        2: 'bg-primary',     // Đã đóng gói
+        3: 'bg-primary',     // Đang vận chuyển
+        4: 'bg-success',     // Đã giao
+        5: 'bg-success',     // Hoàn thành
+        6: 'bg-danger',      // Đã hủy
+        7: 'bg-danger',      // Đã hoàn tiền
+        8: 'bg-info'         // Đã xác nhận
+    };
+    
+    const orderStatusLabels = {
+        [-999]: 'Tất cả',
+        [-1]: 'Giỏ hàng tạm',
+        0: 'Chờ xử lý',
+        1: 'Đang xử lý',
+        2: 'Đã đóng gói',
+        3: 'Đang vận chuyển',
+        4: 'Đã giao',
+        5: 'Hoàn thành',
+        6: 'Đã hủy',
+        7: 'Đã hoàn tiền',
+        8: 'Đã xác nhận'
+    };
+    
+    // Giá trị mặc định cho filter
+    const defaultFilter = {
+        searchTerm: '',
+        sortBy: 2,
+        page: 1,
+        pageSize: 5,
+        status: -999,
+        paymentStatus: -999,
+        paymentMethod: -999,
+        startDate: null,
+        endDate: null,
+        minTotal: 0,
+        maxTotal: 10000000,
+        storeId: app.storeId // Lấy storeId từ app
+    };
+    
+    // Biến lưu trữ trạng thái filter và phân trang
+    let currentFilter = {...defaultFilter};
+    
+    let paymentStatusMap = {};
+    let paymentMethodMap = {};
+    let totalOrders = 0;
+    
+    // 1. Load payment status và method
+    async function loadInitialData() {
+        try {
+            // Load payment statuses
+            const paymentStatusesResponse = await app.services.enum.fetchApi("/payment-statuses");
+            if (paymentStatusesResponse && paymentStatusesResponse.success && paymentStatusesResponse.data) {
+                const paymentStatusSelect = document.getElementById('paymentStatus');
+                paymentStatusSelect.innerHTML = '<option value="-999">Tất cả trạng thái</option>';
+                
+                paymentStatusMap = paymentStatusesResponse.data;
+                Object.entries(paymentStatusMap).forEach(([key, value]) => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = value;
+                    paymentStatusSelect.appendChild(option);
+                });
+            } else {
+                throw new Error("Không thể tải trạng thái thanh toán");
+            }
+            
+            // Load payment methods
+            const paymentMethodsResponse = await app.services.enum.fetchApi("/payment-methods");
+            if (paymentMethodsResponse && paymentMethodsResponse.success && paymentMethodsResponse.data) {
+                const paymentMethodSelect = document.getElementById('paymentMethod');
+                paymentMethodSelect.innerHTML = '<option value="-999">Tất cả phương thức</option>';
+                
+                paymentMethodMap = paymentMethodsResponse.data;
+                Object.entries(paymentMethodMap).forEach(([key, value]) => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = value;
+                    paymentMethodSelect.appendChild(option);
+                });
+            } else {
+                throw new Error("Không thể tải phương thức thanh toán");
+            }
+            
+            // Sau khi load xong dữ liệu ban đầu, load danh sách đơn hàng
+            await loadOrders();
+            
+        } catch (error) {
+            console.error("Lỗi khi tải dữ liệu ban đầu:", error);
+            Toast.error("Lỗi khi tải dữ liệu: " + error.message);
+        }
+    }
+    
+    // 2. Load danh sách đơn hàng
+    async function loadOrders() {
+        try {
+            document.getElementById('orderTableBody').innerHTML = '<tr><td colspan="7" class="text-center">Đang tải dữ liệu...</td></tr>';
+            
+            // Chuẩn bị filter để gửi đi
+            const filter = {...currentFilter};
+            
+            // Chuyển đổi page từ 1-based sang 0-based cho API
+            filter.page = filter.page - 1;
+            
+            console.log("Gửi filter:", filter);
+            
+            // Gọi API lấy danh sách đơn hàng
+            const response = await app.services.order.find(filter);
+            console.log("Kết quả:", response);
+            
+            if (response && response.success) {
+                // Cập nhật tổng số đơn hàng
+                totalOrders = response.totalCount;
+                
+                // Hiển thị dữ liệu lên bảng
+                renderOrders(response.data);
+                
+                // Cập nhật phân trang
+                updatePagination();
+                
+            } else {
+                throw new Error("Không thể tải danh sách đơn hàng");
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải đơn hàng:", error);
+            Toast.error("Lỗi khi tải đơn hàng: " + error.message);
+            document.getElementById('orderTableBody').innerHTML = '<tr><td colspan="7" class="text-center text-danger">Lỗi khi tải dữ liệu. Vui lòng thử lại sau.</td></tr>';
+        }
+    }
+    
+    // 3. Hiển thị danh sách đơn hàng
+    function renderOrders(orders) {
+        const tableBody = document.getElementById('orderTableBody');
+        
+        if (!orders || orders.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="7" class="text-center">Không có đơn hàng nào</td></tr>';
+            return;
+        }
+        
+        let html = '';
+        
+        orders.forEach(order => {
+            html += `
+                <tr>
+                    <td>${order.orderCode}</td>
+                    <td>${order.buyer ? order.buyer.fullName : 'N/A'}</td>
+                    <td>${formatDate(order.createdAt)}</td>
+                    <td>${formatCurrency(order.finalAmount)}</td>
+                    <td><span class="badge ${orderStatusClasses[order.status]}">${orderStatusLabels[order.status]}</span></td>
+                    <td>${paymentStatusMap[order.paymentStatus] || 'N/A'}</td>
+                    <td>
+                        <a href="/Seller/OrderDetail?id=${order.id}" class="btn btn-sm btn-primary">
+                            <i class="feather-eye"></i>
+                        </a>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        tableBody.innerHTML = html;
+        
+        // Cập nhật thông tin phân trang
+        const start = (currentFilter.page - 1) * currentFilter.pageSize + 1;
+        const end = Math.min(start + orders.length - 1, totalOrders);
+        document.getElementById('paginationInfo').textContent = `Hiển thị ${start}-${end} trên ${totalOrders} kết quả`;
+    }
+    
+    // 4. Cập nhật phân trang
+    function updatePagination() {
+        const paginationElement = document.getElementById('pagination');
+        
+        // Tính tổng số trang
+        const totalPages = Math.ceil(totalOrders / currentFilter.pageSize);
+        
+        if (totalPages <= 1) {
+            paginationElement.innerHTML = '';
+            return;
+        }
+        
+        let html = '';
+        
+        // Nút Previous
+        html += `
+            <li class="page-item ${currentFilter.page === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="javascript:void(0);" data-page="${currentFilter.page - 1}">
+                    <i class="feather-chevron-left"></i>
+                </a>
+            </li>
+        `;
+        
+        // Hiển thị tối đa 5 trang
+        const maxPagesToShow = 5;
+        let startPage = Math.max(1, currentFilter.page - Math.floor(maxPagesToShow / 2));
+        let endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+        
+        // Điều chỉnh lại startPage nếu cần
+        if (endPage - startPage + 1 < maxPagesToShow) {
+            startPage = Math.max(1, endPage - maxPagesToShow + 1);
+        }
+        
+        // Các nút số trang
+        for (let i = startPage; i <= endPage; i++) {
+            html += `
+                <li class="page-item ${i === currentFilter.page ? 'active' : ''}">
+                    <a class="page-link" href="javascript:void(0);" data-page="${i}">${i}</a>
+                </li>
+            `;
+        }
+        
+        // Nút Next
+        html += `
+            <li class="page-item ${currentFilter.page === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="javascript:void(0);" data-page="${currentFilter.page + 1}">
+                    <i class="feather-chevron-right"></i>
+                </a>
+            </li>
+        `;
+        
+        paginationElement.innerHTML = html;
+        
+        // Thêm sự kiện click cho các nút phân trang
+        document.querySelectorAll('#pagination .page-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const page = parseInt(this.getAttribute('data-page'));
+                
+                if (page !== currentFilter.page && page >= 1 && page <= totalPages) {
+                    currentFilter.page = page;
+                    loadOrders();
+                }
+            });
+        });
+    }
+    
+    // 5. Xử lý form tìm kiếm và lọc
+    document.getElementById('orderFilterForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Lấy giá trị từ form
+        const formData = new FormData(this);
+        
+        // Reset page về 1 khi thay đổi filter
+        currentFilter.page = 1;
+        
+        // Cập nhật filter từ form
+        for (const [key, value] of formData.entries()) {
+            if (key === 'startDate' || key === 'endDate') {
+                currentFilter[key] = value ? new Date(value).toISOString() : null;
+            }
+            else if (key === 'sortBy' || key === 'pageSize' || key === 'status' || key === 'paymentStatus' || key === 'paymentMethod' || key === 'minTotal' || key === 'maxTotal') {
+                currentFilter[key] = parseInt(value);
+            }
+            else {
+                currentFilter[key] = value;
+            }
+        }
+        
+        // Lấy giá trị từ ô tìm kiếm
+        currentFilter.searchTerm = document.getElementById('searchInput').value;
+        
+        // Load lại đơn hàng
+        loadOrders();
+    });
+    
+    // 6. Xử lý ô tìm kiếm
+    document.getElementById('searchInput').addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            currentFilter.searchTerm = this.value;
+            currentFilter.page = 1;
+            loadOrders();
+        }
+    });
+    
+    // 7. Xử lý thay đổi số lượng kết quả hiển thị
+    document.getElementById('pageSize').addEventListener('change', function() {
+        currentFilter.pageSize = parseInt(this.value);
+        currentFilter.page = 1;
+        loadOrders();
+    });
+    
+    // 8. Hàm đặt lại bộ lọc về mặc định
+    function resetFilter() {
+        // Reset giá trị trên form
+        document.getElementById('searchInput').value = '';
+        document.getElementById('orderStatus').value = '-999';
+        document.getElementById('paymentStatus').value = '-999';
+        document.getElementById('paymentMethod').value = '-999';
+        document.getElementById('startDate').value = '';
+        document.getElementById('endDate').value = '';
+        document.getElementById('minTotal').value = '';
+        document.getElementById('maxTotal').value = '';
+        document.getElementById('sortBy').value = '2';
+        document.getElementById('pageSize').value = '5';
+        
+        // Reset biến filter về mặc định
+        currentFilter = {...defaultFilter};
+        
+        // Tải lại danh sách đơn hàng
+        loadOrders();
+        
+        Toast.success('Đã đặt lại bộ lọc');
+    }
+    
+    // Xử lý sự kiện nhấn nút Reset
+    document.getElementById('resetFilterBtn').addEventListener('click', resetFilter);
+    
+    // Khởi tạo trang
+    document.addEventListener('DOMContentLoaded', function() {
+        loadInitialData();
+    });
+</script> 

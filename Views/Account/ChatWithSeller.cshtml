@@ -1,0 +1,544 @@
+@{
+    ViewData["Title"] = "Chat với người bán";
+}
+
+<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                    <div class="section-title-area ltn__section-title-2">
+                        <h1 class="section-title white-color">Chat với người bán</h1>
+                    </div>
+                    <div class="ltn__breadcrumb-list">
+                        <ul>
+                            <li><a href="/">Trang chủ</a></li>
+                            <li>Chat với người bán</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="px-5">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__shop-details-inner mb-60">
+                    <div class="row">
+                        <!-- Danh sách người chat -->
+                        <div class="col-md-3 border-end" style="height: 600px; overflow-y: auto;">
+                            <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0 fs-16">Người bán</h5>
+                            </div>
+
+                            <div class="list-group list-group-flush" id="chat-sellers">
+                                <!-- Danh sách người bán sẽ được thêm vào đây -->
+                                <div class="text-center p-3" id="loading-sellers">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Đang tải...</span>
+                                    </div>
+                                    <p class="mt-2">Đang tải danh sách người bán...</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Khung chat -->
+                        <div class="col-md-9" style="height: 600px;">
+                            <div id="chat-container" style="display: flex; flex-direction: column; height: 100%;">
+                                <div id="chat-header" class="p-3 border-bottom">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div class="d-flex align-items-center">
+                                            <div id="chat-avatar" class="me-3">
+                                                <img src="/Custom/no-image.webp" alt="Avatar" class="rounded-circle" width="40"
+                                                    height="40">
+                                            </div>
+                                            <div>
+                                                <h6 id="chat-name" class="mb-0">Đang tải...</h6>
+                                                <small id="chat-status" class="text-muted"></small>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-sm btn-outline-secondary"
+                                                id="connectionStatus">
+                                                <i class="fas fa-wifi text-warning"></i> Đang kết nối...
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="chat-messages" style="flex: 1; overflow-y: auto; padding: 15px;">
+                                    <!-- Tin nhắn sẽ được thêm vào đây -->
+                                    <div class="text-center py-4">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Đang tải...</span>
+                                        </div>
+                                        <p class="mt-2">Đang tải tin nhắn...</p>
+                                    </div>
+                                </div>
+
+                                <div id="typing-indicator" class="px-3 py-2 text-muted small d-none">
+                                    <span>Người bán đang nhập...</span>
+                                </div>
+
+                                <div id="chat-input" class="p-3 border-top">
+                                    <form id="message-form" class="mb-0">
+                                        <div class="input-group">
+                                            <input type="text" id="message-input" class="form-control"
+                                                placeholder="Nhập tin nhắn và nhấn Enter để gửi..." autocomplete="off">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Thêm thư viện Pusher -->
+<script src="https://js.pusher.com/8.3.0/pusher.min.js"></script>
+
+<script type="module">
+    import url from "/Custom/endpoints.js";
+    import Toast from "/Custom/Toast.js";
+    import {BaseService} from "/Custom/BaseService.js";
+    import key from "/Custom/jwt.js";
+
+    // Lấy thông tin từ localStorage
+    const token = localStorage.getItem('accessToken');
+    const userId = parseInt(localStorage.getItem('id'));
+
+    const chatUrl = url.base + "/Chat";
+    const chatService = new BaseService(chatUrl, key);
+
+    // Biến toàn cục
+    let currentRoomId = null;
+    let currentSellerId = null;
+    let currentRoomInfo = null;
+    let pusher = null;
+    let channel = null;
+
+    // Hàm tải danh sách phòng chat
+    function loadChatRooms() {
+        if (!token || !userId) {
+            Toast.error("Không tìm thấy thông tin đăng nhập. Vui lòng đăng nhập lại.");
+            return;
+        }
+
+        document.getElementById('loading-sellers').style.display = 'block';
+
+        chatService.fetchApi("/my-chats")
+            .then(response => {
+                if (response && Array.isArray(response) && response.length > 0) {
+                    // Hiển thị danh sách phòng
+                    renderChatRooms(response);
+
+                    // Nếu không có room ID trong URL, tự động chọn phòng đầu tiên
+                    if (!currentRoomId) {
+                        const firstRoom = response[0];
+                        currentRoomId = firstRoom.id;
+
+                        // Chuyển hướng URL để có room ID
+                        const newUrl = window.location.pathname + '?room=' + currentRoomId;
+                        window.history.pushState({ path: newUrl }, '', newUrl);
+
+                        // Tải thông tin phòng chat
+                        loadRoomInfo(currentRoomId);
+                    }
+                } else {
+                    document.getElementById('chat-sellers').innerHTML = '<div class="text-center p-3">Không có cuộc trò chuyện nào</div>';
+                    document.getElementById('loading-sellers').style.display = 'none';
+
+                    // Hiển thị thông báo không có cuộc trò chuyện
+                    document.getElementById('chat-messages').innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="fas fa-comment-slash" style="font-size: 3rem; color: #ccc;"></i>
+                            <p class="mt-3 text-muted">Bạn chưa có cuộc trò chuyện nào. Hãy liên hệ với người bán từ trang sản phẩm.</p>
+                        </div>
+                    `;
+                    
+                    // Vô hiệu hóa khung nhập tin nhắn
+                    document.getElementById('message-input').disabled = true;
+                    document.getElementById('message-form').querySelector('button[type="submit"]').disabled = true;
+                    
+                    // Cập nhật tiêu đề
+                    document.getElementById('chat-name').textContent = 'Không có cuộc trò chuyện';
+                    document.getElementById('chat-status').textContent = '';
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi khi tải danh sách phòng chat:", error);
+                Toast.error("Không thể tải danh sách phòng chat");
+                document.getElementById('loading-sellers').style.display = 'none';
+                
+                // Hiển thị thông báo lỗi trong khung chat
+                document.getElementById('chat-messages').innerHTML = `
+                    <div class="text-center py-4">
+                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #dc3545;"></i>
+                        <p class="mt-3 text-danger">Không thể tải danh sách phòng chat. Vui lòng thử lại sau.</p>
+                    </div>
+                `;
+            });
+    }
+
+    // Hàm hiển thị danh sách phòng chat
+    function renderChatRooms(chatRooms) {
+        const sellersContainer = document.getElementById('chat-sellers');
+        document.getElementById('loading-sellers').style.display = 'none';
+
+        let html = '';
+        chatRooms.forEach(room => {
+            // Định dạng thời gian
+            const lastMessageTime = new Date(room.lastMessageTime);
+            const now = new Date();
+            let timeDisplay = '';
+
+            if (lastMessageTime.toDateString() === now.toDateString()) {
+                timeDisplay = lastMessageTime.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            } else {
+                timeDisplay = lastMessageTime.toLocaleDateString('vi-VN', { day: '2-digit', month: '2-digit' });
+            }
+
+            // Đánh dấu phòng được chọn
+            const isActive = room.id == currentRoomId ? 'active' : '';
+
+            html += `
+                <a href="?room=${room.id}" class="list-group-item list-group-item-action chat-seller ${isActive}" 
+                   data-room-id="${room.id}" data-room-name="${room.nameRoom}">
+                    <div class="d-flex align-items-center">
+                        <div class="position-relative me-3">
+                            <img src="${url.baseUrl}/img/Users/${room.seller?.imageUrl || 'avatar-default.jpg'}" alt="${room.nameRoom}" class="rounded-circle" width="40" height="40">
+                        </div>
+                        <div class="flex-grow-1 min-width-0">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h6 class="mb-0 text-truncate">${room.seller?.fullName || room.nameRoom}</h6>
+                                <small class="text-muted ms-2">${timeDisplay}</small>
+                            </div>
+                            <p class="text-muted mb-0 small text-truncate">${room.lastMessage || 'Không có tin nhắn'}</p>
+                        </div>
+                    </div>
+                </a>
+            `;
+        });
+
+        sellersContainer.innerHTML = html;
+
+        // Sự kiện click cho các phòng chat
+        document.querySelectorAll('.chat-seller').forEach(item => {
+            item.addEventListener('click', function (e) {
+                e.preventDefault();
+                const roomId = this.getAttribute('data-room-id');
+
+                // Cập nhật URL
+                const newUrl = window.location.pathname + '?room=' + roomId;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+
+                // Đánh dấu mục đang chọn
+                document.querySelectorAll('.chat-seller').forEach(el => {
+                    el.classList.remove('active');
+                });
+                this.classList.add('active');
+
+                // Tải thông tin phòng
+                currentRoomId = roomId;
+                loadRoomInfo(roomId);
+            });
+        });
+    }
+
+    // Hàm tải thông tin phòng chat
+    function loadRoomInfo(roomId) {
+        if (!roomId) return;
+
+        // Hiển thị khung chat với trạng thái đang tải
+        document.getElementById('chat-messages').innerHTML = `
+            <div class="text-center py-4">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Đang tải...</span>
+                </div>
+                <p class="mt-2">Đang tải tin nhắn...</p>
+            </div>
+        `;
+
+        // Gọi API để lấy thông tin phòng chat
+        chatService.fetchApi(`/room/${roomId}`)
+            .then(response => {
+                if (response) {
+                    currentRoomInfo = response;
+                    currentSellerId = response.sellerId;
+
+                    // Cập nhật giao diện
+                    updateUIWithRoomInfo(response);
+
+                    // Kết nối Pusher
+                    connectToPusher(roomId);
+                    
+                    // Bật các nút điều khiển
+                    document.getElementById('message-input').disabled = false;
+                    // document.getElementById('message-form').querySelector('button[type="submit"]').disabled = false;
+                } else {
+                    Toast.error("Không thể tải thông tin phòng chat");
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi khi tải thông tin phòng chat:", error);
+                Toast.error("Không thể tải thông tin phòng chat");
+            });
+    }
+
+    // Hàm cập nhật giao diện
+    function updateUIWithRoomInfo(roomData) {
+        const seller = roomData.seller;
+        if (seller) {
+            document.getElementById('chat-name').textContent = seller.fullName || 'Người bán';
+            document.getElementById('chat-avatar').querySelector('img').src = `${url.baseUrl}/img/Users/${seller.imageUrl || 'avatar-default.jpg'}`;
+            document.getElementById('chat-status').textContent = roomData.isActive ? 'Trực tuyến' : 'Offline';
+        } else {
+            document.getElementById('chat-name').textContent = roomData.nameRoom || 'Phòng chat';
+            document.getElementById('chat-status').textContent = '';
+        }
+
+        // Hiển thị tin nhắn
+        chatService.fetchApi(`/room/${roomData.id}/messages`)
+        .then(response => {
+            displayMessages(response || []);
+        })
+        .catch(error => {
+            console.error("Lỗi khi tải tin nhắn:", error);
+        });
+    }
+
+    // Hàm hiển thị danh sách tin nhắn
+    function displayMessages(messages) {
+        const messagesContainer = document.getElementById('chat-messages');
+        messagesContainer.innerHTML = '';
+
+        if (messages.length === 0) {
+            messagesContainer.innerHTML = `
+                <div class="text-center py-4">
+                    <p class="text-muted">Chưa có tin nhắn nào. Hãy bắt đầu cuộc trò chuyện!</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Sắp xếp tin nhắn theo thời gian
+        messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+
+        // Hiển thị từng tin nhắn
+        messages.forEach(msg => {
+            const isFromSeller = msg.senderId === currentSellerId;
+            let dt = new Date(msg.createdAt);
+            dt.setHours(dt.getHours() + 7);
+            const messageTime = dt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            appendMessage(msg.content, isFromSeller, messageTime);
+        });
+
+        // Cuộn xuống tin nhắn mới nhất
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Hàm kết nối đến Pusher
+    function connectToPusher(roomId) {
+        // Ngắt kết nối kênh cũ nếu có
+        if (channel) {
+            channel.unbind_all();
+            pusher.unsubscribe(roomId);
+        }
+
+        // Khởi tạo Pusher nếu chưa có
+        if (!pusher) {
+            pusher = new Pusher("8edd0b50c3ce30916549", {
+                cluster: "ap1",
+            });
+        }
+        
+        // Chuyển đổi roomId thành chuỗi để đảm bảo tương thích với Pusher
+        const channelName = roomId.toString();
+        console.log("Đăng ký kênh Pusher:", channelName);
+        
+        // Đăng ký kênh và sự kiện
+        channel = pusher.subscribe(channelName);
+
+        // Cập nhật trạng thái kết nối
+        document.getElementById('connectionStatus').innerHTML = '<i class="fas fa-wifi text-success"></i> Đã kết nối';
+
+        // Lắng nghe sự kiện tin nhắn mới
+        channel.bind("new-message", function(data) {
+            console.log("Nhận được tin nhắn mới:", data);
+
+            // Xử lý tin nhắn nhận được
+            if (data && data.message) {
+                console.log(data.senderId, currentSellerId);
+                const isFromSeller = data.senderId === currentSellerId;
+                appendMessage(data.message, isFromSeller);
+                
+                // Cuộn xuống tin nhắn mới nhất
+                const messagesContainer = document.getElementById('chat-messages');
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        });
+
+        // Xử lý lỗi kết nối
+        pusher.connection.bind('error', function(err) {
+            console.error("Lỗi kết nối Pusher:", err);
+            document.getElementById('connectionStatus').innerHTML = '<i class="fas fa-wifi-slash text-danger"></i> Lỗi kết nối';
+            Toast.error("Không thể kết nối đến máy chủ chat");
+        });
+    }
+
+    // Hàm gửi tin nhắn
+    function sendMessage() {
+        const messageInput = document.getElementById('message-input');
+        const message = messageInput.value.trim();
+
+        if (!message || !currentRoomId) {
+            return;
+        }
+
+        // Hiển thị tin nhắn ngay lập tức (optimistic UI)
+        @* appendMessage(message, false); *@
+        
+        // Xóa nội dung input ngay sau khi hiển thị
+        messageInput.value = '';
+
+        let urlSend = `/room/${currentRoomId}/send`;
+
+        // Gọi API để gửi tin nhắn
+        chatService.fetchApi(urlSend, 'POST', message)
+        .then(() => {
+            console.log("Đã gửi tin nhắn thành công");
+        })
+        .catch(err => {
+            console.error("Lỗi khi gửi tin nhắn:", err);
+            Toast.error("Không thể gửi tin nhắn");
+        });
+    }
+
+    // Hàm thêm tin nhắn vào khung chat
+    function appendMessage(content, isFromSeller, time = null) {
+        if (!content) return;
+        
+        const messagesContainer = document.getElementById('chat-messages');
+
+        let timeDisplay = time;
+        let messageTime = '';
+        if (!timeDisplay) {
+            timeDisplay = new Date();
+            messageTime = timeDisplay.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+
+        } else {
+            messageTime = timeDisplay;
+        }
+
+        const messageElement = document.createElement('div');
+        messageElement.className = `message ${isFromSeller ? 'message-received' : 'message-sent'} mb-3`;
+        messageElement.innerHTML = `
+            <div class="message-content p-3 rounded ${isFromSeller ? 'bg-light' : 'bg-primary text-white'}">
+                <p class="mb-0">${content}</p>
+            </div>
+            <div class="message-time small text-muted ${isFromSeller ? '' : 'text-end'} mt-1">${messageTime}</div>
+        `;
+
+        messagesContainer.appendChild(messageElement);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // Lấy room ID từ URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const roomParam = urlParams.get('room');
+
+    // Luôn tải danh sách phòng chat trước
+    loadChatRooms();
+
+    if (roomParam) {
+        // Nếu có room ID trong URL, kết nối trực tiếp đến phòng đó
+        currentRoomId = roomParam;
+        loadRoomInfo(currentRoomId);
+    }
+
+    // Xử lý gửi tin nhắn
+    document.getElementById('message-form').addEventListener('submit', function (e) {
+        e.preventDefault();
+        sendMessage();
+    });
+    
+    // Thêm sự kiện nhấn phím cho input tin nhắn
+    document.getElementById('message-input').addEventListener('keydown', function (e) {
+        // Kiểm tra nếu là phím Enter và không nhấn Shift (để cho phép xuống dòng khi Shift+Enter)
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault(); // Ngăn chặn hành vi mặc định của Enter
+            sendMessage();
+        }
+    });
+</script>
+
+<style>
+    /* CSS cho khung chat */
+    .message {
+        max-width: 80%;
+        margin-bottom: 15px;
+    }
+
+    .message-received {
+        margin-right: auto;
+    }
+
+    .message-sent {
+        margin-left: auto;
+    }
+
+    .message-content {
+        border-radius: 15px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    }
+
+    .message-sent .message-content {
+        border-top-right-radius: 5px;
+    }
+
+    .message-received .message-content {
+        border-top-left-radius: 5px;
+    }
+
+    .chat-seller {
+        transition: all 0.2s ease;
+        padding: 10px 15px;
+    }
+
+    .chat-seller:hover,
+    .chat-seller.active {
+        background-color: #f8f9fa;
+    }
+
+    .chat-seller.active {
+        border-left: 3px solid #0d6efd;
+    }
+
+    .chat-seller .text-truncate {
+        max-width: 150px;
+    }
+
+    #chat-header {
+        background-color: #f8f9fa;
+    }
+
+    #chat-input {
+        background-color: #f8f9fa;
+    }
+
+    #chat-input .btn {
+        border-radius: 50%;
+        padding: 8px 10px;
+    }
+
+    #message-input {
+        border-radius: 20px;
+        padding-right: 15px;
+    }
+</style>

@@ -1,0 +1,282 @@
+@{
+    Layout = "_LayoutSeller";
+    ViewBag.Title = "Sản phẩm";
+}
+
+<main class="nxl-container">
+    <div class="nxl-content">
+        <!-- [ page-header ] start -->
+        <div class="page-header">
+            <div class="page-header-left d-flex align-items-center">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Danh Sách Sản Phẩm</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item">Sản phẩm</li>
+                </ul>
+            </div>
+            <div class="page-header-right ms-auto">
+                <div class="page-header-right-items">
+                    <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                        <a asp-action="ProductCreate" asp-controller="Seller" class="btn btn-primary">
+                            <i class="feather-plus me-2"></i>
+                            Thêm Sản Phẩm
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ page-header ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="main-content">
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="card stretch stretch-full">
+                        <div class="card-header">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <h5 class="card-title">Danh Sách Sản Phẩm Nông Sản</h5>
+                                <div class="search-box">
+                                    <input type="text" id="product-search" class="form-control" placeholder="Tìm kiếm sản phẩm...">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body custom-card-action p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã SP</th>
+                                            <th>Hình ảnh</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Danh mục</th>
+                                            <th>Giá</th>
+                                            <th>Tồn kho</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="products-table-body">
+                                        <tr>
+                                            <td colspan="8" class="text-center">Đang tải dữ liệu...</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center mb-0" id="products-pagination">
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+    <!-- [ Footer ] start -->
+    <footer class="footer">
+        <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
+            <span>Copyright ©</span>
+        </p>
+        <div class="d-flex align-items-center gap-4">
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+        </div>
+    </footer>
+    <!-- [ Footer ] end -->
+    <script type="module">
+        import app from "/Custom/service.js";
+        import url from "/Custom/endpoints.js";
+
+        app.initServices({requiredSeller: true});
+        
+        const productApp = {
+            products: [],
+            totalCount: 0,
+            currentPage: 1,
+            pageSize: 5,
+            searchTimeout: null,
+            
+            init: function() {
+                this.setupFilter();
+                this.setupEventListeners();
+                this.loadProducts();
+            },
+            
+            setupFilter: function() {
+                this.filter = {
+                    "searchTerm": "",
+                    "sortBy": 2,
+                    "page": 1,
+                    "pageSize": this.pageSize,
+                    "storeId": app.storeId,
+                };
+            },
+            
+            setupEventListeners: function() {
+                document.getElementById('product-search').addEventListener('input', (e) => {
+                    clearTimeout(this.searchTimeout);
+                    this.searchTimeout = setTimeout(() => {
+                        this.filter.searchTerm = e.target.value;
+                        this.filter.page = 1;
+                        this.loadProducts();
+                    }, 500);
+                });
+            },
+            
+            loadProducts: function() {
+                app.services.product.find(this.filter).then(response => {
+                    if (response.success) {
+                        this.products = response.data;
+                        this.totalCount = response.totalCount;
+                        this.currentPage = this.filter.page;
+                        this.renderProducts();
+                        this.renderPagination();
+                    } else {
+                        console.error("Lỗi khi tải sản phẩm:", response.message);
+                        document.getElementById('products-table-body').innerHTML = `
+                            <tr>
+                                <td colspan="8" class="text-center">Lỗi khi tải dữ liệu: ${response.message || 'Không xác định'}</td>
+                            </tr>
+                        `;
+                    }
+                }).catch(error => {
+                    console.error("Lỗi khi tải sản phẩm:", error);
+                    document.getElementById('products-table-body').innerHTML = `
+                        <tr>
+                            <td colspan="8" class="text-center">Lỗi khi tải dữ liệu: ${error.message || 'Không xác định'}</td>
+                        </tr>
+                    `;
+                });
+            },
+            
+            renderProducts: function() {
+                const tableBody = document.getElementById('products-table-body');
+                let html = '';
+                
+                if (this.products.length === 0) {
+                    html = `<tr><td colspan="8" class="text-center">Không có sản phẩm nào</td></tr>`;
+                } else {
+                    this.products.forEach(product => {
+                        let statusBadge = '';
+                        if (!product.isActive) {
+                            statusBadge = '<span class="badge bg-secondary">Ngừng bán</span>';
+                        } else if (product.stockQuantity <= 0) {
+                            statusBadge = '<span class="badge bg-danger">Hết hàng</span>';
+                        } else if (product.stockQuantity < 10) {
+                            statusBadge = '<span class="badge bg-warning">Sắp hết hàng</span>';
+                        } else {
+                            statusBadge = '<span class="badge bg-success">Còn hàng</span>';
+                        }
+                        
+                        html += `
+                            <tr>
+                                <td>#SP${product.id.toString().padStart(3, '0')}</td>
+                                <td>
+                                    <img src="${url.baseUrl}/img/Products/${product.imageUrl}" alt="${product.name}"
+                                        class="img-thumbnail"
+                                        style="width: 50px; height: 50px; object-fit: cover;">
+                                </td>
+                                <td>${product.name}</td>
+                                <td>${product.category ? product.category.name : 'Không có'}</td>
+                                <td>${product.price.toLocaleString('vi-VN')}đ</td>
+                                <td>${product.stockQuantity} ${product.unit === 1 ? 'kg' : 'gói'}</td>
+                                <td>${statusBadge}</td>
+                                <td>
+                                    <div class="d-flex gap-2">
+                                        <a href="/Product/Details?id=${product.id}" class="btn btn-sm btn-info">
+                                            <i class="feather-eye"></i>
+                                        </a>
+                                        <a href="/Seller/ProductEdit?id=${product.id}"
+                                            class="btn btn-sm btn-warning">
+                                            <i class="feather-edit"></i>
+                                        </a>
+                                        <a href="javascript:void(0);" class="btn btn-sm btn-danger" onclick="if(confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) productApp.deleteProduct(${product.id})">
+                                            <i class="feather-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                }
+                
+                tableBody.innerHTML = html;
+            },
+            
+            renderPagination: function() {
+                const paginationContainer = document.getElementById('products-pagination');
+                const totalPages = Math.ceil(this.totalCount / this.pageSize);
+                let paginationHtml = '';
+                
+                paginationHtml += `
+                    <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="javascript:void(0);" data-page="${this.currentPage - 1}">
+                            <i class="feather-chevron-left"></i>
+                        </a>
+                    </li>
+                `;
+                
+                let startPage = Math.max(1, this.currentPage - 2);
+                let endPage = Math.min(totalPages, startPage + 4);
+                
+                if (endPage === totalPages) {
+                    startPage = Math.max(1, endPage - 4);
+                }
+                
+                for (let i = startPage; i <= endPage; i++) {
+                    paginationHtml += `
+                        <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+                            <a class="page-link" href="javascript:void(0);" data-page="${i}">${i}</a>
+                        </li>
+                    `;
+                }
+                
+                paginationHtml += `
+                    <li class="page-item ${this.currentPage === totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="javascript:void(0);" data-page="${this.currentPage + 1}">
+                            <i class="feather-chevron-right"></i>
+                        </a>
+                    </li>
+                `;
+                
+                paginationContainer.innerHTML = paginationHtml;
+                
+                document.querySelectorAll('#products-pagination .page-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const page = parseInt(e.target.getAttribute('data-page') || e.target.closest('.page-link').getAttribute('data-page'));
+                        
+                        if (page >= 1 && page <= totalPages && page !== this.currentPage) {
+                            this.currentPage = page;
+                            this.filter.page = page;
+                            this.loadProducts();
+                        }
+                    });
+                });
+            },
+            
+            deleteProduct: function(productId) {
+                app.services.product.delete(productId).then(response => {
+                    if (response.success) {
+                        Toast.success('Xóa sản phẩm thành công!');
+                        this.loadProducts();
+                    } else {
+                        Toast.error('Lỗi khi xóa sản phẩm: ' + (response.message || 'Không xác định'));
+                    }
+                }).catch(error => {
+                    Toast.error('Lỗi khi xóa sản phẩm: ' + (error.message || 'Không xác định'));
+                });
+            }
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            window.productApp = productApp;
+            productApp.init();
+        });
+    </script>
+</main>

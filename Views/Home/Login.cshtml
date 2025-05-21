@@ -1,0 +1,121 @@
+@{
+    ViewData["Title"] = "Đăng nhập";
+    ViewBag.Title = "Đăng nhập";
+}
+
+<!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h1 class="section-title white-color">Đăng nhập</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li>Đăng nhập</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- LOGIN AREA START -->
+    <div class="ltn__login-area pb-65">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title-area text-center">
+                        <h1 class="section-title">Đăng nhập <br>Vào tài khoản của bạn</h1>
+                        <p>Đăng nhập để mua sắm nông sản tươi sạch <br>
+                             và theo dõi đơn hàng của bạn.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="account-login-inner">
+                        <form id="formLogin" method="post" class="ltn__form-box contact-form-box">
+                            <input type="text" name="email" placeholder="Email*">
+                            <input type="password" name="password" placeholder="Mật khẩu*">
+                            <div class="btn-wrapper mt-0">
+                                <button class="theme-btn-1 btn btn-block" type="submit">ĐĂNG NHẬP</button>
+                            </div>
+                            <div class="go-to-btn mt-20">
+                                <a asp-action="ForgotPassword" asp-controller="Home"><small>QUÊN MẬT KHẨU?</small></a>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="account-create text-center pt-50">
+                        <h4>BẠN CHƯA CÓ TÀI KHOẢN?</h4>
+                        <p>Đăng ký để mua sắm nông sản tươi sạch, <br>
+                            nhận thông tin khuyến mãi và theo dõi đơn hàng dễ dàng</p>
+                        <div class="btn-wrapper">
+                            <a asp-action="Register" asp-controller="Home" class="theme-btn-1 btn black-btn">TẠO TÀI KHOẢN</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- LOGIN AREA END -->
+
+    <script type="module">
+        import {BaseService} from "/Custom/BaseService.js";
+        import url from "/Custom/endpoints.js";
+        import Toast from "/Custom/toast.js";
+        const authUrl = url.base + "/Auth";
+        const authService = new BaseService(authUrl, null);
+        const formLogin = document.getElementById("formLogin");
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa
+        if (localStorage.getItem('accessToken')) {
+            window.location.href = '/';
+        }
+
+        formLogin.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const email = formLogin.email.value;
+            const password = formLogin.password.value;
+            console.log(email, password);
+            let data = {
+                email: email,
+                password: password
+            }
+            authService.fetchApi("/Login", 'POST', data)
+                .then(response => {
+                    console.log(response);
+                    if (response.status === 200) {
+                        // Lưu thông tin người dùng vào localStorage
+                        localStorage.setItem('id', response.user.id);
+                        localStorage.setItem('name', response.user.fullName);
+                        localStorage.setItem('email', response.user.email);
+                        localStorage.setItem('accessToken', response.token.accessToken);
+                        localStorage.setItem('role', response.role);
+                        if(response.store){
+                            localStorage.setItem('storeId', response.store.id);
+                        }
+                        // Hiển thị thông báo thành công
+                        Toast.success('Đăng nhập thành công! Chuyển hướng về trang chủ sau 3 giây.');
+                        // Chuyển hướng về trang chủ sau khi đăng nhập
+                        setTimeout(() => {
+                            window.location.href = '/';
+                        }, 3000);
+                    } else {
+                        // Hiển thị thông báo lỗi
+                        Toast.error(response.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Lỗi đăng nhập:', error);
+                    Toast.error('Đã xảy ra lỗi ! Vui lòng thử lại sau.');
+                });
+        })
+    </script>

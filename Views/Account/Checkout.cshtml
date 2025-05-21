@@ -1,0 +1,599 @@
+@{
+    ViewData["Title"] = "Thanh toán";
+}
+
+<!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h6 class="section-subtitle ltn__secondary-color">//  Chào mừng đến với cửa hàng</h6>
+                            <h1 class="section-title white-color">Thanh toán</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li>Thanh toán</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- CHECKOUT AREA START -->
+    <div class="ltn__checkout-area mb-105">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__checkout-inner">
+                        <div class="ltn__checkout-single-content mt-50">
+                            <h4 class="title-2">Thông tin giao hàng</h4>
+                            <div class="ltn__checkout-single-content-info">
+                                <form id="checkout-form">
+                                    <h6>Thông tin cá nhân</h6>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="input-item input-item-name ltn__custom-icon">
+                                                <input type="text" name="shippingName" id="shippingName" placeholder="Họ và tên người nhận" value="Nguyễn Đan Trường" required>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="input-item input-item-phone ltn__custom-icon">
+                                                <input type="text" name="shippingPhone" id="shippingPhone" placeholder="Số điện thoại" value="0909090909" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-6 mb-3">
+                                            <h6>Tỉnh/Thành phố</h6>
+                                            <div class="input-item">
+                                                <select class="form-select" name="shippingProvince" id="shippingProvince" required>
+                                                    <option disabled selected value="">Chọn Tỉnh/Thành phố</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 mb-3">
+                                            <h6>Quận/Huyện</h6>
+                                            <div class="input-item">
+                                                <select class="form-select" name="shippingDistrict" id="shippingDistrict" required>
+                                                    <option disabled selected value="">Chọn Quận/Huyện</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-4 col-md-6 mb-3">
+                                            <h6>Phường/Xã</h6>
+                                            <div class="input-item">
+                                                <select class="form-select" name="shippingWard" id="shippingWard" required>
+                                                    <option disabled selected value="">Chọn Phường/Xã</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12 col-md-12">
+                                            <h6>Địa chỉ chi tiết</h6>
+                                            <div class="input-item">
+                                                <input type="text" name="shippingAddress" id="shippingAddress" placeholder="Số nhà, tên đường, khu vực" value="123" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <h6>Ghi chú đơn hàng (không bắt buộc)</h6>
+                                    <div class="input-item input-item-textarea ltn__custom-icon">
+                                        <textarea name="notes" id="notes" placeholder="Ghi chú về đơn hàng của bạn, ví dụ: thời gian giao hàng hoặc địa điểm giao hàng chi tiết hơn.">456</textarea>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="ltn__checkout-payment-method mt-50">
+                        <h4 class="title-2">Phương thức thanh toán</h4>
+                        <div id="checkout_accordion_1">
+                            <!-- card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" id="payment1" value="1" checked>
+                                        <label class="form-check-label" for="payment1">
+                                            <strong>Thanh toán khi nhận hàng</strong> <img src="~/img/icons/cash.png" alt="#">
+                                            <p>Thanh toán bằng tiền mặt khi nhận hàng.</p>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>                             
+                            <!-- card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" id="payment2" value="2">
+                                        <label class="form-check-label" for="payment2">
+                                            <strong>Chuyển khoản ngân hàng</strong> <img src="~/img/icons/payment-3.png" alt="#">
+                                            <p>Thực hiện thanh toán trực tiếp vào tài khoản ngân hàng của chúng tôi. Vui lòng sử dụng Mã đơn hàng của bạn trong phần Nội dung thanh toán. Đơn hàng sẽ được giao sau khi tiền đã chuyển vào tài khoản của chúng tôi.</p>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- card -->
+                            <div class="card">
+                                <div class="card-body">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="paymentMethod" id="payment3" value="3">
+                                        <label class="form-check-label" for="payment3">
+                                            <strong>VNPay</strong> <img src="~/img/icons/payment-3.png" alt="#">
+                                            <p>Thanh toán trực tuyến qua cổng thanh toán VNPay.</p>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ltn__payment-note mt-30 mb-30">
+                            <p>Thông tin cá nhân của bạn sẽ được sử dụng để xử lý đơn hàng và hỗ trợ trải nghiệm của bạn trên trang web này.</p>
+                        </div>
+                        <button id="place-order-btn" class="btn theme-btn-1 btn-effect-1 text-uppercase">Đặt hàng</button>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="mt-50 mb-3">
+                        <h4 class="title-2">
+                            <i class="fas fa-ticket-alt mr-2" style="background-color: #f7a392; color: white; padding: 10px; border-radius: 50%;"></i>
+                            Mã giảm giá
+                        </h4>
+                        <div class="input-item">
+                            <input type="text" name="discountCode" id="discountCode" placeholder="Mã giảm giá (nhấn Enter để áp dụng)">
+                        </div>
+                    </div>
+                    <div class="">
+                        <h4 class="title-2">
+                            <i class="fas fa-shopping-basket mr-2" style="background-color: #2d6ae0; color: white; padding: 10px; border-radius: 50%;"></i>
+                            Thông tin đơn hàng
+                        </h4>
+                        <div id="order-summary-container">
+                            <div class="text-center py-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Đang tải...</span>
+                                </div>
+                                <p class="mt-2">Đang tải thông tin đơn hàng...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- CHECKOUT AREA END -->
+
+<script type="module">
+    import Toast from "/Custom/Toast.js";
+    import {BaseService} from "/Custom/BaseService.js";
+    import url from "/Custom/endpoints.js";
+    import key from "/Custom/jwt.js";
+
+    const cartUrl = url.base + "/Cart";
+    const orderUrl = url.base + "/Order";
+    const discountUrl = url.base + "/Discount";
+
+    const orderService = new BaseService(orderUrl, key);
+    const cartService = new BaseService(cartUrl, key);
+    const discountService = new BaseService(discountUrl, key);
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Vô hiệu hóa nice-select cho tất cả các select
+        if (typeof $ !== 'undefined' && $.fn.niceSelect) {
+            $('select').niceSelect('destroy');
+        }
+
+        const app = {
+            shippingFee: 0,
+            selectedItems: null,
+            provinces: [],
+            districts: [],
+            wards: [],
+            discountInfo: null,
+            originalTotalAmount: 0,
+            init: function() {
+                // Lấy dữ liệu từ localStorage
+                const selectedCartItems = JSON.parse(localStorage.getItem('selectedCartItems'));
+                console.log("Item from localStorage", selectedCartItems);
+                //Nếu null chuyển về trang giỏ hàng
+                if(!selectedCartItems) {
+                    window.location.href = "/Account/Cart";
+                }
+                cartService.fetchApi("/preview", 'POST', selectedCartItems )
+                .then(response => {
+                    console.log("Response from API", response);
+                    if (response && response.success) {
+                        this.selectedItems = response.data;
+                        this.shippingFee = response.shippingFee;
+                        this.renderOrderSummary();
+                        this.setupEventListeners();
+                        Toast.success("Đã tải thông tin đơn hàng thành công");
+                    } else {
+                        Toast.error("Không thể tải thông tin đơn hàng");
+                        document.getElementById('order-summary-container').innerHTML = `
+                            <div class="text-center py-4">
+                                <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                                <h5>Không thể tải thông tin đơn hàng</h5>
+                                <a href="/Account/Cart" class="btn theme-btn-2 btn-effect-2 text-uppercase mt-3">Quay lại giỏ hàng</a>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi lấy dữ liệu giỏ hàng:", error);
+                });
+
+                // Tải dữ liệu tỉnh/thành phố
+                this.loadProvinces();
+            },
+            loadProvinces: function() {
+                fetch('/Custom/province-api.json')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Không thể tải dữ liệu tỉnh thành');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log("Province", data);
+                        this.provinces = data;
+                        const provinceSelect = document.getElementById('shippingProvince');
+                        
+                        // Xóa tất cả các option hiện tại
+                        provinceSelect.innerHTML = '<option value="">Chọn Tỉnh/Thành phố</option>';
+                        
+                        // Thêm các option mới
+                        data.forEach(province => {
+                            const option = document.createElement('option');
+                            option.value = province.code;
+                            option.textContent = province.name;
+                            provinceSelect.appendChild(option);
+                        });
+                        
+                        // Khởi tạo lại nice-select
+                        if (typeof $ !== 'undefined' && $.fn.niceSelect) {
+                            $(provinceSelect).niceSelect('destroy');
+                            $(provinceSelect).niceSelect();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi tải dữ liệu tỉnh/thành phố:', error);
+                        Toast.error('Không thể tải dữ liệu địa chỉ');
+                    });
+            },
+            loadDistricts: function(provinceCode) {
+                const province = this.provinces.find(p => p.code == provinceCode);
+                if (!province) return;
+                
+                this.districts = province.districts;
+                const districtSelect = document.getElementById('shippingDistrict');
+                
+                // Xóa tất cả các option hiện tại
+                districtSelect.innerHTML = '<option disabled selected value="">Chọn Quận/Huyện</option>';
+                
+                // Thêm các option mới
+                this.districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district.code;
+                    option.textContent = district.name;
+                    districtSelect.appendChild(option);
+                });
+                
+                // Reset phường/xã
+                document.getElementById('shippingWard').innerHTML = '<option disabled selected value="">Chọn Phường/Xã</option>';
+                
+                // Khởi tạo lại nice-select
+                if (typeof $ !== 'undefined' && $.fn.niceSelect) {
+                    $(districtSelect).niceSelect('destroy');
+                    $(districtSelect).niceSelect();
+                    $('#shippingWard').niceSelect('destroy');
+                    $('#shippingWard').niceSelect();
+                }
+            },
+            loadWards: function(districtCode) {
+                const district = this.districts.find(d => d.code == districtCode);
+                if (!district) return;
+                
+                this.wards = district.wards;
+                const wardSelect = document.getElementById('shippingWard');
+                
+                // Xóa tất cả các option hiện tại
+                wardSelect.innerHTML = '<option disabled selected value="">Chọn Phường/Xã</option>';
+                
+                // Thêm các option mới
+                this.wards.forEach(ward => {
+                    const option = document.createElement('option');
+                    option.value = ward.code;
+                    option.textContent = ward.name;
+                    wardSelect.appendChild(option);
+                });
+                
+                // Khởi tạo lại nice-select
+                if (typeof $ !== 'undefined' && $.fn.niceSelect) {
+                    $(wardSelect).niceSelect('destroy');
+                    $(wardSelect).niceSelect();
+                }
+            },
+            renderOrderSummary: function() {
+                const container = document.getElementById('order-summary-container');
+                if (!this.selectedItems || !this.selectedItems.shopCarts || this.selectedItems.shopCarts.length === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="fas fa-exclamation-circle fa-3x text-warning mb-3"></i>
+                            <h5>Không có sản phẩm nào được chọn</h5>
+                            <a href="/Account/Cart" class="btn theme-btn-2 btn-effect-2 text-uppercase mt-3">Quay lại giỏ hàng</a>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let tableHTML = `<table class="table">
+                    <tbody>`;
+                
+                let totalAmount = 0;
+                let cartItemIds = [];
+
+                // Hiển thị sản phẩm từ các cửa hàng
+                this.selectedItems.shopCarts.forEach(shopCart => {
+                    // Hiển thị tên cửa hàng
+                    tableHTML += `
+                        <tr>
+                            <td colspan="2"><strong>${shopCart.shop.name}</strong></td>
+                        </tr>
+                    `;
+                    
+                    shopCart.cartItems.forEach(item => {
+                        const subtotal = item.product.price * item.quantity;
+                        totalAmount += subtotal;
+                        cartItemIds.push(item.id);
+                        
+                        tableHTML += `
+                            <tr>
+                                <td>
+                                    <i class="fas fa-box mr-2" style="color: #2d6ae0;"></i>
+                                    ${item.product.name} <strong>× ${item.quantity}</strong>
+                                </td>
+                                <td>${subtotal.toLocaleString('vi-VN')}đ</td>
+                            </tr>
+                        `;
+                    });
+                });
+
+                // Phí vận chuyển từ response
+                const shippingFee = this.shippingFee || 0;
+                totalAmount += shippingFee;
+                
+                // Lưu tổng tiền gốc để tính toán giảm giá
+                this.originalTotalAmount = totalAmount;
+
+                tableHTML += `
+                    <tr>
+                        <td>Phí vận chuyển</td>
+                        <td>${shippingFee.toLocaleString('vi-VN')}đ</td>
+                    </tr>`;
+                
+                // Hiển thị thông tin giảm giá nếu có
+                if (this.discountInfo) {
+                    const discountAmount = this.discountInfo.value;
+                    totalAmount -= discountAmount;
+                    
+                    tableHTML += `
+                        <tr>
+                            <td>Mã giảm giá <span class="badge bg-success">Mã: ${document.getElementById('discountCode').value}</span></td>
+                            <td>-${discountAmount.toLocaleString('vi-VN')}đ</td>
+                        </tr>`;
+                }
+
+                tableHTML += `
+                    <tr>
+                        <td><strong>Tổng thanh toán</strong></td>
+                        <td><strong>${totalAmount.toLocaleString('vi-VN')}đ</strong></td>
+                    </tr>
+                </tbody>
+                </table>`;
+
+                container.innerHTML = tableHTML;
+                
+                // Lưu danh sách cartItemIds để sử dụng khi đặt hàng
+                container.dataset.cartItemIds = JSON.stringify(cartItemIds);
+            },
+            applyDiscountCode: function(code) {
+                if (!code || code.trim() === '') {
+                    Toast.warning("Vui lòng nhập mã giảm giá!");
+                    return;
+                }
+                
+                Toast.info("Đang áp dụng mã giảm giá ...");
+                
+                // Lấy dữ liệu giỏ hàng từ localStorage
+                const carts = JSON.parse(localStorage.getItem('selectedCartItems'));
+                
+                // Tạo payload để gửi đến API
+                const payload = {
+                    voucher: code,
+                    cart: carts
+                };
+                
+                // Gọi API để áp dụng mã giảm giá
+                discountService.fetchApi("/voucher", 'POST', payload)
+                    .then(response => {
+                        console.log("Voucher response:", response);
+                        if (response && response.success) {
+                            // Lưu thông tin giảm giá
+                            this.discountInfo = {
+                                value: response.value
+                            };
+                            
+                            // Cập nhật hiển thị đơn hàng
+                            this.renderOrderSummary();
+                            
+                            Toast.success("Đã áp dụng mã giảm giá thành công!");
+                        } else {
+                            this.discountInfo = null;
+                            Toast.error(response.message || "Mã giảm giá không hợp lệ!");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi áp dụng mã giảm giá:", error);
+                        this.discountInfo = null;
+                        Toast.error("Đã xảy ra lỗi khi áp dụng mã giảm giá");
+                    });
+            },
+            setupEventListeners: function() {
+                const placeOrderBtn = document.getElementById('place-order-btn');
+                placeOrderBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.placeOrder();
+                });
+
+                // Thêm event listener cho input mã giảm giá khi nhấn Enter
+                const discountCodeInput = document.getElementById('discountCode');
+                discountCodeInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        const discountCode = discountCodeInput.value;
+                        this.applyDiscountCode(discountCode);
+                    }
+                });
+
+                // Thêm event listener cho select tỉnh/thành phố
+                document.getElementById('shippingProvince').addEventListener('change', (e) => {
+                    const provinceCode = e.target.value;
+                    if (provinceCode) {
+                        this.loadDistricts(provinceCode);
+                    }
+                });
+
+                // Thêm event listener cho select quận/huyện
+                document.getElementById('shippingDistrict').addEventListener('change', (e) => {
+                    const districtCode = e.target.value;
+                    if (districtCode) {
+                        this.loadWards(districtCode);
+                    }
+                });
+            },
+            placeOrder: function() {
+                // Validate form
+                const form = document.getElementById('checkout-form');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
+                    return;
+                }
+
+                // Lấy cartItemIds từ localStorage thay vì từ data attribute
+                const selectedCartItems = JSON.parse(localStorage.getItem('selectedCartItems'));
+                if (!selectedCartItems || selectedCartItems.length === 0) {
+                    Toast.error("Không có sản phẩm nào để thanh toán!");
+                    return;
+                }
+                
+                // Lấy danh sách cartItemIds từ selectedCartItems
+                const cartItemIds = [];
+                this.selectedItems.shopCarts.forEach(shop => {
+                    shop.cartItems.forEach(item => {
+                        if(item) {
+                            cartItemIds.push(item.id);
+                        }
+                    });
+                });
+                
+                if (cartItemIds.length === 0) {
+                    Toast.error("Không có sản phẩm nào được chọn để thanh toán!");
+                    return;
+                }
+                
+                // Lấy phương thức thanh toán được chọn
+                const paymentMethodElement = document.querySelector('input[name="paymentMethod"]:checked');
+                if (!paymentMethodElement) {
+                    Toast.error("Vui lòng chọn phương thức thanh toán!");
+                    return;
+                }
+                const paymentMethod = parseInt(paymentMethodElement.value);
+                
+                // Lấy thông tin địa chỉ
+                const shippingName = document.getElementById('shippingName').value;
+                const shippingPhone = document.getElementById('shippingPhone').value;
+                const shippingAddress = document.getElementById('shippingAddress').value;
+                const provinceId = document.getElementById('shippingProvince').value;
+                const districtId = document.getElementById('shippingDistrict').value;
+                const wardId = document.getElementById('shippingWard').value;
+
+                // Vấn đề có thể do kiểu dữ liệu không khớp (string vs number)
+                // Chuyển đổi provinceId, districtId, wardId sang string để đảm bảo so sánh chính xác
+                const provinceIdStr = String(provinceId);
+                const districtIdStr = String(districtId);
+                const wardIdStr = String(wardId);
+                
+                // Tìm đối tượng tương ứng trong mảng
+                const provinceObj = this.provinces.find(p => String(p.code) === provinceIdStr);
+                const districtObj = this.districts.find(d => String(d.code) === districtIdStr);
+                const wardObj = this.wards.find(w => String(w.code) === wardIdStr);
+                
+                const shippingProvince = provinceObj ? provinceObj.name : '';
+                const shippingDistrict = districtObj ? districtObj.name : '';
+                const shippingWard = wardObj ? wardObj.name : '';
+                console.log(shippingName, shippingPhone, shippingAddress, shippingProvince, shippingDistrict, shippingWard);
+                // Validate thông tin địa chỉ
+                if (!shippingName || !shippingPhone || !shippingAddress || !shippingProvince || !shippingDistrict || !shippingWard) {
+                    Toast.error("Vui lòng điền đầy đủ thông tin giao hàng!");
+                    return;
+                }
+                
+                // Tạo đối tượng dữ liệu để gửi đi
+                const orderData = {
+                    cartItemIds: cartItemIds,
+                    address: {
+                        shippingName: shippingName,
+                        shippingPhone: shippingPhone,
+                        shippingAddress: shippingAddress,
+                        shippingProvince: shippingProvince,
+                        shippingDistrict: shippingDistrict,
+                        shippingWard: shippingWard
+                    },
+                    paymentMethod: paymentMethod,
+                    notes: document.getElementById('notes').value,
+                    discountCode: document.getElementById('discountCode').value
+                };
+
+                console.log("Đang gửi dữ liệu đặt hàng:", orderData);
+
+                // Hiển thị loading
+                const placeOrderBtn = document.getElementById('place-order-btn');
+                const originalBtnText = placeOrderBtn.innerHTML;
+                placeOrderBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Đang xử lý...';
+                placeOrderBtn.disabled = true;
+
+                // Gửi dữ liệu đến API
+                orderService.fetchApi("/create", "POST", orderData)
+                    .then(response => {
+                        console.log("Checkout response:", response);
+                        if (response && response.success) {
+                            Toast.success("Đặt hàng thành công !");
+                            // Xóa dữ liệu đã chọn khỏi localStorage
+                            localStorage.removeItem('selectedCartItems');
+
+                            // Chuyển hướng đến trang xác nhận đơn hàng
+                            setTimeout(() => {
+                                window.location.href = '/Account/Order?id=' + response.data.id;
+                            }, 1500);
+                        } else {
+                            Toast.error("Đặt hàng thất bại: " + (response.message || "Vui lòng thử lại sau") + "");
+                            placeOrderBtn.innerHTML = originalBtnText;
+                            placeOrderBtn.disabled = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi đặt hàng:", error);
+                        Toast.error("Đã xảy ra lỗi khi đặt hàng");
+                        placeOrderBtn.innerHTML = originalBtnText;
+                        placeOrderBtn.disabled = false;
+                    });
+            }
+        };
+
+        app.init();
+    });
+</script>

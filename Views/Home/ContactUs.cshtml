@@ -1,0 +1,169 @@
+@{
+    ViewData["Title"] = "Liên hệ";
+    ViewBag.Title = "Liên hệ";
+}
+
+
+<!-- BREADCRUMB AREA START -->
+<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image"
+    data-bg="/img/bg/9.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                    <div class="section-title-area ltn__section-title-2">
+                        <h1 class="section-title white-color">Liên hệ</h1>
+                    </div>
+                    <div class="ltn__breadcrumb-list">
+                        <ul>
+                            <li><a href="/">Trang chủ</a></li>
+                            <li>Liên hệ</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- BREADCRUMB AREA END -->
+
+<!-- CONTACT ADDRESS AREA START -->
+<div class="ltn__contact-address-area mb-90">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow">
+                    <div class="ltn__contact-address-icon">
+                        <img src="~/img/icons/10.png" alt="Icon Image">
+                    </div>
+                    <h3>Địa chỉ Email</h3>
+                    <p>hotro@nongsanviet.com<br>
+                        lienhe@nongsanviet.com</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow">
+                    <div class="ltn__contact-address-icon">
+                        <img src="~/img/icons/11.png" alt="Icon Image">
+                    </div>
+                    <h3>Số điện thoại</h3>
+                    <p>0795155630 <br> 0332805095</p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="ltn__contact-address-item ltn__contact-address-item-3 box-shadow">
+                    <div class="ltn__contact-address-icon">
+                        <img src="~/img/icons/12.png" alt="Icon Image">
+                    </div>
+                    <h3>Địa chỉ văn phòng</h3>
+                    <p>Số 1, Phố Xốm <br>
+                        Hà Đông, Hà Nội</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CONTACT ADDRESS AREA END -->
+
+<!-- CONTACT MESSAGE AREA START -->
+<div class="ltn__contact-message-area mb-3">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__form-box contact-form-box box-shadow white-bg">
+                    <h4 class="title-2">Gửi thông tin liên hệ</h4>
+                    <form id="contact-form" action="#" method="post">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="input-item input-item-name ltn__custom-icon">
+                                    <input type="text" name="FullName" placeholder="Nhập họ tên của bạn" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-item input-item-email ltn__custom-icon">
+                                    <input type="email" name="Email" placeholder="Nhập địa chỉ email" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-item">
+                                    <select class="nice-select" name="ServiceType" required>
+                                        <option>Chọn loại dịch vụ</option>
+                                        <option>Mua sỉ nông sản</option>
+                                        <option>Bán nông sản</option>
+                                        <option>Hợp tác kinh doanh</option>
+                                        <option>Khiếu nại dịch vụ</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="input-item input-item-phone ltn__custom-icon">
+                                    <input class="form-control" type="tel" name="PhoneNumber"
+                                        placeholder="Nhập số điện thoại" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-item input-item-textarea ltn__custom-icon">
+                            <textarea name="Message" placeholder="Nhập nội dung tin nhắn" required></textarea>
+                        </div>
+                        <p><label class="input-info-save mb-0"><input type="checkbox" name="agree"> Lưu thông tin của
+                                tôi cho lần liên hệ tiếp theo.</label></p>
+                        <div class="btn-wrapper mt-0">
+                            <button class="btn theme-btn-1 btn-effect-1 text-uppercase" type="submit">Gửi thông
+                                tin</button>
+                        </div>
+                        <p class="form-messege mb-0 mt-20"></p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- CONTACT MESSAGE AREA END -->
+
+<script type="module">
+    import Toast from '/Custom/toast.js';
+    import url from "/Custom/endpoints.js";
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('contact-form');
+
+        form.addEventListener('submit', function (e) {
+            // Thêm URL endpoint cho form
+            form.action = url.base + '/ContactRequest';
+            
+            // Kiểm tra dữ liệu trước khi gửi
+            const name = formData.get('Name');
+            const email = formData.get('Email');
+            const phone = formData.get('PhoneNumber');
+            const message = formData.get('Message');
+            const serviceType = formData.get('ServiceType');
+            
+            // Kiểm tra dữ liệu cơ bản
+            if (!name || !email || !phone || !message || serviceType === 'Chọn loại dịch vụ') {
+                Toast.error('Vui lòng điền đầy đủ thông tin !');
+                return;
+            }
+            e.preventDefault();
+
+            const formData = new FormData(form);
+
+            fetch(form.action, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Toast.success('Thông tin liên hệ của bạn đã được gửi thành công!');
+                        form.reset();
+                    } else {
+                        Toast.error('Có lỗi xảy ra khi gửi thông tin. Vui lòng thử lại sau!');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Toast.error('Đã xảy ra lỗi khi kết nối với máy chủ. Vui lòng thử lại sau!');
+                });
+        });
+    });
+</script>

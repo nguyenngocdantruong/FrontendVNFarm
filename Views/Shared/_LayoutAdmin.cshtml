@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title | VNFarm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <link rel="shortcut icon" href="~/icon.ico" />
+    <link href="~/assets/css/vendor.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/assets/css/app.min.css" rel="stylesheet" type="text/css" />
+    <script src="~/assets/js/config.js"></script>
+  </head>
+
+  <body>
+    <!-- Preloader -->
+    <div id="preloader">
+      <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+      </div>
+    </div>
+
+    <style>
+      #preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #ffffff;
+        z-index: 9999;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+      .spinner {
+        width: 70px;
+        text-align: center;
+      }
+      
+      .spinner > div {
+        width: 18px;
+        height: 18px;
+        background-color: #4CAF50;
+        border-radius: 100%;
+        display: inline-block;
+        animation: sk-bouncedelay 1.4s infinite ease-in-out both;
+      }
+      
+      .spinner .bounce1 {
+        animation-delay: -0.32s;
+      }
+      
+      .spinner .bounce2 {
+        animation-delay: -0.16s;
+      }
+      
+      @@keyframes sk-bouncedelay {
+        0%, 80%, 100% { 
+          transform: scale(0);
+        } 40% { 
+          transform: scale(1.0);
+        }
+      }
+    </style>
+
+    <script>
+      //Check role 
+      let role = localStorage.getItem('role');
+      if (role !== 'Admin') {
+        window.location.href = '/';
+      }
+      // Preloader
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          const preloader = document.getElementById('preloader');
+          preloader.style.opacity = '0';
+          preloader.style.transition = 'opacity 0.5s ease';
+          
+          setTimeout(function() {
+            preloader.style.display = 'none';
+          }, 500);
+        }, 1000);
+      });
+    </script>
+
+    <div class="wrapper">
+      <header class="topbar">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <div class="d-flex align-items-center">
+              <div class="topbar-item">
+                <button type="button" class="button-toggle-menu me-2">
+                  <iconify-icon icon="solar:hamburger-menu-broken" class="fs-24 align-middle"></iconify-icon>
+                </button>
+              </div>
+              <div class="topbar-item">
+                <h4 class="fw-bold topbar-button pe-none text-uppercase mb-0">Admin Portal</h4>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-1">
+              <div class="dropdown topbar-item">
+                <a type="button" class="topbar-button" id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="d-flex align-items-center">
+                    <img class="rounded-circle" width="32" src="~/default.jpg" alt="Avatar" />
+                  </span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end user-menu-dropdown">
+                  <h6 class="dropdown-header">Xin chào, Admin!</h6>
+                  <a class="dropdown-item" asp-action="Profile" asp-controller="Account">
+                    <i class="bx bx-lock text-muted fs-18 align-middle me-1"></i><span class="align-middle">Sửa thông tin</span>
+                  </a>
+                  <div class="dropdown-divider my-1"></div>
+                  <a class="dropdown-item text-danger" asp-action="Logout" asp-controller="Account">
+                    <i class="bx bx-log-out fs-18 align-middle me-1"></i><span class="align-middle">Đăng xuất</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div>
+        <div class="offcanvas offcanvas-end border-0" tabindex="-1" id="theme-settings-offcanvas">
+          <div class="d-flex align-items-center bg-primary p-3 offcanvas-header">
+            <h5 class="text-white m-0">Theme Settings</h5>
+            <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body p-0">
+            <div data-simplebar class="h-100">
+              <div class="p-3 settings-bar">
+                <div>
+                  <h5 class="mb-3 font-16 fw-semibold">Color Scheme</h5>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-bs-theme" id="layout-color-light" value="light" />
+                    <label class="form-check-label" for="layout-color-light">Light</label>
+                  </div>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-bs-theme" id="layout-color-dark" value="dark" />
+                    <label class="form-check-label" for="layout-color-dark">Dark</label>
+                  </div>
+                </div>
+                <div>
+                  <h5 class="my-3 font-16 fw-semibold">Topbar Color</h5>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-topbar-color" id="topbar-color-light" value="light" />
+                    <label class="form-check-label" for="topbar-color-light">Light</label>
+                  </div>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-topbar-color" id="topbar-color-dark" value="dark" />
+                    <label class="form-check-label" for="topbar-color-dark">Dark</label>
+                  </div>
+                </div>
+                <div>
+                  <h5 class="my-3 font-16 fw-semibold">Menu Color</h5>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-menu-color" id="leftbar-color-light" value="light" />
+                    <label class="form-check-label" for="leftbar-color-light">Light</label>
+                  </div>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-menu-color" id="leftbar-color-dark" value="dark" />
+                    <label class="form-check-label" for="leftbar-color-dark">Dark</label>
+                  </div>
+                </div>
+                <div>
+                  <h5 class="my-3 font-16 fw-semibold">Sidebar Size</h5>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-menu-size" id="leftbar-size-default" value="default" />
+                    <label class="form-check-label" for="leftbar-size-default">Default</label>
+                  </div>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-menu-size" id="leftbar-size-small" value="condensed" />
+                    <label class="form-check-label" for="leftbar-size-small">Condensed</label>
+                  </div>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-menu-size" id="leftbar-hidden" value="hidden" />
+                    <label class="form-check-label" for="leftbar-hidden">Hidden</label>
+                  </div>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-menu-size" id="leftbar-size-small-hover-active" value="sm-hover-active" />
+                    <label class="form-check-label" for="leftbar-size-small-hover-active">Small Hover Active</label>
+                  </div>
+                  <div class="form-check mb-2">
+                    <input class="form-check-input" type="radio" name="data-menu-size" id="leftbar-size-small-hover" value="sm-hover" />
+                    <label class="form-check-label" for="leftbar-size-small-hover">Small Hover</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="offcanvas-footer border-top p-3 text-center">
+            <div class="row">
+              <div class="col">
+                <button type="button" class="btn btn-danger w-100" id="reset-layout">Reset</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="main-nav">
+        <div class="logo-box">
+          <a asp-action="Index" class="logo-dark">
+            <img src="~/icon.png" class="logo-sm" alt="logo sm" />
+            <img src="~/logo.png" class="logo-lg" alt="logo dark" />
+          </a>
+          <a asp-action="Index" class="logo-light">
+            <img src="~/icon.png" class="logo-sm" alt="logo sm" />
+            <img src="~/logo.png" class="logo-lg" alt="logo light" />
+          </a>
+        </div>
+        <button type="button" class="button-sm-hover" aria-label="Show Full Sidebar">
+          <iconify-icon icon="solar:double-alt-arrow-right-bold-duotone" class="button-sm-hover-icon"></iconify-icon>
+        </button>
+        <div class="scrollbar" data-simplebar>
+          <ul class="navbar-nav" id="navbar-nav">
+            <li class="menu-title">Quản Lý Chung</li>
+            <li class="nav-item">
+              <a class="nav-link" asp-action="Dashboard" asp-controller="Admin">
+                <span class="nav-icon">
+                  <iconify-icon icon="solar:widget-5-bold-duotone"></iconify-icon>
+                </span>
+                <span class="nav-text">Tổng Quan</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" asp-action="Shop" asp-controller="Admin">
+                <span class="nav-icon">
+                  <iconify-icon
+                    icon="solar:shop-bold-duotone"
+                  ></iconify-icon>
+                </span>
+                <span class="nav-text">Quản lý shop</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" asp-action="Product" asp-controller="Admin">
+                <span class="nav-icon">
+                  <iconify-icon
+                    icon="solar:box-bold-duotone"
+                  ></iconify-icon>
+                </span>
+                <span class="nav-text">Quản lý sản phẩm</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" asp-action="Order" asp-controller="Admin">
+                <span class="nav-icon">
+                  <iconify-icon
+                    icon="solar:bag-smile-bold-duotone"
+                  ></iconify-icon>
+                </span>
+                <span class="nav-text">Quản lý đơn hàng</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a
+                class="nav-link menu-arrow"
+                href="#sidebarUser"
+                data-bs-toggle="collapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="sidebarUser"
+              >
+                <span class="nav-icon">
+                  <iconify-icon
+                    icon="solar:users-group-two-rounded-bold-duotone"
+                  ></iconify-icon>
+                </span>
+                <span class="nav-text">Quản Lý Người Dùng</span>
+              </a>
+              <div class="collapse" id="sidebarUser">
+                <ul class="nav sub-navbar-nav">
+                  <li class="sub-nav-item">
+                    <a
+                      class="sub-nav-link"
+                      asp-action="Users"
+                      asp-controller="Admin"
+                      >Danh Sách Người Dùng</a>
+                  </li>
+                  <li class="sub-nav-item">
+                    <a
+                      class="sub-nav-link"
+                      asp-action="UserActivate"
+                      asp-controller="Admin"
+                      >Kích Hoạt Tài Khoản</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            @* <li class="nav-item">
+              <a class="nav-link" asp-action="Dispute" asp-controller="Admin">
+                <span class="nav-icon">
+                  <iconify-icon
+                    icon="solar:chat-square-like-bold-duotone"
+                  ></iconify-icon>
+                </span>
+                <span class="nav-text">Giải Quyết Tranh Chấp</span>
+              </a>
+            </li> *@
+
+            <li class="nav-item">
+              <a class="nav-link menu-arrow" href="#sidebarDiscount" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarDiscount">
+                <span class="nav-icon">
+                  <iconify-icon icon="solar:ticket-sale-bold-duotone"></iconify-icon>
+                </span>
+                <span class="nav-text">Quản Lý Khuyến Mãi</span>
+              </a>
+              <div class="collapse" id="sidebarDiscount">
+                <ul class="nav sub-navbar-nav">
+                  <li class="sub-nav-item">
+                    <a class="sub-nav-link" asp-action="Discount" asp-controller="Admin">Danh Sách Khuyến Mãi</a>
+                  </li>
+                  <li class="sub-nav-item">
+                    <a class="sub-nav-link" asp-action="DiscountAdd" asp-controller="Admin">Thêm Khuyến Mãi</a>
+                  </li>
+                </ul>
+              </div>
+            </li>
+
+            <li class="nav-item">
+              <!-- <a
+                class="nav-link menu-arrow"
+                href="#sidebarCategory"
+                data-bs-toggle="collapse"
+                role="button"
+                aria-expanded="false"
+                aria-controls="sidebarCategory"
+              >
+                <span class="nav-icon">
+                  <iconify-icon
+                    icon="solar:folder-with-files-bold-duotone"
+                  ></iconify-icon>
+                </span>
+                <span class="nav-text">Quản Lý Danh Mục</span>
+              </a> -->
+              <div class="collapse" id="sidebarCategory">
+                <ul class="nav sub-navbar-nav">
+                  <li class="sub-nav-item">
+                    <a
+                      class="sub-nav-link"
+                      href="00_layout.html?file=00_category_list.html"
+                      >Danh Sách Danh Mục</a
+                    >
+                  </li>
+                  <li class="sub-nav-item">
+                    <a
+                      class="sub-nav-link"
+                      href="00_layout.html?file=00_category_create.html"
+                      >Thêm Danh Mục</a
+                    >
+                  </li>
+                  <li class="sub-nav-item">
+                    <a
+                      class="sub-nav-link"
+                      href="00_layout.html?file=00_category_edit.html"
+                      >Sửa Danh Mục</a
+                    >
+                  </li>
+                </ul>
+              </div>
+            </li>
+            @* <li class="nav-item">
+              <a class="nav-link" asp-action="Settings" asp-controller="Admin">
+                <span class="nav-icon">
+                  <iconify-icon
+                    icon="solar:settings-bold-duotone"
+                  ></iconify-icon>
+                </span>
+                <span class="nav-text">Cài Đặt Hệ Thống</span>
+              </a>
+            </li> *@
+          </ul>
+        </div>
+      </div>
+      @RenderBody()
+    </div>
+    
+    <script src="~/assets/js/vendor.js"></script>
+    <script src="~/assets/js/app.js"></script>
+  </body>
+</html>

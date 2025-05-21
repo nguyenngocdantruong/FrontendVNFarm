@@ -1,0 +1,1158 @@
+@{
+    ViewData["Title"] = "Tài khoản";
+}
+
+<!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h1 class="section-title white-color">Tài Khoản Của Tôi</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li>Tài khoản của tôi</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- WISHLIST AREA START -->
+    <div class="liton__wishlist-area pb-70">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <!-- PRODUCT TAB AREA START -->
+                    <div class="ltn__product-tab-area">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-4">
+                                    <div class="ltn__tab-menu-list mb-50">
+                                        <div class="nav">
+                                            <a class="active show" data-bs-toggle="tab" href="#liton_tab_1_1">Tổng quan <i class="fas fa-home"></i></a>
+                                            <a data-bs-toggle="tab" href="#liton_tab_1_3">Thông báo <i class="fas fa-bell"></i></a>
+                                            <a data-bs-toggle="tab" href="#liton_tab_1_5">Thông tin tài khoản <i class="fas fa-user"></i></a>
+                                            <a data-bs-toggle="tab" href="#liton_tab_1_6">Đánh giá của tôi <i class="fas fa-star"></i></a>
+                                            <a href="login.html">Đăng xuất <i class="fas fa-sign-out-alt"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-lg-8">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active show" id="liton_tab_1_1">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <p>Xin chào <strong class="username">Tên người dùng</strong> (không phải <strong class="username">Tên người dùng</strong>? <small><a asp-action="Logout" asp-controller="Account">Đăng xuất</a></small> )</p>
+                                                <p>Từ trang tổng quan tài khoản, bạn có thể xem <span>đơn hàng gần đây</span>, quản lý <span>địa chỉ giao hàng và thanh toán</span>, và <span>chỉnh sửa mật khẩu cùng thông tin tài khoản</span>.</p>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="liton_tab_1_3">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <h4>Thông báo của bạn</h4>
+                                                <div class="notification-list" id="notificationList">
+                                                    <div class="text-center py-3">
+                                                        <div class="spinner-border text-primary" role="status">
+                                                            <span class="visually-hidden">Đang tải...</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="liton_tab_1_5">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <p>Cập nhật thông tin tài khoản của bạn.</p>
+                                                <div class="ltn__form-box">
+                                                    <form action="#" enctype="multipart/form-data" id="userProfileForm">
+                                                        <div class="row mb-50">
+                                                            <div class="col-md-12 mb-3">
+                                                                <label>Ảnh đại diện:</label>
+                                                                <div class="mb-3">
+                                                                    <img id="avatarPreview" src="" alt="Ảnh đại diện" style="max-width: 100px; max-height: 100px; display: none; margin-bottom: 10px;">
+                                                                    <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*">
+                                                                    <input type="hidden" name="ImageUrl" id="ImageUrl">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Họ và tên:</label>
+                                                                <input type="text" name="FullName" id="FullName" required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Địa chỉ:</label>
+                                                                <input type="text" name="Address" id="Address">
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Email:</label>
+                                                                <input type="email" name="Email" id="Email" readonly required>
+                                                            </div>
+                                                            <div class="col-md-6">
+                                                                <label>Số điện thoại:</label>
+                                                                <input type="text" name="PhoneNumber" id="PhoneNumber" required>
+                                                            </div>
+                                                        </div>
+                                                        <fieldset>
+                                                            <strong>Thay đổi mật khẩu</strong>
+                                                            <div class="row">
+                                                                <div class="col-md-12">
+                                                                    <label>Mật khẩu mới (để trống nếu không thay đổi):</label>
+                                                                    <input type="password" name="PasswordNew" id="PasswordNew">
+                                                                    <label>Xác nhận mật khẩu mới:</label>
+                                                                    <input type="password" name="ConfirmPassword" id="ConfirmPassword">
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <fieldset>
+                                                            <strong>Cài đặt thông báo</strong>
+                                                            <div class="row">
+                                                                <div class="col-md-6">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="EmailNotificationsEnabled" id="EmailNotificationsEnabled">
+                                                                        <label class="form-check-label" for="EmailNotificationsEnabled">
+                                                                            Thông báo qua email
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="OrderStatusNotificationsEnabled" id="OrderStatusNotificationsEnabled">
+                                                                        <label class="form-check-label" for="OrderStatusNotificationsEnabled">
+                                                                            Thông báo trạng thái đơn hàng
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="DiscountNotificationsEnabled" id="DiscountNotificationsEnabled">
+                                                                        <label class="form-check-label" for="DiscountNotificationsEnabled">
+                                                                            Thông báo khuyến mãi
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-6">
+                                                                    <div class="form-check">
+                                                                        <input class="form-check-input" type="checkbox" name="AdminNotificationsEnabled" id="AdminNotificationsEnabled">
+                                                                        <label class="form-check-label" for="AdminNotificationsEnabled">
+                                                                            Thông báo từ quản trị viên
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </fieldset>
+                                                        <div class="btn-wrapper">
+                                                            <button type="submit" class="btn theme-btn-1 btn-effect-1 text-uppercase">Lưu thay đổi</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="liton_tab_1_6">
+                                            <div class="ltn__myaccount-tab-content-inner">
+                                                <h4>Đánh giá của tôi</h4>
+                                                
+                                                <!-- Form lọc đánh giá -->
+                                                <div class="filter-reviews mb-4 p-3 bg-light rounded">
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Điểm đánh giá</label>
+                                                                <div class="d-flex">
+                                                                    <select class="form-select me-2" id="minRating">
+                                                                        <option value="" disabled>Từ</option>
+                                                                        <option value="1" selected>1 sao</option>
+                                                                        <option value="2">2 sao</option>
+                                                                        <option value="3">3 sao</option>
+                                                                        <option value="4">4 sao</option>
+                                                                        <option value="5">5 sao</option>
+                                                                    </select>
+                                                                    <select class="form-select" id="maxRating">
+                                                                        <option value="" disabled>Đến</option>
+                                                                        <option value="1">1 sao</option>
+                                                                        <option value="2">2 sao</option>
+                                                                        <option value="3">3 sao</option>
+                                                                        <option value="4">4 sao</option>
+                                                                        <option value="5" selected>5 sao</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Thời gian</label>
+                                                                <div class="d-flex">
+                                                                    <input type="date" class="form-control me-2" id="startDate">
+                                                                    <input type="date" class="form-control" id="endDate">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Sắp xếp theo</label>
+                                                                <select class="form-select" id="sortBy">
+                                                                    <option value="2" selected>Mới nhất</option>
+                                                                    <option value="3">Cũ nhất</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Bộ lọc khác</label>
+                                                                <div class="d-flex align-items-center">
+                                                                    <div class="form-check me-3">
+                                                                        <input class="form-check-input" type="checkbox" id="hasImage">
+                                                                        <label class="form-check-label" for="hasImage">Có hình ảnh</label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <button type="button" id="applyFilter" class="btn theme-btn-1 btn-sm">
+                                                                <i class="fas fa-filter me-1"></i> Lọc đánh giá
+                                                            </button>
+                                                            <button type="button" id="resetFilter" class="btn btn-outline-secondary btn-sm">
+                                                                <i class="fas fa-redo me-1"></i> Đặt lại
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <p class="mb-3 info-count">
+
+                                                </p>
+                                                
+                                                <!-- Danh sách đánh giá -->
+                                                <div id="reviewsList" class="review-list">
+                                                    <div class="text-center py-3">
+                                                        <div class="spinner-border text-primary" role="status">
+                                                            <span class="visually-hidden">Đang tải...</span>
+                                                        </div>
+                                                        <p class="mt-2">Đang tải đánh giá...</p>
+                                                    </div>
+                                                </div>
+                                                
+                                                <!-- Phân trang -->
+                                                <div class="d-flex justify-content-center mt-4">
+                                                    <nav aria-label="Phân trang đánh giá">
+                                                        <ul class="pagination" id="reviewPagination"></ul>
+                                                    </nav>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- PRODUCT TAB AREA END -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- WISHLIST AREA START -->
+
+    <!-- FEATURE AREA START ( Feature - 3) -->
+    <div class="ltn__feature-area before-bg-bottom-2 mb--30--- plr--5">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__feature-item-box-wrap ltn__border-between-column white-bg">
+                        <div class="row">
+                            <div class="col-xl-3 col-md-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-8">
+                                    <div class="ltn__feature-icon">
+                                        <img src="~/img/icons/icon-img/11.png" alt="#">
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h4>Sản phẩm chọn lọc</h4>
+                                        <p>Cung cấp nông sản tươi ngon
+                                            cho mọi đơn hàng trên 100.000đ</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-8">
+                                    <div class="ltn__feature-icon">
+                                        <img src="~/img/icons/icon-img/12.png" alt="#">
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h4>Trồng tự nhiên</h4>
+                                        <p>Chúng tôi đảm bảo chất lượng sản phẩm
+                                            là mục tiêu hàng đầu</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-8">
+                                    <div class="ltn__feature-icon">
+                                        <img src="~/img/icons/icon-img/13.png" alt="#">
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h4>Thực phẩm hữu cơ</h4>
+                                        <p>Đổi trả sản phẩm trong vòng 3 ngày
+                                            đối với mọi sản phẩm</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-3 col-md-6 col-12">
+                                <div class="ltn__feature-item ltn__feature-item-8">
+                                    <div class="ltn__feature-icon">
+                                        <img src="~/img/icons/icon-img/14.png" alt="#">
+                                    </div>
+                                    <div class="ltn__feature-info">
+                                        <h4>Giao hàng tận nhà</h4>
+                                        <p>Chúng tôi đảm bảo chất lượng sản phẩm
+                                            mà bạn có thể tin tưởng</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- FEATURE AREA END -->
+    <script type="module">
+        //Kiểm tra nếu chưa đăng nhập thì chuyển về trang login
+        import {BaseService} from "/Custom/BaseService.js";
+        import  url from "/Custom/endpoints.js";
+        import Toast from "/Custom/Toast.js";
+        if (!localStorage.getItem('accessToken')) {
+            window.location.href = '/Home/Login';
+        }
+        const usernames = document.querySelectorAll('.username');
+        usernames.forEach(username => {
+            username.textContent = localStorage.getItem('email') || 'Khách hàng';
+        });
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            const userUrl = url.base  + "/Users";
+            const baseService = new BaseService(userUrl, token);
+            baseService.fetchApi("/user-info?userId=" + localStorage.getItem('id'),'POST', token).then(response => {
+                console.log("Response: ",response);
+                if (response && response.success && response.data) {
+                    const userData = response.data;
+                    
+                    // Cập nhật tên người dùng
+                    usernames.forEach(username => {
+                        username.textContent = userData.fullName || userData.email;
+                    });
+                    
+                    // Điền thông tin vào form
+                    document.getElementById('FullName').value = userData.fullName || '';
+                    document.getElementById('Email').value = userData.email || '';
+                    document.getElementById('PhoneNumber').value = userData.phoneNumber || '';
+                    document.getElementById('Address').value = userData.address || '';
+                    document.getElementById('ImageUrl').value = userData.imageUrl || '';
+                    
+                    // Thiết lập các checkbox thông báo
+                    document.getElementById('EmailNotificationsEnabled').checked = userData.emailNotificationsEnabled || false;
+                    document.getElementById('OrderStatusNotificationsEnabled').checked = userData.orderStatusNotificationsEnabled || false;
+                    document.getElementById('DiscountNotificationsEnabled').checked = userData.discountNotificationsEnabled || false;
+                    document.getElementById('AdminNotificationsEnabled').checked = userData.adminNotificationsEnabled || false;
+                    
+                    // Hiển thị ảnh đại diện nếu có
+                    if (userData.imageUrl) {
+                        const avatarPreview = document.getElementById('avatarPreview');
+                        avatarPreview.src = `${url.baseUrl}/img/Users/${userData.imageUrl}`;
+                        avatarPreview.style.display = 'block';
+                    }
+                }
+            }).catch(error => {
+                console.error("Lỗi khi lấy thông tin người dùng :", error);
+                Toast.error("Lỗi khi lấy thông tin người dùng");
+            });
+            
+            // Lấy danh sách thông báo
+            const notificationUrl = url.base + "/Notification";
+            const notificationService = new BaseService(notificationUrl, token);
+            notificationService.fetchApi(`/user/${localStorage.getItem('id')}`, 'GET')
+                .then(response => {
+                    console.log("Notification: ",response);
+                    if (response) {
+                        const notificationList = document.getElementById('notificationList');
+                        notificationList.innerHTML = '';
+                        
+                        if (response.length === 0) {
+                            notificationList.innerHTML = '<div class="text-center py-3">Bạn chưa có thông báo nào</div>';
+                            return;
+                        }
+                        
+                        // Tạo danh sách thông báo
+                        response.forEach(notification => {
+                            const notificationItem = document.createElement('div');
+                            notificationItem.className = 'notification-item p-3 mb-2 bg-light';
+                            notificationItem.style.borderRadius = '8px';
+                            notificationItem.style.border = '1px solid #eee';
+                            
+                            // Xác định icon dựa trên loại thông báo
+                            let icon = '';
+                            switch(notification.type) {
+                                case 0: // Đơn hàng
+                                    icon = '<i class="fas fa-shopping-cart text-primary me-2"></i>';
+                                    break;
+                                case 1: // Khuyến mãi
+                                    icon = '<i class="fas fa-tag text-success me-2"></i>';
+                                    break;
+                                case 2: // Hệ thống
+                                    icon = '<i class="fas fa-cog text-warning me-2"></i>';
+                                    break;
+                                default:
+                                    icon = '<i class="fas fa-bell text-info me-2"></i>';
+                            }
+                            
+                            // Định dạng thời gian
+                            const createdDate = new Date(notification.createdAt);
+                            const formattedDate = `${createdDate.getDate()}/${createdDate.getMonth() + 1}/${createdDate.getFullYear()} ${createdDate.getHours()}:${createdDate.getMinutes()}`;
+                            
+                            // Tạo nội dung thông báo
+                            let notificationContent = `
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>${icon} ${notification.content}</div>
+                                    <small class="text-muted">${formattedDate}</small>
+                                </div>
+                            `;
+                            
+                            // Thêm link nếu có
+                            if (notification.linkUrl) {
+                                notificationContent += `
+                                    <div class="mt-2">
+                                        <a href="${notification.linkUrl}" class="btn btn-sm btn-outline-primary">Xem chi tiết</a>
+                                    </div>
+                                `;
+                            }
+                            
+                            notificationItem.innerHTML = notificationContent;
+                            
+                            // Thêm sự kiện đánh dấu đã đọc khi click
+                            if (!notification.isRead) {
+                                notificationItem.addEventListener('click', function() {
+                                    markAsRead(notification.id);
+                                });
+                            }
+                            
+                            notificationList.appendChild(notificationItem);
+                        });
+                    } else {
+                        document.getElementById('notificationList').innerHTML = '<div class="text-center py-3">Không thể tải thông báo</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi lấy thông báo:", error);
+                    document.getElementById('notificationList').innerHTML = '<div class="text-center py-3">Lỗi khi tải thông báo</div>';
+                });
+        }
+        
+        // Tải thống kê người dùng
+        if (token) {
+            const statsUrl = url.base + "/Users";
+            const statsService = new BaseService(statsUrl, token);
+            statsService.fetchApi("/stats?id=" + localStorage.getItem('id'), 'GET')
+                .then(response => {
+                    console.log("Stats response:", response);
+                    if (response && response.success && response.data) {
+                        const statsData = response.data;
+                        const overviewContent = document.querySelector('#liton_tab_1_1 .ltn__myaccount-tab-content-inner');
+                        
+                        // Tạo phần thống kê
+                        const statsHtml = `
+                            <div class="user-stats mt-4 p-3 bg-light rounded">
+                                <h5 class="mb-3">Thống kê của bạn</h5>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-shopping-bag fs-3 text-primary me-3"></i>
+                                            <div>
+                                                <h6 class="mb-0">Số đơn hàng</h6>
+                                                <p class="fs-4 fw-bold mb-0">${statsData.orderCount || 0}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fas fa-money-bill-wave fs-3 text-success me-3"></i>
+                                            <div>
+                                                <h6 class="mb-0">Tổng chi tiêu</h6>
+                                                <p class="fs-4 fw-bold mb-0">${(statsData.totalRevenue || 0).toLocaleString('vi-VN')}đ</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // Thêm thống kê vào phần tổng quan
+                        overviewContent.insertAdjacentHTML('beforeend', statsHtml);
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi tải thống kê người dùng:", error);
+                    Toast.error("Không thể tải thống kê người dùng");
+                });
+        }
+        
+        // Hàm đánh dấu thông báo đã đọc
+        function markAsRead(notificationId) {
+            const notificationUrl = url.base + "/Notifications";
+            const notificationService = new BaseService(notificationUrl, token);
+            notificationService.fetchApi(`/${notificationId}/mark-as-read`, 'PUT')
+                .then(response => {
+                    if (!response || !response.success) {
+                        console.error("Không thể đánh dấu đã đọc:", response?.message);
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi đánh dấu đã đọc:", error);
+                });
+        }
+        
+        // Xử lý xem trước ảnh khi chọn file
+        document.getElementById('ImageFile').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const avatarPreview = document.getElementById('avatarPreview');
+                    avatarPreview.src = e.target.result;
+                    avatarPreview.style.display = 'block';
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        // Xử lý sự kiện submit form
+        document.getElementById('userProfileForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Kiểm tra các trường bắt buộc
+            const fullName = document.getElementById('FullName').value.trim();
+            const email = document.getElementById('Email').value.trim();
+            const phoneNumber = document.getElementById('PhoneNumber').value.trim();
+            const passwordNew = document.getElementById('PasswordNew').value;
+            const confirmPassword = document.getElementById('ConfirmPassword').value;
+            
+            // Kiểm tra các trường bắt buộc
+            if (!fullName) {
+                Toast.error("Vui lòng nhập họ và tên !");
+                return;
+            }
+            
+            if (!email) {
+                Toast.error("Vui lòng nhập email !");
+                return;
+            }
+            
+            if (!phoneNumber) {
+                Toast.error("Vui lòng nhập số điện thoại !");
+                return;
+            }
+            
+            // Kiểm tra mật khẩu mới và xác nhận mật khẩu
+            if (passwordNew && passwordNew !== confirmPassword) {
+                Toast.error("Mật khẩu mới và xác nhận mật khẩu không khớp !");
+                return;
+            }
+            
+            // Tạo FormData để gửi dữ liệu bao gồm file
+            const formData = new FormData();
+            formData.append('Id', localStorage.getItem('id'));
+            formData.append('FullName', fullName);
+            formData.append('Email', email);
+            formData.append('PhoneNumber', phoneNumber);
+            formData.append('Address', document.getElementById('Address').value);
+            formData.append('ImageUrl', document.getElementById('ImageUrl').value);
+            
+            // Thêm mật khẩu mới nếu có
+            if (passwordNew) {
+                formData.append('PasswordNew', passwordNew);
+            }
+            
+            // Thêm các cài đặt thông báo
+            formData.append('EmailNotificationsEnabled', document.getElementById('EmailNotificationsEnabled').checked);
+            formData.append('OrderStatusNotificationsEnabled', document.getElementById('OrderStatusNotificationsEnabled').checked);
+            formData.append('DiscountNotificationsEnabled', document.getElementById('DiscountNotificationsEnabled').checked);
+            formData.append('AdminNotificationsEnabled', document.getElementById('AdminNotificationsEnabled').checked);
+            
+            // Thêm file ảnh nếu có
+            const imageFile = document.getElementById('ImageFile').files[0];
+            if (imageFile) {
+                formData.append('ImageFile', imageFile);
+            }
+            
+            // Gửi dữ liệu lên server
+            const userUrl = url.base + "/Users";
+            const baseService = new BaseService(userUrl, token);
+            
+            baseService.fetchApi(`/${localStorage.getItem('id')}`, 'PUT', formData, true)
+                .then(response => {
+                    if (response && response.success) {
+                        Toast.success("Cập nhật thông tin thành công !");
+                        // Cập nhật lại thông tin hiển thị
+                        usernames.forEach(username => {
+                            username.textContent = fullName || email;
+                        });
+                    } else {
+                        Toast.error(response.message || "Cập nhật thông tin thất bại");
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi cập nhật thông tin:", error);
+                    Toast.error("Lỗi khi cập nhật thông tin ! " + error + "");
+                });
+        });
+        
+        // Khởi tạo phần quản lý đánh giá
+        const reviewManager = {
+            currentPage: 1,
+            pageSize: 5,
+            totalPages: 0,
+            filter: {
+                userId: parseInt(localStorage.getItem('id')),
+                page: 1,
+                pageSize: 5,
+                sortBy: 2 // Mới nhất
+            },
+            
+            init: function() {
+                // Thiết lập ngày mặc định là tháng hiện tại
+                const today = new Date();
+                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                
+                document.getElementById('startDate').valueAsDate = firstDay;
+                document.getElementById('endDate').valueAsDate = lastDay;
+                
+                // Đăng ký sự kiện
+                document.getElementById('applyFilter').addEventListener('click', this.applyFilter.bind(this));
+                document.getElementById('resetFilter').addEventListener('click', this.resetFilter.bind(this));
+                
+                // Tải dữ liệu ban đầu
+                this.loadReviews();
+            },
+            
+            applyFilter: function() {
+                const minRating = document.getElementById('minRating').value;
+                const maxRating = document.getElementById('maxRating').value;
+                const startDate = document.getElementById('startDate').value;
+                const endDate = document.getElementById('endDate').value;
+                const sortBy = document.getElementById('sortBy').value;
+                const hasImage = document.getElementById('hasImage').checked;
+                
+                // Cập nhật bộ lọc
+                this.filter = {
+                    userId: localStorage.getItem('id'),
+                    page: 1,
+                    pageSize: this.pageSize,
+                    sortBy: parseInt(sortBy)
+                };
+                
+                // Thêm các điều kiện lọc nếu có
+                if (minRating) {
+                    this.filter.minRating = parseInt(minRating);
+                }
+                
+                if (maxRating) {
+                    this.filter.maxRating = parseInt(maxRating);
+                }
+                
+                if (startDate) {
+                    this.filter.startDate = new Date(startDate).toISOString();
+                }
+                
+                if (endDate) {
+                    // Đặt thời gian là cuối ngày
+                    const endDateTime = new Date(endDate);
+                    endDateTime.setHours(23, 59, 59, 999);
+                    this.filter.endDate = endDateTime.toISOString();
+                }
+                
+                if (hasImage) {
+                    this.filter.hasImage = true;
+                }
+                
+                // Reset trang về 1 và tải lại dữ liệu
+                this.currentPage = 1;
+                this.filter.page = 1;
+                this.loadReviews();
+            },
+            
+            resetFilter: function() {
+                // Reset các giá trị form
+                document.getElementById('minRating').value = '';
+                document.getElementById('maxRating').value = '5';
+                
+                const today = new Date();
+                const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+                const lastDay = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                
+                document.getElementById('startDate').valueAsDate = firstDay;
+                document.getElementById('endDate').valueAsDate = lastDay;
+                
+                document.getElementById('sortBy').value = 2;
+                document.getElementById('hasImage').checked = false;
+                
+                // Reset bộ lọc
+                this.filter = {
+                    userId: localStorage.getItem('id'),
+                    page: 1,
+                    pageSize: this.pageSize,
+                    sortBy: 2
+                };
+                
+                // Tải lại dữ liệu
+                this.currentPage = 1;
+                this.loadReviews();
+            },
+            
+            loadReviews: function() {
+                const reviewUrl = url.base + "/Review";
+                const reviewService = new BaseService(reviewUrl, token);
+                
+                document.getElementById('reviewsList').innerHTML = `
+                    <div class="text-center py-3">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                        <p class="mt-2">Đang tải đánh giá...</p>
+                    </div>
+                `;
+                
+                reviewService.find(this.filter)
+                    .then(response => {
+                        if (response && response.success) {
+                            const reviewsData = response.data || [];
+                            const totalItems = response.totalCount || 0;
+                            this.totalPages = Math.ceil((response.totalCount || 0) / this.pageSize) || 0;
+                            
+                            this.renderReviews(reviewsData);
+                            this.renderPagination();
+                            
+                            if (totalItems > 0) {
+                                document.querySelector('.mb-3.info-count').innerHTML = `<p class="mb-3 info-count">Hiển thị ${reviewsData.length} trên tổng số ${totalItems} đánh giá</p>`;
+                            }
+                        } else {
+                            document.getElementById('reviewsList').innerHTML = `
+                                <div class="alert alert-warning">
+                                    <i class="fas fa-exclamation-triangle me-2"></i> 
+                                    Không thể tải đánh giá: ${response?.message || 'Đã xảy ra lỗi'}
+                                </div>
+                            `;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi tải đánh giá:', error);
+                        document.getElementById('reviewsList').innerHTML = `
+                            <div class="alert alert-danger">
+                                <i class="fas fa-exclamation-circle me-2"></i> 
+                                Đã xảy ra lỗi khi tải đánh giá
+                            </div>
+                        `;
+                    });
+            },
+            
+            renderReviews: function(reviews) {
+                const reviewsList = document.getElementById('reviewsList');
+                
+                if (!reviews || reviews.length === 0) {
+                    reviewsList.innerHTML = `
+                        <div class="text-center py-4">
+                            <i class="fas fa-comment-slash fa-3x text-muted mb-3"></i>
+                            <h5>Bạn chưa có đánh giá nào</h5>
+                            <p class="text-muted">Hãy mua sắm và đánh giá sản phẩm để nhận xét hiển thị ở đây nhé!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                let html = '';
+                reviews.forEach(review => {
+                    const createdDate = new Date(review.createdAt);
+                    const formattedDate = `${createdDate.getDate()}/${createdDate.getMonth() + 1}/${createdDate.getFullYear()} ${createdDate.getHours()}:${String(createdDate.getMinutes()).padStart(2, '0')}`;
+                    console.log("Review :", review);
+                    html += `
+                        <div class="review-item p-3 mb-3 border rounded">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center">
+                                    <div class="me-3">
+                                        <img src="${url.baseUrl}/img/Users/default.jpg" alt="${review.product.name}" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-1">${review.product.name}</h6>
+                                        <p class="mb-0 text-muted">Cửa hàng: ${review.shop ? review.shop.name : 'Không xác định'}</p>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <div class="rating mb-1">
+                                        ${Array(5).fill().map((_, i) => 
+                                            i < review.rating 
+                                                ? '<i class="fas fa-star text-warning"></i>' 
+                                                : '<i class="far fa-star"></i>'
+                                        ).join('')}
+                                    </div>
+                                    <small class="text-muted">${formattedDate}</small>
+                                </div>
+                            </div>
+                            <div class="review-content my-2">
+                                <p>${review.content}</p>
+                            </div>
+                            ${review.imageUrl ? `
+                            <div class="review-image mb-2">
+                                <img src="${url.baseUrl}/img/Reviews/${review.imageUrl}" alt="Hình ảnh đánh giá" class="rounded" style="max-width: 100%; max-height: 200px;">
+                            </div>
+                            ` : ''}
+                            ${review.shopResponse ? `
+                            <div class="shop-response mt-2 p-2 bg-light rounded">
+                                <p class="mb-1"><strong>Phản hồi từ cửa hàng:</strong></p>
+                                <p class="mb-0">${review.shopResponse}</p>
+                            </div>
+                            ` : ''}
+                            <div class="action-buttons mt-2">
+                                <button class="btn btn-sm btn-outline-danger delete-review" data-review-id="${review.id}">
+                                    <i class="fas fa-trash-alt me-1"></i> Xóa
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                reviewsList.innerHTML = html;
+                
+                // Thêm sự kiện xóa đánh giá
+                document.querySelectorAll('.delete-review').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const reviewId = this.dataset.reviewId;
+                        if (confirm('Bạn có chắc muốn xóa đánh giá này không? (⌣̩̩́_⌣̩̩̀)')) {
+                            reviewManager.deleteReview(reviewId);
+                        }
+                    });
+                });
+            },
+            
+            renderPagination: function() {
+                const pagination = document.getElementById('reviewPagination');
+                
+                if (this.totalPages <= 1) {
+                    pagination.innerHTML = '';
+                    return;
+                }
+                
+                let paginationHtml = '';
+                
+                // Nút trang trước
+                paginationHtml += `
+                    <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+                        <a class="page-link" href="#" data-page="${this.currentPage - 1}" aria-label="Trang trước">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                `;
+                
+                // Các nút số trang
+                for (let i = 1; i <= this.totalPages; i++) {
+                    if (
+                        i === 1 || 
+                        i === this.totalPages || 
+                        (i >= this.currentPage - 1 && i <= this.currentPage + 1)
+                    ) {
+                        paginationHtml += `
+                            <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+                                <a class="page-link" href="#" data-page="${i}">${i}</a>
+                            </li>
+                        `;
+                    } else if (i === this.currentPage - 2 || i === this.currentPage + 2) {
+                        paginationHtml += `
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">...</a>
+                            </li>
+                        `;
+                    }
+                }
+                
+                // Nút trang sau
+                paginationHtml += `
+                    <li class="page-item ${this.currentPage === this.totalPages ? 'disabled' : ''}">
+                        <a class="page-link" href="#" data-page="${this.currentPage + 1}" aria-label="Trang sau">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                `;
+                
+                pagination.innerHTML = paginationHtml;
+                
+                // Thêm sự kiện cho các nút phân trang
+                document.querySelectorAll('#reviewPagination .page-link').forEach(link => {
+                    link.addEventListener('click', function(event) {
+                        event.preventDefault();
+                        const page = parseInt(this.dataset.page);
+                        if (!isNaN(page) && page > 0) {
+                            reviewManager.goToPage(page);
+                        }
+                    });
+                });
+            },
+            
+            goToPage: function(page) {
+                if (page < 1 || page > this.totalPages) return;
+                
+                this.currentPage = page;
+                this.filter.page = page;
+                this.loadReviews();
+            },
+            
+            deleteReview: function(reviewId) {
+                const reviewUrl = url.base + "/Review";
+                const reviewService = new BaseService(reviewUrl, token);
+                
+                Toast.info("Đang xóa đánh giá...");
+                
+                reviewService.fetchApi(`/${reviewId}`, 'DELETE')
+                    .then(response => {
+                        if (response && response.success) {
+                            Toast.success("Xóa đánh giá thành công");
+                            this.loadReviews(); // Tải lại danh sách đánh giá
+                        } else {
+                            Toast.error(response?.message || "Xóa đánh giá thất bại");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi xóa đánh giá:", error);
+                        Toast.error("Đã xảy ra lỗi khi xóa đánh giá");
+                    });
+            }
+        };
+
+        // Khởi tạo quản lý đánh giá khi tải trang
+        document.addEventListener('DOMContentLoaded', function() {
+            reviewManager.init();
+        });
+    </script>
+
+    <!-- CSS cho phần đánh giá -->
+    <style>
+        .review-item {
+            transition: all 0.3s ease;
+        }
+        .review-item:hover {
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+        }
+        .rating {
+            font-size: 1.1rem;
+        }
+        .filter-reviews {
+            border: 1px solid #e5e5e5;
+        }
+        .review-content {
+            background-color: #f9f9f9;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .shop-response {
+            background-color: #f0f8ff;
+            border-left: 3px solid #007bff;
+        }
+    </style>
+
+    <script type="module">
+        // Biến để lưu trữ kết nối SignalR
+        let chatConnection;
+        let currentChatRoom = null;
+        
+        // Hàm tải danh sách liên hệ
+        function loadContacts() {
+            const userId = localStorage.getItem('id');
+            const token = localStorage.getItem('accessToken');
+            
+            // Giả lập tải danh sách liên hệ (thay thế bằng API thực tế sau)
+            setTimeout(() => {
+                const contacts = [
+                    { id: 'store-1', name: 'Cửa hàng Fruit Paradise', avatar: '/images/stores/fruit.png', lastMessage: 'Xin chào quý khách', unread: 2 },
+                    { id: 'store-2', name: 'Cửa hàng Meat Lovers', avatar: '/images/stores/meat.png', lastMessage: 'Cảm ơn bạn đã mua hàng', unread: 0 },
+                    { id: 'store-3', name: 'Cửa hàng Veggie World', avatar: '/images/stores/veggie.png', lastMessage: 'Đơn hàng của bạn đã được giao', unread: 1 }
+                ];
+                
+                renderContacts(contacts);
+            }, 1000);
+        }
+        
+        // Hàm hiển thị danh sách liên hệ
+        function renderContacts(contacts) {
+            const contactsContainer = document.getElementById('chat-contacts');
+            document.getElementById('loading-contacts').style.display = 'none';
+            
+            if (!contacts || contacts.length === 0) {
+                contactsContainer.innerHTML = '<div class="text-center p-3">Không có cuộc trò chuyện nào</div>';
+                return;
+            }
+            
+            let html = '';
+            contacts.forEach(contact => {
+                html += `
+                    <a href="javascript:void(0);" class="list-group-item list-group-item-action d-flex align-items-center p-3" 
+                       onclick="selectChat('${contact.id}', '${contact.name}', '${contact.avatar}')">
+                        <div class="position-relative me-3">
+                            <img src="${contact.avatar}" alt="${contact.name}" class="rounded-circle" width="40" height="40">
+                            ${contact.unread > 0 ? `<span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">${contact.unread}</span>` : ''}
+                        </div>
+                        <div class="flex-grow-1">
+                            <h6 class="mb-0">${contact.name}</h6>
+                            <p class="text-muted mb-0 small text-truncate">${contact.lastMessage}</p>
+                        </div>
+                    </a>
+                `;
+            });
+            
+            contactsContainer.innerHTML = html;
+            
+            // Thêm hàm selectChat vào window để có thể gọi từ onclick
+            window.selectChat = function(roomId, name, avatar) {
+                currentChatRoom = roomId;
+                
+                // Hiển thị khung chat
+                document.getElementById('no-chat-selected').classList.add('d-none');
+                document.getElementById('chat-container').classList.remove('d-none');
+                
+                // Cập nhật thông tin người chat
+                document.getElementById('chat-name').textContent = name;
+                document.getElementById('chat-avatar').querySelector('img').src = avatar;
+                document.getElementById('chat-status').textContent = 'Trực tuyến';
+                
+                // Tham gia phòng chat
+                chatConnection.invoke("JoinRoom", roomId)
+                    .then(() => {
+                        // Tải tin nhắn cũ (giả lập)
+                        loadMessages(roomId);
+                    })
+                    .catch(err => {
+                        console.error("Lỗi khi tham gia phòng chat:", err);
+                        Toast.error("Không thể tham gia phòng chat");
+                    });
+            };
+        }
+        
+        // Hàm tải tin nhắn cũ
+        function loadMessages(roomId) {
+            const messagesContainer = document.getElementById('chat-messages');
+            messagesContainer.innerHTML = '';
+            
+            // Giả lập tải tin nhắn (thay thế bằng API thực tế sau)
+            const userId = localStorage.getItem('id');
+            const messages = [
+                { sender: 'store-' + roomId.split('-')[1], content: 'Xin chào quý khách, chúng tôi có thể giúp gì cho bạn?', time: '10:30' },
+                { sender: userId, content: 'Tôi muốn hỏi về sản phẩm mới nhất của cửa hàng', time: '10:32' },
+                { sender: 'store-' + roomId.split('-')[1], content: 'Dạ vâng, hiện tại chúng tôi có các sản phẩm mới như sau...', time: '10:35' }
+            ];
+            
+            messages.forEach(msg => {
+                appendMessage(msg.sender, msg.content, msg.sender !== userId, msg.time);
+            });
+            
+            // Cuộn xuống tin nhắn mới nhất
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Hàm thêm tin nhắn vào khung chat
+        function appendMessage(sender, content, isReceived, time = null) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageTime = time || new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${isReceived ? 'message-received' : 'message-sent'} mb-3`;
+            messageElement.innerHTML = `
+                <div class="message-content p-3 rounded ${isReceived ? 'bg-light' : 'bg-primary text-white'}">
+                    <p class="mb-0">${content}</p>
+                </div>
+                <div class="message-time small text-muted ${isReceived ? '' : 'text-end'} mt-1">${messageTime}</div>
+            `;
+            
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        // Hàm gửi tin nhắn
+        function sendMessage() {
+            const messageInput = document.getElementById('message-input');
+            const message = messageInput.value.trim();
+            
+            if (!message || !currentChatRoom || !chatConnection) {
+                return;
+            }
+            
+            chatConnection.invoke("SendMessage", currentChatRoom, message)
+                .catch(err => {
+                    console.error("Lỗi khi gửi tin nhắn:", err);
+                    Toast.error("Không thể gửi tin nhắn");
+                });
+            
+            // Xóa nội dung input
+            messageInput.value = '';
+        }
+        
+        // Hàm thông báo đang nhập
+        function notifyTyping() {
+            if (!currentChatRoom || !chatConnection) {
+                return;
+            }
+            
+            chatConnection.invoke("Typing", currentChatRoom)
+                .catch(err => {
+                    console.error("Lỗi khi gửi thông báo đang nhập:", err);
+                });
+        }
+        
+        // Hàm hiển thị thông báo đang nhập
+        function showTypingIndicator(user) {
+            const typingIndicator = document.getElementById('typing-indicator');
+            typingIndicator.classList.remove('d-none');
+            typingIndicator.querySelector('span').textContent = `${user} đang nhập...`;
+            
+            // Ẩn thông báo sau 2 giây
+            setTimeout(() => {
+                typingIndicator.classList.add('d-none');
+            }, 2000);
+        }
+        
+        // Hàm hiển thị lỗi chat
+        function showChatError(message) {
+            const messagesTab = document.getElementById('messages');
+            messagesTab.innerHTML = `
+                <div class="alert alert-danger mt-3">
+                    <i class="feather-alert-triangle me-2"></i> ${message}
+                </div>
+            `;
+        }
+    </script>
+
+    <!-- CSS cho phần chat -->
+    <style>
+        /* CSS cho phần chat */
+        .message {
+            max-width: 80%;
+        }
+        
+        .message-received {
+            margin-right: auto;
+        }
+        
+        .message-sent {
+            margin-left: auto;
+        }
+        
+        .message-content {
+            border-radius: 15px;
+        }
+        
+        .message-sent .message-content {
+            border-top-right-radius: 5px;
+        }
+        
+        .message-received .message-content {
+            border-top-left-radius: 5px;
+        }
+    </style>
+
+    <!-- Thêm thư viện SignalR -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.0/signalr.min.js"></script>

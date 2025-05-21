@@ -1,0 +1,271 @@
+@{
+    ViewData["Title"] = "Kết quả thanh toán";
+    ViewBag.Title = "Kết quả thanh toán";
+}
+
+<!-- BREADCRUMB AREA START -->
+<div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                    <div class="section-title-area ltn__section-title-2">
+                        <h6 class="section-subtitle ltn__secondary-color">//  Thông tin thanh toán</h6>
+                        <h1 class="section-title white-color">Kết quả thanh toán</h1>
+                    </div>
+                    <div class="ltn__breadcrumb-list">
+                        <ul>
+                            <li><a asp-action="Index" asp-controller="Home">Trang chủ</a></li>
+                            <li>Kết quả thanh toán</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- BREADCRUMB AREA END -->
+
+<!-- PAYMENT RESULT AREA START -->
+<div class="ltn__payment-result-area mb-120 mt-100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div id="payment-result-container">
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                        <p class="mt-2">Đang xử lý kết quả thanh toán...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- PAYMENT RESULT AREA END -->
+
+<script type="module">
+    import Toast from "/Custom/Toast.js";
+    import {BaseService} from "/Custom/BaseService.js";
+    import url from "/Custom/endpoints.js";
+    import key from "/Custom/jwt.js";
+
+    const paymentUrl = url.base + "/Payment";
+    const paymentService = new BaseService(paymentUrl, key);
+
+    const app = {
+        paymentResult: null,
+        
+        init: function() {
+            // Lấy thông tin từ query parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            
+            // Kiểm tra xem có thông tin thanh toán VNPay không
+            if (urlParams.has('vnp_ResponseCode')) {
+                // Xử lý kết quả thanh toán VNPay
+                this.processVnPayResult(urlParams);
+            } else if (urlParams.has('paymentId')) {
+                // Xử lý kết quả thanh toán thông thường
+                this.processNormalPaymentResult(urlParams);
+            } else {
+                this.renderError("Không tìm thấy thông tin thanh toán");
+                return;
+            }
+        },
+        
+        processVnPayResult: function(urlParams) {
+            try {
+                // Tạo đối tượng kết quả thanh toán từ VNPay params
+                const responseCode = urlParams.get('vnp_ResponseCode');
+                const isSuccess = responseCode === '00';
+                
+                this.paymentResult = {
+                    paymentId: urlParams.get('vnp_TxnRef'),
+                    isSuccess: isSuccess,
+                    description: urlParams.get('vnp_OrderInfo'),
+                    timestamp: this.formatVnPayDate(urlParams.get('vnp_PayDate')),
+                    vnpayTransactionId: urlParams.get('vnp_TransactionNo'),
+                    paymentMethod: 'VNPay',
+                    paymentResponse: {
+                        code: parseInt(responseCode || '0'),
+                        description: isSuccess ? 'Giao dịch thành công' : 'Giao dịch thất bại'
+                    },
+                    transactionStatus: {
+                        code: parseInt(urlParams.get('vnp_TransactionStatus') || '0'),
+                        description: isSuccess ? 'Giao dịch thành công' : 'Giao dịch thất bại'
+                    },
+                    bankingInfor: {
+                        bankCode: urlParams.get('vnp_BankCode'),
+                        bankTransactionId: urlParams.get('vnp_BankTranNo')
+                    },
+                    amount: parseInt(urlParams.get('vnp_Amount') || '0') / 100 // VNPay trả về số tiền x100
+                };
+                
+                this.renderPaymentResult();
+            } catch (error) {
+                console.error("Lỗi khi xử lý thông tin thanh toán VNPay:", error);
+                this.renderError("Có lỗi xảy ra khi xử lý thông tin thanh toán");
+            }
+        },
+        
+        formatVnPayDate: function(dateString) {
+            if (!dateString) return new Date().toISOString();
+            
+            // Format: yyyyMMddHHmmss -> yyyy-MM-ddTHH:mm:ss
+            const year = dateString.substring(0, 4);
+            const month = dateString.substring(4, 6);
+            const day = dateString.substring(6, 8);
+            const hour = dateString.substring(8, 10);
+            const minute = dateString.substring(10, 12);
+            const second = dateString.substring(12, 14);
+            
+            return `${year}-${month}-${day}T${hour}:${minute}:${second}`;
+        },
+        
+        processNormalPaymentResult: function(urlParams) {
+            try {
+                this.paymentResult = {
+                    paymentId: urlParams.get('paymentId'),
+                    isSuccess: urlParams.get('isSuccess') === 'true',
+                    description: urlParams.get('description'),
+                    timestamp: urlParams.get('timestamp'),
+                    vnpayTransactionId: urlParams.get('vnpayTransactionId'),
+                    paymentMethod: urlParams.get('paymentMethod'),
+                    paymentResponse: {
+                        code: parseInt(urlParams.get('paymentResponse.code') || '0'),
+                        description: urlParams.get('paymentResponse.description')
+                    },
+                    transactionStatus: {
+                        code: parseInt(urlParams.get('transactionStatus.code') || '0'),
+                        description: urlParams.get('transactionStatus.description')
+                    },
+                    bankingInfor: {
+                        bankCode: urlParams.get('bankingInfor.bankCode'),
+                        bankTransactionId: urlParams.get('bankingInfor.bankTransactionId')
+                    }
+                };
+                
+                this.renderPaymentResult();
+            } catch (error) {
+                console.error("Lỗi khi xử lý thông tin thanh toán:", error);
+                this.renderError("Có lỗi xảy ra khi xử lý thông tin thanh toán");
+            }
+        },
+        
+        renderPaymentResult: function() {
+            const result = this.paymentResult;
+            const container = document.getElementById('payment-result-container');
+            
+            // Xác định trạng thái thanh toán
+            const isSuccess = result.isSuccess;
+            const statusIcon = isSuccess ? 
+                '<i class="fas fa-check-circle fa-5x text-success mb-4"></i>' : 
+                '<i class="fas fa-times-circle fa-5x text-danger mb-4"></i>';
+            const statusTitle = isSuccess ? 
+                'Thanh toán thành công' : 
+                'Thanh toán thất bại';
+            const statusClass = isSuccess ? 'success' : 'danger';
+            
+            // Tạo HTML hiển thị kết quả thanh toán
+            let html = `
+            <div class="card shadow-sm">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        ${statusIcon}
+                        <h2 class="text-${statusClass} mb-3">${statusTitle}</h2>
+                        <p class="lead">${result.paymentResponse?.description || 'Không có thông tin chi tiết'}</p>
+                    </div>
+                    
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card bg-light mb-4">
+                                <div class="card-header">
+                                    <h5 class="mb-0">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        Chi tiết giao dịch
+                                    </h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row mb-2">
+                                        <div class="col-sm-5 fw-bold">Mã giao dịch:</div>
+                                        <div class="col-sm-7">${result.paymentId}</div>
+                                    </div>
+                                    ${result.amount ? `
+                                    <div class="row mb-2">
+                                        <div class="col-sm-5 fw-bold">Số tiền:</div>
+                                        <div class="col-sm-7">${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(result.amount)}</div>
+                                    </div>
+                                    ` : ''}
+                                    <div class="row mb-2">
+                                        <div class="col-sm-5 fw-bold">Thời gian:</div>
+                                        <div class="col-sm-7">${new Date(result.timestamp).toLocaleString('vi-VN')}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-5 fw-bold">Phương thức:</div>
+                                        <div class="col-sm-7">${result.paymentMethod || 'VNPay'}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-5 fw-bold">Mã giao dịch VNPay:</div>
+                                        <div class="col-sm-7">${result.vnpayTransactionId || 'N/A'}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-5 fw-bold">Ngân hàng:</div>
+                                        <div class="col-sm-7">${result.bankingInfor?.bankCode || 'N/A'}</div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-5 fw-bold">Mã giao dịch ngân hàng:</div>
+                                        <div class="col-sm-7">${result.bankingInfor?.bankTransactionId || 'N/A'}</div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="text-center mt-4">
+                                <a href="/Account/Orders" class="btn theme-btn-1 btn-effect-1 text-uppercase me-3">
+                                    <i class="fas fa-list me-2"></i> Xem đơn hàng của tôi
+                                </a>
+                                <a href="/" class="btn theme-btn-2 btn-effect-2 text-uppercase">
+                                    <i class="fas fa-home me-2"></i> Về trang chủ
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+            
+            // Cập nhật nội dung
+            container.innerHTML = html;
+            
+            // Hiển thị thông báo
+            if (isSuccess) {
+                Toast.success("Thanh toán đã được xử lý thành công");
+            } else {
+                Toast.error("Thanh toán không thành công");
+            }
+        },
+        
+        renderError: function(message) {
+            const container = document.getElementById('payment-result-container');
+            container.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                    <h4>${message}</h4>
+                    <div class="mt-4">
+                        <a href="/Account/Orders" class="btn theme-btn-1 btn-effect-1 text-uppercase me-3">
+                            <i class="fas fa-list me-2"></i> Xem đơn hàng của tôi
+                        </a>
+                        <a href="/" class="btn theme-btn-2 btn-effect-2 text-uppercase">
+                            <i class="fas fa-home me-2"></i> Về trang chủ
+                        </a>
+                    </div>
+                </div>
+            `;
+            Toast.error(message);
+        }
+    };
+    
+    // Khởi tạo ứng dụng khi trang đã tải xong
+    document.addEventListener('DOMContentLoaded', function() {
+        app.init();
+    });
+</script>

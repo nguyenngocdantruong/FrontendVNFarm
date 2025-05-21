@@ -1,0 +1,319 @@
+@{
+    ViewData["Title"] = "Đơn hàng của tôi";
+}
+
+<!-- BREADCRUMB AREA START -->
+    <div class="ltn__breadcrumb-area ltn__breadcrumb-area-2 ltn__breadcrumb-color-white bg-overlay-theme-black-90 bg-image" data-bg="/img/bg/9.jpg">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__breadcrumb-inner ltn__breadcrumb-inner-2 justify-content-between">
+                        <div class="section-title-area ltn__section-title-2">
+                            <h6 class="section-subtitle ltn__secondary-color">//  Thông tin tài khoản</h6>
+                            <h1 class="section-title white-color">Đơn hàng của tôi</h1>
+                        </div>
+                        <div class="ltn__breadcrumb-list">
+                            <ul>
+                                <li><a href="/">Trang chủ</a></li>
+                                <li>Đơn hàng của tôi</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- BREADCRUMB AREA END -->
+
+    <!-- ORDERS AREA START -->
+    <div class="liton__shoping-cart-area mb-120">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="shoping-cart-inner">
+                        <h4 class="title-2 mb-4">Đơn hàng của tôi</h4>
+                        
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="orders-container">
+                                    <div class="text-center py-5">
+                                        <div class="spinner-border text-primary" role="status">
+                                            <span class="visually-hidden">Đang tải...</span>
+                                        </div>
+                                        <p class="mt-2">Đang tải danh sách đơn hàng...</p>
+                                    </div>
+                                </div>
+                                <div id="pagination-container" class="d-flex justify-content-center mt-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ORDERS AREA END -->
+
+<script type="module">
+    import Toast from "/Custom/Toast.js";
+    import {BaseService} from "/Custom/BaseService.js";
+    import url from "/Custom/endpoints.js";
+    import key from "/Custom/jwt.js";
+
+    const orderUrl = url.base + "/Order";
+    const orderService = new BaseService(orderUrl, key);
+    let filter = {
+        sortBy: 2,
+        page: 1,
+        pageSize: 5,
+        userId: null
+    }
+
+    const app = {
+        orders: [],
+        userId: null,
+        totalCount: 0,
+        currentPage: 1,
+        pageSize: 5,
+        
+        init: function(){
+            // Kiểm tra xem người dùng đã đăng nhập chưa
+            this.userId = parseInt(localStorage.getItem('id'));
+            // Nếu chưa đăng nhập, chuyển hướng về trang đăng nhập
+            if (!this.userId) {
+                Toast.error("Vui lòng đăng nhập để xem đơn hàng của bạn !");
+                window.location.href = '/Home/Login'
+                return;
+            }
+            filter.userId = this.userId;
+            this.getUserInfo();
+        },
+        
+        getUserInfo: function() {
+            this.getOrders();
+        },
+        
+        getOrders: function(){
+            document.getElementById('orders-container').innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Đang tải...</span>
+                    </div>
+                    <p class="mt-2">Đang tải danh sách đơn hàng...</p>
+                </div>
+            `;
+            
+            orderService.find(filter)
+                .then(response => {
+                    console.log("Orders response:", response);
+                    if (response && response.success && Array.isArray(response.data)) {
+                        this.orders = response.data;
+                        this.totalCount = response.totalCount;
+                        this.renderOrders();
+                        this.renderPagination();
+                        Toast.success("Đã tải danh sách đơn hàng thành công");
+                    } else {
+                        Toast.error("Không thể tải danh sách đơn hàng");
+                        document.getElementById('orders-container').innerHTML = `
+                            <div class="text-center py-5">
+                                <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                                <h4>Không thể tải danh sách đơn hàng</h4>
+                                <a href="/" class="btn theme-btn-1 btn-effect-1 text-uppercase mt-3">Về trang chủ</a>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(error => {
+                    console.error("Lỗi khi tải danh sách đơn hàng:", error);
+                    Toast.error("Đã xảy ra lỗi khi tải danh sách đơn hàng");
+                    document.getElementById('orders-container').innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                            <h4>Đã xảy ra lỗi</h4>
+                            <p>Không thể tải danh sách đơn hàng</p>
+                            <a href="/" class="btn theme-btn-1 btn-effect-1 text-uppercase mt-3">Về trang chủ</a>
+                        </div>
+                    `;
+                });
+        },
+        
+        getStatusText: function(status) {
+            const statusMap = {
+                0: '<span class="badge bg-warning">Chờ xác nhận</span>',
+                1: '<span class="badge bg-info">Đã xác nhận</span>',
+                2: '<span class="badge bg-primary">Đang chuẩn bị</span>',
+                3: '<span class="badge bg-info">Đang giao hàng</span>',
+                4: '<span class="badge bg-success">Đã giao hàng</span>',
+                5: '<span class="badge bg-success">Hoàn thành</span>',
+                6: '<span class="badge bg-danger">Đã hủy</span>',
+                7: '<span class="badge bg-secondary">Hoàn trả</span>'
+            };
+            
+            return statusMap[status] || '<span class="badge bg-secondary">Không xác định</span>';
+        },
+        
+        getPaymentStatusText: function(status) {
+            const statusMap = {
+                1: '<span class="badge bg-warning">Chưa thanh toán</span>',
+                2: '<span class="badge bg-info">Thanh toán một phần</span>',
+                3: '<span class="badge bg-success">Đã thanh toán</span>',
+                4: '<span class="badge bg-secondary">Đã hoàn tiền</span>',
+                5: '<span class="badge bg-danger">Thanh toán thất bại</span>'
+            };
+            
+            return statusMap[status] || '<span class="badge bg-secondary">Không xác định</span>';
+        },
+        
+        getPaymentMethodText: function(method) {
+            const methodMap = {
+                1: '<i class="fas fa-money-bill-wave text-success me-1"></i> Thanh toán khi nhận hàng (COD)',
+                2: '<i class="fas fa-university text-primary me-1"></i> Chuyển khoản ngân hàng',
+                3: '<i class="fas fa-credit-card text-info me-1"></i> Thanh toán qua VNPay'
+            };
+            
+            return methodMap[method] || 'Không xác định';
+        },
+        
+        getAddressText: function(address) {
+            if (!address) return "Không có thông tin địa chỉ";
+            
+            // Tạo địa chỉ đầy đủ
+            const fullAddress = [
+                address.shippingAddress,
+                address.shippingWard,
+                address.shippingDistrict,
+                address.shippingProvince
+            ].filter(Boolean).join(', ');
+            
+            return fullAddress || "Không có thông tin địa chỉ";
+        },
+        
+        renderOrders: function() {
+            const container = document.getElementById('orders-container');
+            
+            if (!this.orders || this.orders.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-bag fa-3x text-muted mb-3"></i>
+                        <h4>Bạn chưa có đơn hàng nào</h4>
+                        <a href="/" class="btn theme-btn-1 btn-effect-1 text-uppercase mt-3">Mua sắm ngay</a>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Sắp xếp đơn hàng theo thời gian tạo mới nhất
+            const sortedOrders = [...this.orders].sort((a, b) => 
+                new Date(b.createdAt) - new Date(a.createdAt)
+            );
+            
+            let html = `
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="bg-light">
+                            <tr>
+                                <th>Mã đơn hàng</th>
+                                <th>Ngày đặt</th>
+                                <th>Người nhận</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Thanh toán</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            sortedOrders.forEach(order => {
+                html += `
+                    <tr>
+                        <td>
+                            <strong>${order.orderCode}</strong>
+                        </td>
+                        <td>${new Date(order.createdAt).toLocaleDateString('vi-VN')}</td>
+                        <td>
+                            <div>${order.address.shippingName}</div>
+                            <small class="text-muted">${order.address.shippingPhone}</small>
+                        </td>
+                        <td>${order.finalAmount.toLocaleString('vi-VN')}đ</td>
+                        <td>${this.getStatusText(order.status)}</td>
+                        <td>${this.getPaymentStatusText(order.paymentStatus)}</td>
+                        <td>
+                            <a href="/Account/Order?id=${order.id}" class="btn btn-sm btn-outline-primary">
+                                <i class="fas fa-eye"></i> Chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            container.innerHTML = html;
+        },
+        
+        renderPagination: function() {
+            const paginationContainer = document.getElementById('pagination-container');
+            const totalPages = Math.ceil(this.totalCount / this.pageSize);
+            
+            if (totalPages <= 1) {
+                paginationContainer.innerHTML = '';
+                return;
+            }
+            
+            let html = '<nav aria-label="Phân trang đơn hàng"><ul class="pagination">';
+            
+            // Nút Previous
+            html += `
+                <li class="page-item ${this.currentPage === 1 ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${this.currentPage - 1}" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+            `;
+            
+            // Các nút số trang
+            const startPage = Math.max(1, this.currentPage - 2);
+            const endPage = Math.min(totalPages, startPage + 4);
+            
+            for (let i = startPage; i <= endPage; i++) {
+                html += `
+                    <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+                        <a class="page-link" href="#" data-page="${i}">${i}</a>
+                    </li>
+                `;
+            }
+            
+            // Nút Next
+            html += `
+                <li class="page-item ${this.currentPage === totalPages ? 'disabled' : ''}">
+                    <a class="page-link" href="#" data-page="${this.currentPage + 1}" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            `;
+            
+            html += '</ul></nav>';
+            
+            paginationContainer.innerHTML = html;
+            
+            // Thêm event listeners cho các nút phân trang
+            document.querySelectorAll('#pagination-container .page-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const page = parseInt(e.target.closest('.page-link').dataset.page);
+                    if (page !== this.currentPage && page > 0 && page <= totalPages) {
+                        this.currentPage = page;
+                        filter.page = page;
+                        this.getOrders();
+                    }
+                });
+            });
+        }
+    };
+
+    app.init();
+</script>

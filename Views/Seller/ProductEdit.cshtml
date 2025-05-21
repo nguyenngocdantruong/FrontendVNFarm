@@ -1,0 +1,284 @@
+@{
+    Layout = "_LayoutSeller";
+    ViewBag.Title = "Chỉnh sửa sản phẩm";
+}
+
+<main class="nxl-container">
+    <div class="nxl-content">
+        <!-- [ page-header ] start -->
+        <div class="page-header">
+            <div class="page-header-left d-flex align-items-center">
+                <div class="page-header-title">
+                    <h5 class="m-b-10">Chỉnh Sửa Sản Phẩm</h5>
+                </div>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="index.html">Trang chủ</a></li>
+                    <li class="breadcrumb-item"><a href="00_seller_product_lists.html">Sản phẩm</a></li>
+                    <li class="breadcrumb-item">Chỉnh sửa</li>
+                </ul>
+            </div>
+            <div class="page-header-right ms-auto">
+                <div class="page-header-right-items">
+                    <div class="d-flex align-items-center gap-2 page-header-right-items-wrapper">
+                        <a href="00_seller_product_lists.html" class="btn btn-light">
+                            <i class="feather-arrow-left me-2"></i>
+                            Quay Lại
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ page-header ] end -->
+        <!-- [ Main Content ] start -->
+        <div class="main-content">
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="card stretch stretch-full">
+                        <div class="card-body">
+                            <form id="productEditForm">
+                                <input type="hidden" id="productId" name="id">
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="mb-3">
+                                            <label class="form-label">Tên sản phẩm</label>
+                                            <input type="text" class="form-control" id="productName" name="name" value="Đang tải ..." required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Mô tả sản phẩm</label>
+                                            <textarea class="form-control" id="productDescription" name="description" rows="4" required>Đang tải ...</textarea>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Danh mục</label>
+                                                    <select class="form-select" id="categorySelect" name="categoryId" required>
+                                                        <option value="">Đang tải ...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Xuất xứ</label>
+                                                    <select class="form-select" id="originSelect" name="origin" required>
+                                                        <option value="">Đang tải ...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Đơn vị</label>
+                                                    <select class="form-select" id="unitSelect" name="unit" required>
+                                                        <option value="">Đang tải ...</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label class="form-label">Trạng thái</label>
+                                                    <div class="form-check form-switch">
+                                                        <input class="form-check-input" type="checkbox" id="isActive" name="isActive" checked>
+                                                        <label class="form-check-label" for="isActive">Kích hoạt</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="mb-3">
+                                            <label class="form-label">Hình ảnh sản phẩm</label>
+                                            <div class="mb-2">
+                                                <img src="#" onerror="this.src='/no-image.webp'" alt="Product" id="mainImage" class="img-thumbnail" style="width: 100%; height: 200px; object-fit: cover;">
+                                            </div>
+                                            <input type="file" class="form-control" id="productImage" name="imageFile" accept="image/*">
+                                            <input type="hidden" id="imageUrl" name="imageUrl">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Giá (VNĐ)</label>
+                                            <input type="number" class="form-control" id="price" name="price" value="0" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Số lượng tồn kho</label>
+                                            <input type="number" class="form-control" id="stockQuantity" name="stockQuantity" value="0" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-end mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="feather-save me-2"></i>
+                                        Cập Nhật Sản Phẩm
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- [ Main Content ] end -->
+    </div>
+    <!-- [ Footer ] start -->
+    <footer class="footer">
+        <p class="fs-11 text-muted fw-medium text-uppercase mb-0 copyright">
+            <span>Copyright ©</span>
+            
+        </p>
+        <div class="d-flex align-items-center gap-4">
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Help</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Terms</a>
+            <a href="javascript:void(0);" class="fs-11 fw-semibold text-uppercase">Privacy</a>
+        </div>
+    </footer>
+    <!-- [ Footer ] end -->
+</main> 
+<script type="module">
+    import url from "/Custom/endpoints.js"
+    const urlParams = new URLSearchParams(window.location.search);
+    const productId = urlParams.get('id');
+    
+    // Tải danh mục, đơn vị tính và xuất xứ trước
+    const loadInitialData = async () => {
+        try {
+            // Tải danh mục 📂
+            const categories = await app.services.category.getAll();
+            console.log("Danh mục: ", categories);
+            
+            if (categories.success && categories.data) {
+                const categorySelect = document.getElementById('categorySelect');
+                categorySelect.innerHTML = '<option value="">Chọn danh mục</option>';
+                
+                categories.data.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.id;
+                    option.textContent = category.name;
+                    categorySelect.appendChild(option);
+                });
+            }
+            
+            // Tải đơn vị tính 📏
+            const units = await app.services.enum.fetchApi("/unit-types");
+            console.log("Đơn vị tính: ", units);
+            
+            if (units) {
+                const unitSelect = document.getElementById('unitSelect');
+                unitSelect.innerHTML = '<option value="">Chọn đơn vị</option>';
+                
+                Object.entries(units).forEach(([key, value]) => {
+                    const option = document.createElement('option');
+                    option.value = key;
+                    option.textContent = value;
+                    unitSelect.appendChild(option);
+                });
+            }
+            
+            // Tải xuất xứ 🌍
+            const origins = await app.services.enum.fetchApi("/origin-types");
+            console.log("Xuất xứ: ", origins);
+            
+            if (origins) {
+                const originSelect = document.getElementById('originSelect');
+                originSelect.innerHTML = '<option value="">Chọn xuất xứ</option>';
+                
+                origins.forEach(origin => {
+                    const option = document.createElement('option');
+                    option.value = origin;
+                    option.textContent = origin;
+                    originSelect.appendChild(option);
+                });
+            }
+            
+            // Sau khi tải xong dữ liệu cơ bản, tải thông tin sản phẩm
+            await loadProductData();
+        } catch (error) {
+            console.error("Lỗi khi tải dữ liệu ban đầu:", error);
+        }
+    };
+    
+    // Tải thông tin sản phẩm
+    const loadProductData = async () => {
+        try {
+            if (!productId) return;
+            
+            const response = await app.services.product.getById(productId);
+            console.log("Sản phẩm: ", response);
+            
+            if (response.success && response.data) {
+                const product = response.data;
+                
+                // Điền thông tin sản phẩm vào form
+                document.getElementById('productId').value = product.id;
+                document.getElementById('productName').value = product.name;
+                document.getElementById('productDescription').value = product.description;
+                document.getElementById('categorySelect').value = product.categoryId;
+                document.getElementById('price').value = product.price;
+                document.getElementById('stockQuantity').value = product.stockQuantity;
+                document.getElementById('unitSelect').value = product.unit;
+                document.getElementById('originSelect').value = product.origin;
+                document.getElementById('isActive').checked = product.isActive;
+                document.getElementById('imageUrl').value = product.imageUrl || '';
+                
+                // Hiển thị hình ảnh sản phẩm nếu có
+                if (product.imageUrl) {
+                    document.getElementById('mainImage').src = `${url.baseUrl}/img/Products/${product.imageUrl}`;
+                }
+            }
+        } catch (error) {
+            console.error("Lỗi khi tải thông tin sản phẩm:", error);
+        }
+    };
+    
+    // Hiển thị ảnh preview khi chọn file
+    document.getElementById('productImage').addEventListener('change', function(e) {
+        if (e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('mainImage').src = e.target.result;
+            }
+            reader.readAsDataURL(e.target.files[0]);
+        }
+    });
+    
+    // Khởi tải dữ liệu
+    loadInitialData();
+    
+    // Xử lý submit form
+    document.getElementById('productEditForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        try {
+            // Tạo FormData từ form
+            const form = document.getElementById('productEditForm');
+            const formData = new FormData(form);
+            
+            // Xử lý checkbox isActive riêng vì FormData không tự xử lý đúng
+            const isActive = document.getElementById('isActive').checked;
+            formData.set('isActive', isActive);
+            
+            // Gọi API cập nhật sản phẩm
+            const result = await app.services.product.update(productId, formData, true);
+            
+            if (result && result.success) {
+                Toast.success('Cập nhật sản phẩm thành công!');
+            } else {
+                Toast.error('Cập nhật sản phẩm thất bại!');
+            }
+        } catch (error) {
+            let errorMessages = [];
+            for (const field in error.errors) {
+                error.errors[field].forEach(message => {
+                    errorMessages.push(message);
+                });
+
+                // Hiển thị tất cả lỗi validation
+                if (errorMessages.length > 0) {
+                    errorMessages.forEach(message => {
+                        Toast.error(message);
+                    });
+                } else {
+                    Toast.error('Đã xảy ra lỗi khi tạo sản phẩm! ' + error.title || error.message);
+                }
+            } 
+        }
+    });
+</script>
