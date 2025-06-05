@@ -30,22 +30,6 @@
                                     <i class="feather-user"></i>
                                     <span>Thông tin cá nhân</span>
                                 </div>
-                                <div class="settings-menu-item" data-target="security">
-                                    <i class="feather-shield"></i>
-                                    <span>Bảo mật</span>
-                                </div>
-                                <div class="settings-menu-item" data-target="notifications">
-                                    <i class="feather-bell"></i>
-                                    <span>Thông báo</span>
-                                </div>
-                                <div class="settings-menu-item" data-target="privacy">
-                                    <i class="feather-lock"></i>
-                                    <span>Quyền riêng tư</span>
-                                </div>
-                                <div class="settings-menu-item" data-target="language">
-                                    <i class="feather-globe"></i>
-                                    <span>Ngôn ngữ</span>
-                                </div>
                                 <div class="settings-menu-item" data-target="shop">
                                     <i class="feather-shopping-bag"></i>
                                     <span>Thông tin Shop</span>
@@ -65,333 +49,44 @@
                             <h5 class="card-title">Thông Tin Cá Nhân</h5>
                         </div>
                         <div class="card-body">
-                            <form class="profile-form">
+                            <form id="sellerProfileForm" enctype="multipart/form-data">
                                 <div class="text-center mb-4">
-                                    <div class="avatar-upload">
-                                        <img src="assets/images/user/avatar-1.jpg" alt="Avatar" class="avatar">
-                                        <button type="button" class="btn btn-light btn-sm mt-2">
-                                            <i class="feather-camera me-2"></i>
-                                            Đổi ảnh đại diện
-                                        </button>
-                                    </div>
+                                    <img id="sellerAvatarPreview" src="assets/images/user/avatar-1.jpg" alt="Avatar" class="avatar">
+                                    <input type="file" name="ImageFile" id="sellerImageFile" class="form-control mt-2" accept="image/*">
+                                    <input type="hidden" name="ImageUrl" id="sellerImageUrl">
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Họ và tên</label>
-                                        <input type="text" class="form-control" value="Nguyễn Văn A">
+                                        <input type="text" class="form-control" name="FullName" id="sellerFullName" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Email</label>
-                                        <input type="email" class="form-control" value="example@email.com">
+                                        <input type="email" class="form-control" name="Email" id="sellerEmail" readonly required>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Số điện thoại</label>
-                                        <input type="tel" class="form-control" value="0123456789">
+                                        <input type="tel" class="form-control" name="PhoneNumber" id="sellerPhoneNumber" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Ngày sinh</label>
-                                        <input type="date" class="form-control" value="1990-01-01">
+                                        <label class="form-label">Địa chỉ</label>
+                                        <input type="text" class="form-control" name="Address" id="sellerAddress">
                                     </div>
                                 </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Địa chỉ</label>
-                                    <textarea class="form-control" rows="3">123 Đường ABC, Quận 1, TP.HCM</textarea>
-                                </div>
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="feather-save me-2"></i>
-                                        Lưu thay đổi
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Bảo mật -->
-                    <div class="card settings-content d-none" id="security">
-                        <div class="card-header">
-                            <h5 class="card-title">Bảo Mật</h5>
-                        </div>
-                        <div class="card-body">
-                            <form class="security-form">
-                                <div class="mb-4">
-                                    <h6>Đổi mật khẩu</h6>
+                                <fieldset>
+                                    <strong>Thay đổi mật khẩu</strong>
                                     <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Mật khẩu hiện tại</label>
-                                            <input type="password" class="form-control">
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Mật khẩu mới</label>
-                                            <input type="password" class="form-control">
+                                        <div class="col-md-12">
+                                            <label>Mật khẩu mới (để trống nếu không thay đổi):</label>
+                                            <input type="password" name="PasswordNew" id="sellerPasswordNew" class="form-control mb-2">
+                                            <label>Xác nhận mật khẩu mới:</label>
+                                            <input type="password" name="ConfirmPassword" id="sellerConfirmPassword" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Xác nhận mật khẩu mới</label>
-                                            <input type="password" class="form-control">
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Gợi ý mật khẩu</label>
-                                            <div class="password-strength">
-                                                <div class="progress" style="height: 5px;">
-                                                    <div class="progress-bar bg-success" style="width: 75%"></div>
-                                                </div>
-                                                <small class="text-muted">Mật khẩu của bạn khá mạnh</small>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Xác thực hai yếu tố</h6>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="twoFactorAuth">
-                                        <label class="form-check-label" for="twoFactorAuth">Bật xác thực hai yếu tố</label>
-                                    </div>
-                                    <small class="text-muted">Khi bật, bạn sẽ cần nhập mã xác thực mỗi khi đăng nhập</small>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Phiên đăng nhập</h6>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th>Thiết bị</th>
-                                                    <th>Vị trí</th>
-                                                    <th>Lần cuối</th>
-                                                    <th>Thao tác</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Chrome trên Windows</td>
-                                                    <td>TP.HCM, Việt Nam</td>
-                                                    <td>2 phút trước</td>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-danger">
-                                                            <i class="feather-trash-2"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Safari trên iPhone</td>
-                                                    <td>Hà Nội, Việt Nam</td>
-                                                    <td>1 giờ trước</td>
-                                                    <td>
-                                                        <button class="btn btn-sm btn-danger">
-                                                            <i class="feather-trash-2"></i>
-                                                        </button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="feather-save me-2"></i>
-                                        Lưu thay đổi
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Thông báo -->
-                    <div class="card settings-content d-none" id="notifications">
-                        <div class="card-header">
-                            <h5 class="card-title">Cài Đặt Thông Báo</h5>
-                        </div>
-                        <div class="card-body">
-                            <form class="notifications-form">
-                                <div class="mb-4">
-                                    <h6>Thông báo đơn hàng</h6>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="orderStatus" checked>
-                                        <label class="form-check-label" for="orderStatus">
-                                            Trạng thái đơn hàng thay đổi
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="orderDelivery" checked>
-                                        <label class="form-check-label" for="orderDelivery">
-                                            Thông báo giao hàng
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="orderReview" checked>
-                                        <label class="form-check-label" for="orderReview">
-                                            Nhắc nhở đánh giá sản phẩm
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Thông báo khuyến mãi</h6>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="promoNew" checked>
-                                        <label class="form-check-label" for="promoNew">
-                                            Mã giảm giá mới
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="promoExpire" checked>
-                                        <label class="form-check-label" for="promoExpire">
-                                            Mã giảm giá sắp hết hạn
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="promoSpecial" checked>
-                                        <label class="form-check-label" for="promoSpecial">
-                                            Ưu đãi đặc biệt
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Thông báo hệ thống</h6>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="systemUpdate" checked>
-                                        <label class="form-check-label" for="systemUpdate">
-                                            Cập nhật hệ thống
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="systemMaintenance" checked>
-                                        <label class="form-check-label" for="systemMaintenance">
-                                            Bảo trì hệ thống
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="feather-save me-2"></i>
-                                        Lưu thay đổi
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Quyền riêng tư -->
-                    <div class="card settings-content d-none" id="privacy">
-                        <div class="card-header">
-                            <h5 class="card-title">Quyền Riêng Tư</h5>
-                        </div>
-                        <div class="card-body">
-                            <form class="privacy-form">
-                                <div class="mb-4">
-                                    <h6>Hiển thị thông tin</h6>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="showEmail" checked>
-                                        <label class="form-check-label" for="showEmail">
-                                            Hiển thị email trong hồ sơ
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="showPhone" checked>
-                                        <label class="form-check-label" for="showPhone">
-                                            Hiển thị số điện thoại trong hồ sơ
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="showAddress" checked>
-                                        <label class="form-check-label" for="showAddress">
-                                            Hiển thị địa chỉ trong hồ sơ
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Quyền truy cập</h6>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="allowSearch" checked>
-                                        <label class="form-check-label" for="allowSearch">
-                                            Cho phép tìm kiếm tài khoản
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="allowFriendRequest" checked>
-                                        <label class="form-check-label" for="allowFriendRequest">
-                                            Cho phép yêu cầu kết bạn
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Dữ liệu tài khoản</h6>
-                                    <div class="alert alert-info">
-                                        <i class="feather-info me-2"></i>
-                                        Bạn có thể tải xuống hoặc xóa dữ liệu tài khoản của mình
-                                    </div>
-                                    <div class="d-flex gap-2">
-                                        <button type="button" class="btn btn-primary">
-                                            <i class="feather-download me-2"></i>
-                                            Tải xuống dữ liệu
-                                        </button>
-                                        <button type="button" class="btn btn-danger">
-                                            <i class="feather-trash-2 me-2"></i>
-                                            Xóa tài khoản
-                                        </button>
-                                    </div>
-                                </div>
-
-                                <div class="text-end">
-                                    <button type="submit" class="btn btn-primary">
-                                        <i class="feather-save me-2"></i>
-                                        Lưu thay đổi
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <!-- Ngôn ngữ -->
-                    <div class="card settings-content d-none" id="language">
-                        <div class="card-header">
-                            <h5 class="card-title">Cài Đặt Ngôn Ngữ</h5>
-                        </div>
-                        <div class="card-body">
-                            <form class="language-form">
-                                <div class="mb-4">
-                                    <h6>Ngôn ngữ hiển thị</h6>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="radio" name="language" id="langVi" checked>
-                                        <label class="form-check-label" for="langVi">
-                                            Tiếng Việt
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="language" id="langEn">
-                                        <label class="form-check-label" for="langEn">
-                                            English
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Định dạng ngày giờ</h6>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="radio" name="dateFormat" id="dateFormat1" checked>
-                                        <label class="form-check-label" for="dateFormat1">
-                                            DD/MM/YYYY
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="dateFormat" id="dateFormat2">
-                                        <label class="form-check-label" for="dateFormat2">
-                                            MM/DD/YYYY
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="text-end">
+                                </fieldset>
+                                <div class="text-end mt-3">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="feather-save me-2"></i>
                                         Lưu thay đổi
@@ -407,129 +102,45 @@
                             <h5 class="card-title">Thông Tin Shop</h5>
                         </div>
                         <div class="card-body">
-                            <form class="shop-form">
+                            <form id="shopForm" enctype="multipart/form-data">
                                 <div class="text-center mb-4">
-                                    <div class="shop-logo-upload">
-                                        <img src="assets/images/shop/logo.jpg" alt="Shop Logo" class="shop-logo">
-                                        <button type="button" class="btn btn-light btn-sm mt-2">
-                                            <i class="feather-camera me-2"></i>
-                                            Đổi logo shop
-                                        </button>
-                                    </div>
+                                    <img id="shopLogoPreview" src="assets/images/shop/logo.jpg" alt="Shop Logo" class="shop-logo">
+                                    <input type="file" name="LogoFile" id="shopLogoFile" class="form-control mt-2" accept="image/*">
+                                    <input type="hidden" name="LogoUrl" id="shopLogoUrl">
                                 </div>
-
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label class="form-label">Tên shop</label>
-                                        <input type="text" class="form-control" value="Duralux Shop">
+                                        <input type="text" class="form-control" name="Name" id="shopName" required>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label class="form-label">Mã số thuế</label>
-                                        <input type="text" class="form-control" value="0123456789">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" name="Email" id="shopEmail" required>
                                     </div>
                                 </div>
-
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Số điện thoại</label>
+                                        <input type="tel" class="form-control" name="PhoneNumber" id="shopPhoneNumber" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label">Địa chỉ</label>
+                                        <input type="text" class="form-control" name="Address" id="shopAddress" required>
+                                    </div>
+                                </div>
                                 <div class="mb-3">
                                     <label class="form-label">Mô tả shop</label>
-                                    <textarea class="form-control" rows="3">Chuyên cung cấp các sản phẩm nội thất cao cấp, chất lượng tốt với giá cả hợp lý.</textarea>
+                                    <textarea class="form-control" name="Description" id="shopDescription" rows="3" required></textarea>
                                 </div>
-
-                                <div class="mb-4">
-                                    <h6>Thông tin liên hệ</h6>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Email</label>
-                                            <input type="email" class="form-control" value="shop@duralux.com">
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Số điện thoại</label>
-                                            <input type="tel" class="form-control" value="0123456789">
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Địa chỉ</label>
-                                        <textarea class="form-control" rows="2">123 Đường ABC, Quận 1, TP.HCM</textarea>
+                                <div class="row">
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label">Loại hình kinh doanh</label>
+                                        <select class="form-select" name="BusinessType" id="shopBusinessType">
+                                            <option value="0">Hộ nông dân</option>
+                                            <option value="1">Doanh nghiệp</option>
+                                        </select>
                                     </div>
                                 </div>
-
-                                <div class="mb-4">
-                                    <h6>Thời gian làm việc</h6>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Giờ mở cửa</label>
-                                            <input type="time" class="form-control" value="08:00">
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Giờ đóng cửa</label>
-                                            <input type="time" class="form-control" value="22:00">
-                                        </div>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="open24h" checked>
-                                        <label class="form-check-label" for="open24h">
-                                            Mở cửa 24/7
-                                        </label>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Mạng xã hội</h6>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Facebook</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="feather-facebook"></i></span>
-                                                <input type="text" class="form-control" value="facebook.com/duralux">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Instagram</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="feather-instagram"></i></span>
-                                                <input type="text" class="form-control" value="instagram.com/duralux">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Zalo</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="feather-message-circle"></i></span>
-                                                <input type="text" class="form-control" value="zalo.me/duralux">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 mb-3">
-                                            <label class="form-label">Website</label>
-                                            <div class="input-group">
-                                                <span class="input-group-text"><i class="feather-globe"></i></span>
-                                                <input type="text" class="form-control" value="duralux.com">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-4">
-                                    <h6>Chính sách shop</h6>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="policyReturn" checked>
-                                        <label class="form-check-label" for="policyReturn">
-                                            Chấp nhận đổi trả hàng
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-2">
-                                        <input class="form-check-input" type="checkbox" id="policyRefund" checked>
-                                        <label class="form-check-label" for="policyRefund">
-                                            Chấp nhận hoàn tiền
-                                        </label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" id="policyWarranty" checked>
-                                        <label class="form-check-label" for="policyWarranty">
-                                            Có chính sách bảo hành
-                                        </label>
-                                    </div>
-                                </div>
-
                                 <div class="text-end">
                                     <button type="submit" class="btn btn-primary">
                                         <i class="feather-save me-2"></i>
@@ -630,6 +241,142 @@
     }
 </style>
 
+<script type="module">
+import {BaseService} from "/Custom/BaseService.js";
+import url from "/Custom/endpoints.js";
+import Toast from "/Custom/Toast_Seller.js";
+
+const token = localStorage.getItem('accessToken');
+const sellerId = localStorage.getItem('id');
+const storeId = localStorage.getItem('storeId');
+const userUrl = url.base + "/Users";
+const userService = new BaseService(userUrl, token);
+const shopUrl = url.base + "/Store";
+const shopService = new BaseService(shopUrl, token);
+
+// ----------- THÔNG TIN SELLER (CÁ NHÂN) -----------
+if (token && sellerId) {
+    userService.fetchApi("/user-info?userId=" + sellerId, 'POST', token).then(response => {
+        if (response && response.success && response.data) {
+            const userData = response.data;
+            document.getElementById('sellerFullName').value = userData.fullName || '';
+            document.getElementById('sellerEmail').value = userData.email || '';
+            document.getElementById('sellerPhoneNumber').value = userData.phoneNumber || '';
+            document.getElementById('sellerAddress').value = userData.address || '';
+            document.getElementById('sellerImageUrl').value = userData.imageUrl || '';
+            if (userData.imageUrl) {
+                document.getElementById('sellerAvatarPreview').src = `${url.baseUrl}/img/Users/${userData.imageUrl}`;
+            }
+        }
+    }).catch(error => {
+        Toast.error("Lỗi khi lấy thông tin cá nhân!");
+    });
+    document.getElementById('sellerImageFile').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('sellerAvatarPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+    document.getElementById('sellerProfileForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const fullName = document.getElementById('sellerFullName').value.trim();
+        const email = document.getElementById('sellerEmail').value.trim();
+        const phoneNumber = document.getElementById('sellerPhoneNumber').value.trim();
+        const address = document.getElementById('sellerAddress').value.trim();
+        const passwordNew = document.getElementById('sellerPasswordNew').value;
+        const confirmPassword = document.getElementById('sellerConfirmPassword').value;
+        if (!fullName) { Toast.error("Vui lòng nhập họ và tên!"); return; }
+        if (!email) { Toast.error("Vui lòng nhập email!"); return; }
+        if (!phoneNumber) { Toast.error("Vui lòng nhập số điện thoại!"); return; }
+        if (passwordNew && passwordNew !== confirmPassword) {
+            Toast.error("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+            return;
+        }
+        const formData = new FormData();
+        formData.append('Id', sellerId);
+        formData.append('FullName', fullName);
+        formData.append('Email', email);
+        formData.append('PhoneNumber', phoneNumber);
+        formData.append('Address', address);
+        formData.append('ImageUrl', document.getElementById('sellerImageUrl').value);
+        if (passwordNew) formData.append('PasswordNew', passwordNew);
+        const imageFile = document.getElementById('sellerImageFile').files[0];
+        if (imageFile) formData.append('ImageFile', imageFile);
+        userService.fetchApi(`/${sellerId}`, 'PUT', formData, true)
+            .then(response => {
+                if (response && response.success) {
+                    Toast.success("Cập nhật thông tin thành công!");
+                } else {
+                    Toast.error(response?.message || "Cập nhật thông tin thất bại!");
+                }
+            })
+            .catch(error => {
+                Toast.error("Lỗi khi cập nhật thông tin!");
+            });
+    });
+}
+// ----------- THÔNG TIN SHOP -----------
+if (token && storeId) {
+    shopService.fetchApi(`/${storeId}`, 'GET').then(response => {
+        if (response && response.success && response.data) {
+            const shop = response.data;
+            document.getElementById('shopName').value = shop.name || '';
+            document.getElementById('shopDescription').value = shop.description || '';
+            document.getElementById('shopAddress').value = shop.address || '';
+            document.getElementById('shopPhoneNumber').value = shop.phoneNumber || '';
+            document.getElementById('shopEmail').value = shop.email || '';
+            document.getElementById('shopLogoUrl').value = shop.logoUrl || '';
+            document.getElementById('shopBusinessType').value = shop.businessType;
+            if (shop.logoUrl) {
+                document.getElementById('shopLogoPreview').src = `${url.baseUrl}/img/Stores/${shop.logoUrl}`;
+            }
+        }
+    }).catch(error => {
+        Toast.error("Lỗi khi lấy thông tin shop!");
+    });
+    document.getElementById('shopLogoFile').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('shopLogoPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+    document.getElementById('shopForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const formData = new FormData();
+        formData.append('Name', document.getElementById('shopName').value);
+        formData.append('Description', document.getElementById('shopDescription').value);
+        formData.append('Address', document.getElementById('shopAddress').value);
+        formData.append('PhoneNumber', document.getElementById('shopPhoneNumber').value);
+        formData.append('Email', document.getElementById('shopEmail').value);
+        formData.append('BusinessType', document.getElementById('shopBusinessType').value);
+        formData.append('LogoUrl', document.getElementById('shopLogoUrl').value);
+        formData.append('UserId', sellerId);
+        formData.append('Id', storeId);
+        const logoFile = document.getElementById('shopLogoFile').files[0];
+        if (logoFile) formData.append('LogoFile', logoFile);
+        shopService.fetchApi(`/${storeId}`, 'PUT', formData, true)
+            .then(response => {
+                if (response && response.success) {
+                    Toast.success("Cập nhật thông tin shop thành công!");
+                } else {
+                    Toast.error(response?.message || "Cập nhật thất bại!");
+                }
+            })
+            .catch(error => {
+                Toast.error("Lỗi khi cập nhật thông tin shop!");
+            });
+    });
+}
+</script>
+
 <script>
     // Xử lý chuyển đổi tab cài đặt
     document.querySelectorAll('.settings-menu-item').forEach(item => {
@@ -651,28 +398,7 @@
     document.querySelector('#logout .btn-danger').addEventListener('click', function() {
         if (confirm('Bạn có chắc chắn muốn đăng xuất?')) {
             // Xử lý đăng xuất ở đây
-            window.location.href = 'login.html';
+            window.location.href = '/Account/Logout';
         }
-    });
-
-    // Xử lý đổi mật khẩu
-    document.querySelector('.security-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        // Xử lý đổi mật khẩu ở đây
-        alert('Đổi mật khẩu thành công!');
-    });
-
-    // Xử lý cập nhật thông tin cá nhân
-    document.querySelector('.profile-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        // Xử lý cập nhật thông tin ở đây
-        alert('Cập nhật thông tin thành công!');
-    });
-
-    // Xử lý cập nhật thông tin shop
-    document.querySelector('.shop-form').addEventListener('submit', function(e) {
-        e.preventDefault();
-        // Xử lý cập nhật thông tin shop ở đây
-        alert('Cập nhật thông tin shop thành công!');
     });
 </script> 

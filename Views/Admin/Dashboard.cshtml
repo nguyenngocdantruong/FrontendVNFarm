@@ -23,7 +23,6 @@
             class="card-header d-flex align-items-center justify-content-between gap-2"
           >
             <h4 class="card-title flex-grow-1">Sản Phẩm Bán Chạy</h4>
-            <a href="#" class="btn btn-sm btn-soft-primary">Xem tất cả</a>
           </div>
           
           <!-- Tìm kiếm và bộ lọc cho Sản phẩm bán chạy -->
@@ -795,6 +794,34 @@
           if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
             console.log(`Hủy đơn hàng ${orderId}`);
             // TODO: Gọi API để hủy đơn hàng
+          }
+        });
+      });
+
+      // Sự kiện cho nút xóa
+      document.querySelectorAll(".delete-product").forEach((button) => {
+        button.addEventListener("click", (e) => {
+          e.preventDefault();
+          const productId = button.getAttribute("data-id");
+
+          if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+            productService
+              .delete(productId)
+              .then((response) => {
+                if (response && response.success) {
+                  Toast.success("Xóa sản phẩm thành công!");
+                  this.applyFilter(); // Tải lại danh sách
+                } else {
+                  Toast.error(
+                    "Xóa sản phẩm thất bại: " +
+                      (response.message || "Không rõ lỗi")
+                  );
+                }
+              })
+              .catch((error) => {
+                console.error("Lỗi khi xóa sản phẩm:", error);
+                Toast.error("Đã xảy ra lỗi khi xóa sản phẩm. Vui lòng thử lại sau.");
+              });
           }
         });
       });

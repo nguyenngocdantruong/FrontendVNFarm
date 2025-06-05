@@ -5,6 +5,8 @@ const SortType = {
     Oldest : 3,
     AscendingPrice : 4,
     DescendingPrice : 5,
+    HighestRating : 6,
+    BestSeller : 7,
 }
 
 const UserRole = {

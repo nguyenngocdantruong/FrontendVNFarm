@@ -39,12 +39,12 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="input-item input-item-name ltn__custom-icon">
-                                                <input type="text" name="shippingName" id="shippingName" placeholder="Họ và tên người nhận" value="Nguyễn Đan Trường" required>
+                                                <input type="text" name="shippingName" id="shippingName" placeholder="Họ và tên người nhận" value="" required>
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="input-item input-item-phone ltn__custom-icon">
-                                                <input type="text" name="shippingPhone" id="shippingPhone" placeholder="Số điện thoại" value="0909090909" required>
+                                                <input type="text" name="shippingPhone" id="shippingPhone" placeholder="Số điện thoại" value="" required>
                                             </div>
                                         </div>
                                     </div>
@@ -76,13 +76,13 @@
                                         <div class="col-lg-12 col-md-12">
                                             <h6>Địa chỉ chi tiết</h6>
                                             <div class="input-item">
-                                                <input type="text" name="shippingAddress" id="shippingAddress" placeholder="Số nhà, tên đường, khu vực" value="123" required>
+                                                <input type="text" name="shippingAddress" id="shippingAddress" placeholder="Số nhà, tên đường, khu vực" value="" required>
                                             </div>
                                         </div>
                                     </div>
                                     <h6>Ghi chú đơn hàng (không bắt buộc)</h6>
                                     <div class="input-item input-item-textarea ltn__custom-icon">
-                                        <textarea name="notes" id="notes" placeholder="Ghi chú về đơn hàng của bạn, ví dụ: thời gian giao hàng hoặc địa điểm giao hàng chi tiết hơn.">456</textarea>
+                                        <textarea name="notes" id="notes" placeholder="Ghi chú về đơn hàng của bạn, ví dụ: thời gian giao hàng hoặc địa điểm giao hàng chi tiết hơn."></textarea>
                                     </div>
                                 </form>
                             </div>
@@ -188,6 +188,7 @@
 
         const app = {
             shippingFee: 0,
+            tax: 0,
             selectedItems: null,
             provinces: [],
             districts: [],
@@ -208,9 +209,9 @@
                     if (response && response.success) {
                         this.selectedItems = response.data;
                         this.shippingFee = response.shippingFee;
+                        this.tax = response.taxAmount;
                         this.renderOrderSummary();
                         this.setupEventListeners();
-                        Toast.success("Đã tải thông tin đơn hàng thành công");
                     } else {
                         Toast.error("Không thể tải thông tin đơn hàng");
                         document.getElementById('order-summary-container').innerHTML = `
@@ -333,8 +334,8 @@
                 let tableHTML = `<table class="table">
                     <tbody>`;
                 
-                let totalAmount = 0;
                 let cartItemIds = [];
+                let totalAmount = 0;
 
                 // Hiển thị sản phẩm từ các cửa hàng
                 this.selectedItems.shopCarts.forEach(shopCart => {
@@ -346,10 +347,9 @@
                     `;
                     
                     shopCart.cartItems.forEach(item => {
+                        cartItemIds.push(item.id);
                         const subtotal = item.product.price * item.quantity;
                         totalAmount += subtotal;
-                        cartItemIds.push(item.id);
-                        
                         tableHTML += `
                             <tr>
                                 <td>
@@ -364,15 +364,23 @@
 
                 // Phí vận chuyển từ response
                 const shippingFee = this.shippingFee || 0;
-                totalAmount += shippingFee;
-                
+
                 // Lưu tổng tiền gốc để tính toán giảm giá
-                this.originalTotalAmount = totalAmount;
+                this.originalTotalAmount = totalAmount + shippingFee;
+
+                totalAmount += shippingFee + this.tax;
 
                 tableHTML += `
                     <tr>
                         <td>Phí vận chuyển</td>
                         <td>${shippingFee.toLocaleString('vi-VN')}đ</td>
+                    </tr>`;
+
+                // Hiển thị thuế
+                tableHTML += `
+                    <tr>
+                        <td>Thuế</td>
+                        <td>${this.tax.toLocaleString('vi-VN')}đ</td>
                     </tr>`;
                 
                 // Hiển thị thông tin giảm giá nếu có

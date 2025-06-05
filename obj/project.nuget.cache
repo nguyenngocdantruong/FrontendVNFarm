@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "E3jB5wVTW6c=",
+  "dgSpecHash": "Sf7n48QhgVE=",
   "success": true,
-  "projectFilePath": "D:\\DoAnCNTT\\template\\ProjectFrontend\\ProjectFrontend.csproj",
+  "projectFilePath": "D:\\DoAnCNTT\\ProjectFrontend\\ProjectFrontend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Nguyen Dan Truong\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.extensions\\6.0.0\\microsoft.aspnetcore.mvc.razor.extensions.6.0.0.nupkg.sha512",
     "C:\\Users\\Nguyen Dan Truong\\.nuget\\packages\\microsoft.aspnetcore.mvc.razor.runtimecompilation\\9.0.4\\microsoft.aspnetcore.mvc.razor.runtimecompilation.9.0.4.nupkg.sha512",

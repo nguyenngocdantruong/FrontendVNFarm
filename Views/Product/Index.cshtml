@@ -43,10 +43,12 @@
                 <select class="nice-select" id="sortBy">
                   <option value="0">Tên A-Z</option>
                   <option value="1">Tên Z-A</option>
-                  <option value="2" selected>Mới nhất</option>
+                  <option value="2">Mới nhất</option>
                   <option value="3">Cũ nhất</option>
                   <option value="4">Giá tăng dần</option>
                   <option value="5">Giá giảm dần</option>
+                  <option value="6" selected>Đánh giá cao nhất</option>
+                  <option value="7">Bán chạy nhất</option>
                 </select>
               </div>
             </li>
@@ -85,6 +87,15 @@
                 placeholder="Nhập từ khóa..."
                 />
             </div>
+
+            <!-- Thêm dropdown xuất xứ -->
+            <div class="widget ltn__search-widget">
+                <h4 class="ltn__widget-title ltn__widget-title-border">Xuất xứ</h4>
+                <select id="originSelect" class="form-select" style="width:100%;margin-bottom:10px;">
+                    <option value="">Tất cả</option>
+                </select>
+            </div>
+
           <!-- Category Widget -->
           <div class="widget ltn__menu-widget">
             <h4 class="ltn__widget-title ltn__widget-title-border">
@@ -99,19 +110,12 @@
             </li>
             </ul>
           </div>
-          
-          <!-- Filter Widget -->
           <div class="widget ltn__tagcloud-widget">
             <div class="filter-buttons">
-              <button class="btn w-100" type="button" id="filterButton" style="background-color: #80B500;">
-                <i class="fas fa-filter"></i> Lọc
-              </button>
-            </div>
-            <div class="filter-buttons">
                 <button class="btn btn-danger w-100 mt-3" type="button" id="resetFilterButton">
-                  <i class="fas fa-undo"></i> Đặt lại bộ lọc
+                    <i class="fas fa-undo"></i> Đặt lại bộ lọc
                 </button>
-              </div>
+            </div>
           </div>
         </aside>
       </div>
@@ -189,23 +193,26 @@
     const categoryUrl = url.base + "/Category";
     const productUrl = url.base + "/Product";
     const cartUrl = url.base + "/Cart";
+    const enumUrl = url.base + "/Enum";
 
     const categoryService = new BaseService(categoryUrl, key);
     const productService = new BaseService(productUrl, key);
     const cartService = new BaseService(cartUrl, key);
-
+    const enumService = new BaseService(enumUrl, key);
     
     const app = {
         filter: {
             searchTerm: "",
-            sortBy: 2,
+            sortBy: 6,
             page: 1,
             pageSize: 9,
             minPrice: 0,
             maxPrice: 10000000,
-            categoryId : -999,
+            categoryId: -999,
             isActive: true,
+            origin: "",
         },
+        searchTimeout: null,
         init: function() {
             this.preloadData();
             this.bindEvents();
@@ -213,6 +220,7 @@
         preloadData: function() {
             this.loadCategories();
             this.loadProducts();
+            this.loadOrigins();
         },
         loadProducts: function() {
             productService.find(app.filter).then(response => {
@@ -435,51 +443,101 @@
                 });
             });
         },
+        loadOrigins: function() {
+            enumService.fetchApi('/origin-types', 'GET')
+                .then(response => {
+                    const originSelect = document.getElementById("originSelect");
+                    // Xóa các option cũ (trừ "Tất cả")
+                    originSelect.innerHTML = '<option value="">Tất cả</option>';
+                    if (Array.isArray(response)) {
+                        response.forEach(origin => {
+                            const option = document.createElement("option");
+                            option.value = origin;
+                            option.textContent = origin;
+                            originSelect.appendChild(option);
+                        });
+                    }
+                    // Nếu muốn dùng nice-select thì:
+                    // $(originSelect).niceSelect('destroy');
+                    // $(originSelect).niceSelect();
+                })
+                .catch(error => {
+                    console.error("Error loading origins:", error);
+                    Toast.error("Không thể tải danh sách xuất xứ!");
+                });
+        },
         bindEvents: function() {
             // Handle sort select with nice-select
             const sortBySelect = document.getElementById("sortBy");
-            $(sortBySelect).niceSelect(); // Khởi tạo nice-select 🎨
-            // Bắt sự kiện khi nice-select thay đổi
+            $(sortBySelect).niceSelect();
             $(sortBySelect).on('change', function() {
                 app.filter.sortBy = parseInt(this.value);
-                console.log("Sort by", app.filter.sortBy);
+                app.applyFilters();
             });
 
-            // Handle search input
+            // Handle search input với debounce
             const searchInput = document.getElementById("searchInput");
             searchInput.addEventListener("input", () => {
-                app.filter.searchTerm = searchInput.value;
+                // Xóa timeout cũ nếu có
+                if (app.searchTimeout) {
+                    clearTimeout(app.searchTimeout);
+                }
+                // Tạo timeout mới
+                app.searchTimeout = setTimeout(() => {
+                    app.filter.searchTerm = searchInput.value;
+                    app.applyFilters();
+                }, 300); // Đợi 0.3s sau khi người dùng ngừng gõ
             });
 
             // Handle category select
             document.getElementById("categoryList").addEventListener("change", (e) => {
                 app.filter.categoryId = parseInt(e.target.value);
-                console.log("Category", app.filter.categoryId);
+                app.applyFilters();
             });
 
-            // Handle filter button
-            const filterButton = document.getElementById("filterButton");
-            filterButton.addEventListener("click", () => {
-                app.filter.page = 1;
-                console.log("Filter", app.filter);
-                app.loadProducts();
+            // Handle origin select
+            const originSelect = document.getElementById("originSelect");
+            originSelect.addEventListener('change', function() {
+                app.filter.origin = this.value;
+                app.applyFilters();
             });
 
-            // Handle reset filter button
+            // Nút reset bộ lọc
             const resetFilterButton = document.getElementById("resetFilterButton");
             resetFilterButton.addEventListener("click", () => {
                 app.filter = {
                     searchTerm: "",
-                    sortBy: 2,
+                    sortBy: 6,
                     page: 1,
                     pageSize: 9,
                     minPrice: 0,
                     maxPrice: 10000000,
-                    categoryId : -999,
+                    categoryId: -999,
                     isActive: true,
-                }
-                app.loadProducts();
+                    origin: "",
+                };
+                // Reset UI
+                document.getElementById("searchInput").value = "";
+                document.getElementById("category-all").checked = true;
+                document.getElementById("originSelect").value = "";
+                app.applyFilters();
             });
+        },
+        applyFilters: function() {
+            app.filter.page = 1; // Reset về trang 1 khi lọc
+            app.loadProducts();
+        },
+        resetFilters: function() {
+            // Reset all filters to default values
+            app.filter.searchTerm = "";
+            app.filter.sortBy = 6;
+            app.filter.page = 1;
+            app.filter.minPrice = 0;
+            app.filter.maxPrice = 10000000;
+            app.filter.categoryId = -999;
+            app.filter.isActive = true;
+            app.filter.origin = "";
+            app.loadProducts();
         },
     }
     app.init();

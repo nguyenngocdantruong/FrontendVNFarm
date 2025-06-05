@@ -219,7 +219,7 @@
                                 <h6 class="mb-0 text-truncate">${room.seller?.fullName || room.nameRoom}</h6>
                                 <small class="text-muted ms-2">${timeDisplay}</small>
                             </div>
-                            <p class="text-muted mb-0 small text-truncate">${room.lastMessage || 'Không có tin nhắn'}</p>
+                            <p class="text-muted mb-0 small text-truncate last-msg">${room.lastMessage || 'Không có tin nhắn'}</p>
                         </div>
                     </div>
                 </a>
@@ -447,6 +447,10 @@
 
         messagesContainer.appendChild(messageElement);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Cập nhật tin nhắn cuối cùng
+        const lastMessage = document.querySelector('.last-msg');
+        lastMessage.textContent = content;
     }
 
     // Lấy room ID từ URL parameter

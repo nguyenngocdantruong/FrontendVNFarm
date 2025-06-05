@@ -1,5 +1,6 @@
 @{
     Layout = "_LayoutAdmin";
+    ViewBag.Title = "Thêm Phiếu Giảm Giá Mới";
 }
 
 <div class="page-content">
@@ -207,6 +208,9 @@
     
     // Lấy dữ liệu từ form
     const formData = new FormData();
+    if(parseInt(document.getElementById('type').value) === 2 || parseInt(document.getElementById('type').value) === 1){
+      document.getElementById('maximumDiscountAmount').value = document.getElementById('discountAmount').value || 1;
+    }
     formData.append('code', document.getElementById('code').value);
     formData.append('description', document.getElementById('description').value);
     formData.append('type', document.getElementById('type').value);

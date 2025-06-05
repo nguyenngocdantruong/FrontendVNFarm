@@ -225,6 +225,11 @@
         const customersContainer = document.getElementById('chat-customers');
         document.getElementById('loading-customers').style.display = 'none';
 
+        if (!Array.isArray(chatRooms) || chatRooms.length === 0) {
+            customersContainer.innerHTML = '<div class="text-center p-3">Không có cuộc trò chuyện nào</div>';
+            return;
+        }
+
         let html = '';
         chatRooms.forEach(room => {
             // Định dạng thời gian
@@ -240,17 +245,21 @@
 
             // Đánh dấu phòng được chọn
             const isActive = room.id == currentRoomId ? 'active' : '';
+            
+            // Lấy thông tin người mua từ đối tượng buyer
+            const buyerName = room.buyer?.fullName || 'Khách hàng';
+            const buyerImage = room.buyer?.imageUrl ? `${url.baseUrl}/img/Users/${room.buyer.imageUrl}` : '/Custom/no-image.webp';
 
             html += `
                 <a href="?room=${room.id}" class="list-group-item list-group-item-action chat-customer ${isActive}" 
                    data-room-id="${room.id}" data-room-name="${room.nameRoom}">
                     <div class="d-flex align-items-center">
                         <div class="position-relative me-3">
-                            <img src="${url.baseUrl}/img/Users/${room.buyer?.imageUrl}" alt="${room.nameRoom}" class="rounded-circle" width="40" height="40">
+                            <img src="${buyerImage}" alt="${buyerName}" class="rounded-circle" width="40" height="40">
                         </div>
                         <div class="flex-grow-1 min-width-0">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0 text-truncate">${room.buyer?.fullName || room.nameRoom}</h6>
+                                <h6 class="mb-0 text-truncate">${buyerName}</h6>
                                 <small class="text-muted ms-2">${timeDisplay}</small>
                             </div>
                             <p class="text-muted mb-0 small text-truncate">${room.lastMessage || 'Không có tin nhắn'}</p>
@@ -306,7 +315,7 @@
                     currentRoomInfo = response;
                     currentCustomerId = response.buyerId;
 
-                    // Cập nhật giao diện
+                    // Cập nhật giao diện với thông tin phòng chat
                     updateUIWithRoomInfo(response);
 
                     // Kết nối Pusher
@@ -340,10 +349,19 @@
         // Hiển thị tin nhắn
         app.services.chat.fetchApi(`/room/${roomData.id}/messages`)
         .then(response => {
-            displayMessages(response || []);
+            if (Array.isArray(response) && response.length > 0) {
+                displayMessages(response);
+            } else {
+                document.getElementById('chat-messages').innerHTML = `
+                    <div class="text-center py-4">
+                        <p class="text-muted">Chưa có tin nhắn nào. Hãy bắt đầu cuộc trò chuyện!</p>
+                    </div>
+                `;
+            }
         })
         .catch(error => {
             console.error("Lỗi khi tải tin nhắn:", error);
+            Toast.error("Không thể tải tin nhắn");
         });
     }
 
@@ -352,7 +370,7 @@
         const messagesContainer = document.getElementById('chat-messages');
         messagesContainer.innerHTML = '';
 
-        if (messages.length === 0) {
+        if (!Array.isArray(messages) || messages.length === 0) {
             messagesContainer.innerHTML = `
                 <div class="text-center py-4">
                     <p class="text-muted">Chưa có tin nhắn nào. Hãy bắt đầu cuộc trò chuyện!</p>
@@ -361,15 +379,18 @@
             return;
         }
 
-        // Sắp xếp tin nhắn theo thời gian
+        // Sắp xếp tin nhắn theo thời gian (cũ nhất lên trên)
         messages.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
 
         // Hiển thị từng tin nhắn
         messages.forEach(msg => {
+            if (!msg.content) return; // Bỏ qua tin nhắn rỗng
+            
             const isFromCustomer = msg.senderId === currentCustomerId;
             let dt = new Date(msg.createdAt);
             dt.setHours(dt.getHours() + 7);
             const messageTime = dt.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            
             appendMessage(msg.content, isFromCustomer, messageTime);
         });
 
@@ -458,14 +479,13 @@
         if (!content) return;
         
         const messagesContainer = document.getElementById('chat-messages');
-        console.log("Time in appendMessage: ", time);
-        let timeDisplay = time;
         let messageTime = '';
-        if (!timeDisplay) {
-            timeDisplay = new Date();
-            messageTime = timeDisplay.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+        
+        if (!time) {
+            const now = new Date();
+            messageTime = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
         } else {
-            messageTime = timeDisplay;
+            messageTime = time;
         }
 
         const messageElement = document.createElement('div');
@@ -479,6 +499,13 @@
 
         messagesContainer.appendChild(messageElement);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        // Cập nhật tin nhắn cuối cùng - đây là phần gây lỗi
+        // Kiểm tra xem có phần tử .last-msg không trước khi cập nhật
+        const lastMessage = document.querySelector('.last-msg');
+        if (lastMessage) {
+            lastMessage.textContent = content;
+        }
     }
 
     // Lấy room ID từ URL parameter

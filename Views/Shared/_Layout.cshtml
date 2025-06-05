@@ -132,6 +132,13 @@
                                     </li>
                                 </ul>
                             </div>
+                            <!-- mini cart -->
+                            <div class="mini-cart-icon" style="margin-right: 15px; margin-left:15px; position: relative;">
+                                <a href="#" id="layoutCartIcon" class="ltn__utilize-toggle">
+                                    <i class="icon-shopping-cart" style="font-size: 22px;"></i>
+                                    <span id="layoutCartItemCount" class="badge bg-primary rounded-pill" style="position: absolute; top: -8px; right: -12px; font-size: 0.7em; padding: 0.25em 0.5em;">0</span>
+                                </a>
+                            </div>
                             <!-- Mobile Menu Button -->
                             <div class="mobile-menu-toggle d-xl-none">
                                 <a href="#ltn__utilize-mobile-menu" class="ltn__utilize-toggle">
@@ -244,6 +251,39 @@
     </div>
     <!-- Body main wrapper end -->
 
+    <!-- Cart Modal -->
+    <div class="modal fade" id="quickViewCartModal" tabindex="-1" aria-labelledby="quickViewCartModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title p-3" id="quickViewCartModalLabel">Giỏ hàng của bạn</h5>
+                </div>
+                <div class="modal-body" id="quickViewCartModalBody">
+                    <!-- Cart content will be loaded here -->
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Đang tải...</span>
+                        </div>
+                        <p class="mt-2">Đang tải giỏ hàng...</p>
+                    </div>
+                </div>
+                <div class="modal-footer" id="quickViewCartModalFooter" style="display: none;">
+                    <div class="w-100">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tổng cộng (<span id="quickViewCartTotalItems">0</span> sản phẩm):</span>
+                            <strong id="quickViewCartTotalPrice">0đ</strong>
+                        </div>
+                        <div class="d-flex justify-content-end gap-2">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            <a href="/Account/Cart" class="btn btn-outline-primary">Xem chi tiết giỏ hàng</a>
+                            <button type="button" id="quickViewCheckoutBtn" class="btn theme-btn-1 btn-effect-1">Thanh toán</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <!-- All JS Plugins -->
     <script src="~/js/plugins.js"></script>
@@ -271,15 +311,223 @@
         }
         const navigationMenu = document.getElementById("navigation-menu");
         if (localStorage.getItem("role") === "Admin") {
+            window.location.href = "/Admin/Dashboard"; // Tạm thời comment để không bị redirect khi test
             navigationMenu.innerHTML += `
                 <li><a href="/Admin/Dashboard">Admin Dashboard</a></li>
             `;
         }
         else if (localStorage.getItem("role") === "Seller") {
+            window.location.href = "/Seller"; // Tạm thời comment để không bị redirect khi test
             navigationMenu.innerHTML += `
                 <li><a href="/Seller">Seller Dashboard</a></li>
             `;
         }
+    </script>
+    <script type="module">
+        import Toast from "/Custom/Toast.js";
+        import {BaseService} from "/Custom/BaseService.js";
+        import url from "/Custom/endpoints.js";
+        import key from "/Custom/jwt.js";
+
+        const cartUrl = url.base + "/Cart";
+        const cartService = new BaseService(cartUrl, key);
+        let quickViewCartModalInstance = null;
+        let currentCartData = null; // Lưu trữ dữ liệu giỏ hàng hiện tại
+
+        const layoutCartIcon = document.getElementById('layoutCartIcon');
+        const layoutCartItemCount = document.getElementById('layoutCartItemCount');
+        const quickViewCartModalElement = document.getElementById('quickViewCartModal');
+        const quickViewCartModalBody = document.getElementById('quickViewCartModalBody');
+        const quickViewCartModalFooter = document.getElementById('quickViewCartModalFooter');
+        const quickViewCartTotalItems = document.getElementById('quickViewCartTotalItems');
+        const quickViewCartTotalPrice = document.getElementById('quickViewCartTotalPrice');
+        const quickViewCheckoutBtn = document.getElementById('quickViewCheckoutBtn');
+
+        function initializeCartModal() {
+            if (quickViewCartModalElement) {
+                quickViewCartModalInstance = new bootstrap.Modal(quickViewCartModalElement);
+            }
+        }
+        
+        function updateLayoutCartItemCount(totalItems) {
+            if (layoutCartItemCount) {
+                layoutCartItemCount.textContent = totalItems;
+            }
+        }
+
+        function renderCartInModal(cartData) {
+            currentCartData = cartData; // Cập nhật dữ liệu giỏ hàng hiện tại
+            if (!cartData || !cartData.shopCarts || cartData.shopCarts.length === 0) {
+                quickViewCartModalBody.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-shopping-cart fa-3x text-muted mb-3"></i>
+                        <h4>Giỏ hàng trống</h4>
+                        <p>Bạn chưa có sản phẩm nào trong giỏ hàng.</p>
+                        <a href="/Product" class="theme-btn-1 btn btn-effect-1 mt-2">Tiếp tục mua sắm</a>
+                    </div>
+                `;
+                quickViewCartModalFooter.style.display = 'none';
+                updateLayoutCartItemCount(0);
+                return;
+            }
+
+            let modalCartHTML = '<div class="ltn__shoping-cart-inner-modal">';
+            let overallTotalAmount = 0;
+            let overallTotalItems = 0;
+
+            cartData.shopCarts.forEach(shopCart => {
+                modalCartHTML += `
+                    <div class="shop-header-modal d-flex align-items-center mb-2 p-2 bg-light rounded">
+                        <img src="${url.baseUrl}/img/Stores/${shopCart.shop.logoUrl}" alt="${shopCart.shop.name}" class="shop-logo-modal me-2" style="width: 25px; height: 25px; border-radius: 50%;" onerror="this.src='${url.baseUrl}/img/Stores/default.jpg'">
+                        <h6 class="mb-0 fs-sm">${shopCart.shop.name}</h6>
+                    </div>
+                    <ul class="ltn__cart-product-list">`;
+                
+                shopCart.cartItems.forEach(item => {
+                    const product = item.product;
+                    const subtotal = product.price * item.quantity;
+                    overallTotalAmount += subtotal;
+                    overallTotalItems += item.quantity;
+
+                    modalCartHTML += `
+                        <li>
+                            <div class="cart-product-item d-flex">
+                                <div class="cart-product-image me-3">
+                                    <a href="/Product/Detail/${product.id}"><img src="${url.baseUrl}/img/Products/${product.imageUrl}" alt="${product.name}" style="width: 60px; height: 60px; object-fit: cover;"></a>
+                                </div>
+                                <div class="cart-product-info flex-grow-1">
+                                    <h6 class="mb-1 fs-sm"><a href="/Product/Detail/${product.id}">${product.name}</a></h6>
+                                    <span class="cart-product-quantity text-muted fs-xs">${item.quantity} x ${product.price.toLocaleString('vi-VN')}đ</span>
+                                </div>
+                                <div class="cart-product-subtotal text-end" style="min-width: 80px;">
+                                    <span class="fs-sm fw-bold">${subtotal.toLocaleString('vi-VN')}đ</span>
+                                </div>
+                            </div>
+                        </li>`;
+                });
+                modalCartHTML += '</ul>';
+                 if (shopCart.cartItems.length > 0 && cartData.shopCarts.length > 1 && cartData.shopCarts.indexOf(shopCart) < cartData.shopCarts.length - 1) {
+                    modalCartHTML += '<hr class="my-2">';
+                }
+            });
+            modalCartHTML += '</div>';
+            quickViewCartModalBody.innerHTML = modalCartHTML;
+
+            quickViewCartTotalItems.textContent = overallTotalItems;
+            quickViewCartTotalPrice.textContent = `${overallTotalAmount.toLocaleString('vi-VN')}đ`;
+            quickViewCartModalFooter.style.display = 'block';
+            updateLayoutCartItemCount(overallTotalItems);
+        }
+
+        async function fetchAndShowCart() {
+            if (!quickViewCartModalInstance) {
+                initializeCartModal();
+            }
+            
+            quickViewCartModalBody.innerHTML = `
+                <div class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status"><span class="visually-hidden">Đang tải...</span></div>
+                    <p class="mt-2">Đang tải giỏ hàng...</p>
+                </div>`;
+            quickViewCartModalFooter.style.display = 'none';
+            if(quickViewCartModalInstance) quickViewCartModalInstance.show();
+
+            try {
+                const response = await cartService.getAll();
+                if (response && response.success) {
+                    renderCartInModal(response.data);
+                } else {
+                    quickViewCartModalBody.innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                            <h4>Không thể tải giỏ hàng</h4>
+                            <p>${response.message || "Vui lòng thử lại sau."}</p>
+                        </div>`;
+                    Toast.error(response.message || "Không thể tải giỏ hàng");
+                    updateLayoutCartItemCount(0);
+                }
+            } catch (error) {
+                console.error("Lỗi khi tải giỏ hàng cho modal:", error);
+                quickViewCartModalBody.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fas fa-exclamation-circle fa-3x text-danger mb-3"></i>
+                        <h4>Đã xảy ra lỗi</h4>
+                        <p>Không thể tải giỏ hàng của bạn.</p>
+                    </div>`;
+                Toast.error("Đã xảy ra lỗi khi tải giỏ hàng");
+                updateLayoutCartItemCount(0);
+            }
+        }
+        
+        // Hàm cập nhật số lượng trên icon khi trang load (nếu người dùng đã đăng nhập)
+        async function updateInitialCartCount() {
+            if (localStorage.getItem("accessToken")) {
+                try {
+                    const response = await cartService.getAll();
+                    if (response && response.success && response.data && response.data.shopCarts) {
+                        let totalItems = 0;
+                        response.data.shopCarts.forEach(sc => {
+                            sc.cartItems.forEach(ci => {
+                                totalItems += ci.quantity;
+                            });
+                        });
+                        updateLayoutCartItemCount(totalItems);
+                    } else {
+                        updateLayoutCartItemCount(0);
+                    }
+                } catch (error) {
+                    console.warn("Không thể tải số lượng giỏ hàng ban đầu:", error);
+                    updateLayoutCartItemCount(0);
+                }
+            } else {
+                updateLayoutCartItemCount(0);
+            }
+        }
+
+        if (layoutCartIcon) {
+            layoutCartIcon.addEventListener('click', function(e) {
+                e.preventDefault();
+                if (localStorage.getItem("accessToken")) {
+                     fetchAndShowCart();
+                } else {
+                    Toast.warning("Vui lòng đăng nhập để xem giỏ hàng của bạn.");
+                    // Tùy chọn: chuyển hướng đến trang đăng nhập
+                    // window.location.href = "/Home/Login"; 
+                }
+            });
+        }
+
+        if (quickViewCheckoutBtn) {
+            quickViewCheckoutBtn.addEventListener('click', function() {
+                if (!currentCartData || !currentCartData.shopCarts || currentCartData.shopCarts.length === 0) {
+                    Toast.warning("Giỏ hàng của bạn đang trống. Không thể thanh toán.");
+                    return;
+                }
+
+                const preparedData = {
+                    userId: currentCartData.userId,
+                    shopCarts: currentCartData.shopCarts.map(sc => ({
+                        shopId: sc.shopId,
+                        cartId: sc.id, 
+                        cartItems: sc.cartItems.map(ci => ({
+                            productId: ci.productId,
+                            quantity: ci.quantity
+                        }))
+                    }))
+                };
+                
+                localStorage.setItem('selectedCartItems', JSON.stringify(preparedData));
+                if(quickViewCartModalInstance) quickViewCartModalInstance.hide();
+                window.location.href = '/Account/Checkout';
+            });
+        }
+        
+        // Khởi tạo modal và cập nhật số lượng giỏ hàng ban đầu
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeCartModal(); // Đảm bảo modal được khởi tạo để có thể show/hide
+            updateInitialCartCount();
+        });
+
     </script>
 
 </body>

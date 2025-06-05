@@ -590,7 +590,7 @@
             // Nút Hủy
             document.getElementById('cancel-button').addEventListener('click', function() {
                 if (confirm('Bạn có chắc chắn muốn hủy các thay đổi?')) {
-                    window.location.href = `00_layout.html?file=00_product_details.html&id=${self.productId}`;
+                    window.location.href = `/Admin/ProductList`;
                 }
             });
             
@@ -605,7 +605,7 @@
             
             // Nút xem sản phẩm sau khi cập nhật thành công
             document.getElementById('view-product-btn').addEventListener('click', function() {
-                window.location.href = `00_layout.html?file=00_product_details.html&id=${self.productId}`;
+                window.location.href = `/Admin/ProductDetail?id=${self.productId}`;
             });
             
             // Nút tiếp tục chỉnh sửa

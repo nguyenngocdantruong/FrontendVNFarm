@@ -87,7 +87,6 @@
                     if (response && response.success) {
                         this.order = response.data;
                         this.renderOrderDetails();
-                        Toast.success("Đã tải thông tin đơn hàng thành công");
                     } else {
                         Toast.error("Không thể tải thông tin đơn hàng");
                         document.getElementById('order-container').innerHTML = `
@@ -136,8 +135,9 @@
                     4: '<span class="badge bg-success">Đã giao hàng</span>',
                     5: '<span class="badge bg-success">Hoàn thành</span>',
                     6: '<span class="badge bg-danger">Đã hủy</span>',
-                    7: '<span class="badge bg-secondary">Hoàn trả</span>',
-                    8: '<span class="badge bg-info">Đã xác nhận</span>'
+                    7: '<span class="badge bg-secondary">Đã hoàn hàng</span>',
+                    8: '<span class="badge bg-info">Đã xác nhận</span>',
+                    9: '<span class="badge bg-secondary">Đã yêu cầu hoàn tiền</span>'
                 };
                 
                 return statusMap[status] || '<span class="badge bg-secondary">Không xác định</span>';
@@ -177,6 +177,67 @@
                 };
                 
                 return statusMap[status] || '<span class="badge bg-secondary">Không xác định</span>';
+            },
+            
+            cancelOrder: function() {
+                if (!this.order || !this.order.id) {
+                    Toast.error("Không tìm thấy thông tin đơn hàng để hủy.");
+                    return;
+                }
+
+                // Xác nhận trước khi hủy
+                if (!confirm("Bạn có chắc chắn muốn hủy đơn hàng này không?")) {
+                    return;
+                }
+
+                const orderId = this.order.id;
+                const cancelStatus = 6; // OrderStatus.Cancelled
+
+                orderService.fetchApi(`/${orderId}/status/${cancelStatus}`, 'PUT')
+                    .then(response => {
+                        if (response && response.success) {
+                            Toast.success(response.message || "Đã hủy đơn hàng thành công");
+                            // Tải lại thông tin đơn hàng để cập nhật giao diện
+                            this.getOrderDetails(orderId);
+                        } else {
+                            Toast.error(response.message || "Không thể hủy đơn hàng. Vui lòng thử lại.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi hủy đơn hàng:", error);
+                        Toast.error("Đã xảy ra lỗi khi hủy đơn hàng.");
+                    });
+            },
+            
+            // Thêm hàm yêu cầu hoàn tiền đơn hàng
+            requestRefund: function() {
+                if (!this.order || !this.order.id) {
+                    Toast.error("Không tìm thấy thông tin đơn hàng để yêu cầu hoàn tiền.");
+                    return;
+                }
+
+                // Xác nhận trước khi yêu cầu hoàn tiền
+                if (!confirm("Bạn có chắc chắn muốn yêu cầu hoàn tiền đơn hàng này không?")) {
+                    return;
+                }
+
+                const orderId = this.order.id;
+                const refundStatus = 9; // RefundRequestStatus = 9
+
+                orderService.fetchApi(`/${orderId}/status/${refundStatus}`, 'PUT')
+                    .then(response => {
+                        if (response && response.success) {
+                            Toast.success(response.message || "Đã gửi yêu cầu hoàn tiền thành công");
+                            // Tải lại thông tin đơn hàng để cập nhật giao diện
+                            this.getOrderDetails(orderId);
+                        } else {
+                            Toast.error(response.message || "Không thể yêu cầu hoàn tiền. Vui lòng thử lại.");
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Lỗi khi yêu cầu hoàn tiền:", error);
+                        Toast.error("Đã xảy ra lỗi khi yêu cầu hoàn tiền.");
+                    });
             },
             
             renderOrderDetails: function() {
@@ -410,6 +471,19 @@
                 Object.values(shopGroups).forEach(group => {
                     group.items.forEach(item => {
                         const subtotal = item.subtotal || (item.unitPrice * item.quantity);
+                        let unitText = '';
+                        switch(item.unit) {
+                            case 1: unitText = 'kg'; break;
+                            case 2: unitText = 'hộp'; break;
+                            case 3: unitText = 'cái'; break;
+                            case 4: unitText = 'gói'; break;
+                            case 5: unitText = 'túi'; break;
+                            case 6: unitText = 'thùng'; break;
+                            case 7: unitText = 'cuộn'; break;
+                            case 8: unitText = 'lít'; break;
+                            case 9: unitText = 'ml'; break;
+                            default: unitText = '';
+                        }
                         html += `
                                     <tr>
                                         <td>
@@ -421,7 +495,7 @@
                                             </div>
                                         </td>
                                         <td>${group.shop.name}</td>
-                                        <td class="text-center">${item.quantity} ${item.unit === 1 ? 'kg' : 'gói'}</td>
+                                        <td class="text-center">${item.quantity} ${unitText}</td>
                                         <td class="text-end">${item.unitPrice.toLocaleString('vi-VN')}đ</td>
                                         <td class="text-end">${(item.taxAmount || 0).toLocaleString('vi-VN')}đ</td>
                                         <td class="text-center">${this.getPackagingStatusText(item.packagingStatus)}</td>
@@ -485,6 +559,16 @@
                                 <i class="fas fa-star me-2"></i> Đánh giá sản phẩm
                             </button>
                             ` : ''}
+                            ${(order.status !== 5 && order.status !== 6 && order.status !== 7 && order.status !== 9) ? `
+                            <button id="cancelOrderBtn" class="btn btn-danger btn-effect-1 text-uppercase">
+                                <i class="fas fa-times-circle me-2"></i> Hủy đơn hàng
+                            </button>
+                            ` : ''}
+                            ${(order.status === 5) ? `
+                            <button id="requestRefundBtn" class="btn btn-warning btn-effect-1 text-uppercase">
+                                <i class="fas fa-undo me-2"></i> Yêu cầu hoàn tiền
+                            </button>
+                            ` : ''}
                         </div>
                     </div>
                 </div>
@@ -514,14 +598,25 @@
                 if (order.status === 5) {
                     document.getElementById('reviewBtn').addEventListener('click', this.openReviewModal.bind(this));
                 }
+
+                // Thêm sự kiện cho nút hủy đơn hàng nếu có
+                if (order.status !== 5 && order.status !== 6) {
+                    const cancelOrderBtn = document.getElementById('cancelOrderBtn');
+                    if (cancelOrderBtn) {
+                        cancelOrderBtn.addEventListener('click', this.cancelOrder.bind(this));
+                    }
+                }
+
+                // Thêm sự kiện cho nút yêu cầu hoàn tiền nếu đơn hàng đã hoàn tất
+                if (order.status === 5) {
+                    document.getElementById('requestRefundBtn').addEventListener('click', this.requestRefund.bind(this));
+                }
             },
             
             openReviewModal: function() {
                 // Gọi API để lấy danh sách sản phẩm có thể đánh giá
                 const reviewUrl = url.base + "/Review";
                 const reviewService = new BaseService(reviewUrl, key);
-                
-                Toast.info("Đang tải danh sách sản phẩm có thể đánh giá...");
                 
                 reviewService.fetchApi(`/reviewable/${this.order.id}`, 'GET')
                     .then(response => {
@@ -827,7 +922,7 @@
                         <div class="row">
                             <div class="col order-info">
                                 <h3>Thông tin đơn hàng</h3>
-                                <p><span class="bold">Trạng thái:</span> ${order.status === 6 ? 'Đã hủy' : order.status === 5 ? 'Hoàn thành' : order.status === 4 ? 'Đã giao hàng' : order.status === 3 ? 'Đang giao hàng' : order.status === 2 ? 'Đã đóng gói' : order.status === 1 ? 'Đang xử lý' : 'Chờ xác nhận'}</p>
+                                <p><span class="bold">Trạng thái:</span> ${order.status === 6 ? 'Đã hủy' : order.status === 5 ? 'Hoàn thành' : order.status === 4 ? 'Đã giao hàng' : order.status === 3 ? 'Đang giao hàng' : order.status === 2 ? 'Đã đóng gói' : order.status === 1 ? 'Đang xử lý' : order.status === 7 ? 'Đã hoàn hàng' : order.status === 9 ? 'Đã yêu cầu hoàn tiền' : order.status === 8 ? 'Đã xác nhận' : 'Chờ xác nhận'}</p>
                                 <p><span class="bold">Thanh toán:</span> ${order.paymentStatus === 3 ? 'Đã thanh toán' : order.paymentStatus === 2 ? 'Thanh toán một phần' : order.paymentStatus === 4 ? 'Đã hoàn tiền' : order.paymentStatus === 5 ? 'Thanh toán thất bại' : 'Chưa thanh toán'}</p>
                                 <p><span class="bold">Phương thức:</span> ${this.getPaymentMethodText(order.paymentMethod)}</p>
                                 <p><span class="bold">Ghi chú:</span> ${order.notes || 'Không có ghi chú'}</p>

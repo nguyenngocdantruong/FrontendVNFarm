@@ -111,6 +111,23 @@
                                         <h5>Đảm bảo thanh toán an toàn</h5>
                                         <img src="~/img/icons/payment-2.png" alt="Payment Image">
                                     </div>
+                                    <!-- Store Info Section -->
+                                    <div class="ltn__shop-details-tab-content-inner mt-4 p-0" style="display:none;" id="inline-store-info-temp">
+                                        <h4 class="title-2">Thông tin cửa hàng</h4>
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <a href="#" id="storeLinkModal_temp">
+                                                    <img id="storeLogoModal_temp" src="/custom/default.jpg" alt="Logo Cửa hàng" class="img-fluid rounded" style="width: 100px; height: 100px; object-fit: cover;">
+                                                </a>
+                                            </div>
+                                            <div class="col-md-9">
+                                                <h5><a href="#" id="storeNameModal_temp">Tên cửa hàng</a></h5>
+                                                <p class="text-muted mb-1"><i class="fas fa-map-marker-alt me-1"></i> <span id="storeAddressModal_temp">Địa chỉ</span></p>
+                                                <p class="text-muted mb-0"><i class="fas fa-phone me-1"></i> <span id="storePhoneModal_temp">Số điện thoại</span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End Store Info Section -->
                                 </div>
                             </div>
                         </div>
@@ -459,7 +476,51 @@
     </div>
     <!-- PRODUCT SLIDER AREA END -->
 
-    <!-- FEATURE AREA START ( Feature - 3) -->
+
+
+    <!-- STORE DETAILS AREA START -->
+    <div class="ltn__shop-details-area pb-85 pt-80" id="dedicated-store-section" style="display: none;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="ltn__shop-details-inner">
+                        <h3 class="title-2">Thông Tin Cửa Hàng</h3>
+                        <div class="card shadow-sm">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-3 text-center mb-3 mb-md-0">
+                                        <a href="#" id="storeLinkDedicated">
+                                            <img id="storeLogoDedicated" src="/custom/default.jpg" alt="Logo Cửa hàng" class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover; border: 3px solid #f0f0f0;">
+                                        </a>
+                                    </div>
+                                    <div class="col-md-9">
+                                        <h4 id="storeNameDedicated" class="mb-2"><a href="#">Tên cửa hàng</a></h4>
+                                        <p id="storeDescriptionDedicated" class="text-muted fst-italic">Mô tả ngắn về cửa hàng.</p>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <p class="mb-2"><strong><i class="fas fa-map-marker-alt text-primary me-2"></i>Địa chỉ:</strong> <span id="storeAddressDedicated">N/A</span></p>
+                                                <p class="mb-2"><strong><i class="fas fa-phone text-primary me-2"></i>Điện thoại:</strong> <span id="storePhoneDedicated">N/A</span></p>
+                                                <p class="mb-2"><strong><i class="fas fa-envelope text-primary me-2"></i>Email:</strong> <span id="storeEmailDedicated">N/A</span></p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <p class="mb-2"><strong><i class="fas fa-briefcase text-primary me-2"></i>Loại hình:</strong> <span id="storeBusinessTypeDedicated">N/A</span></p>
+                                                <p class="mb-2"><strong><i class="fas fa-calendar-alt text-primary me-2"></i>Ngày tham gia:</strong> <span id="storeCreatedAtDedicated">N/A</span></p>
+                                                <p class="mb-2"><strong><i class="fas fa-check-circle text-primary me-2"></i>Trạng thái:</strong> <span id="storeIsActiveDedicated">N/A</span></p>
+                                            </div>
+                                        </div>
+                                        <a href="#" id="viewStoreButton" class="btn theme-btn-1 btn-effect-1 text-uppercase mt-3">Xem cửa hàng</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- STORE DETAILS AREA END -->
+
+        <!-- FEATURE AREA START ( Feature - 3) -->
     <div class="ltn__feature-area before-bg-bottom-2 mb--30--- plr--5">
         <div class="container-fluid">
             <div class="row">
@@ -666,6 +727,44 @@
                 app.renderRating('productRating', data.averageRating);
                 app.renderRating('productRatingTab', data.averageRating);
                 document.getElementById('totalReviewsTab').textContent = (data.reviews ? data.reviews.length : 0);
+
+                // Hiển thị thông tin cửa hàng
+                if (data.store) {
+                    const store = data.store;
+                    const storeSection = document.getElementById('dedicated-store-section');
+                    storeSection.style.display = 'block';
+
+                    document.getElementById('storeNameDedicated').textContent = store.name || 'Chưa cập nhật';
+                    document.getElementById('storeDescriptionDedicated').textContent = store.description || 'Cửa hàng chưa có mô tả.';
+                    document.getElementById('storeAddressDedicated').textContent = store.address || 'Chưa cập nhật';
+                    document.getElementById('storePhoneDedicated').textContent = store.phoneNumber || 'Chưa cập nhật';
+                    document.getElementById('storeEmailDedicated').textContent = store.email || 'Chưa cập nhật';
+                    
+                    // Map businessType to text
+                    let businessTypeText = 'Chưa rõ';
+                    if(store.businessType === 0) businessTypeText = 'Hộ nông dân';
+                    else if(store.businessType === 1) businessTypeText = 'Doanh nghiệp';
+                    document.getElementById('storeBusinessTypeDedicated').textContent = businessTypeText;
+
+                    document.getElementById('storeCreatedAtDedicated').textContent = store.createdAt ? new Date(store.createdAt).toLocaleDateString('vi-VN') : 'Chưa rõ';
+                    document.getElementById('storeIsActiveDedicated').innerHTML = store.isActive ? '<span class="badge bg-success">Đang hoạt động</span>' : '<span class="badge bg-danger">Ngừng hoạt động</span>';
+
+                    if (store.logoUrl) {
+                        document.getElementById('storeLogoDedicated').src = `${url.baseUrl}/img/Stores/${store.logoUrl}`;
+                    } else {
+                        document.getElementById('storeLogoDedicated').src = '/custom/default.jpg';
+                    }
+                    // Cập nhật link cho tên cửa hàng, logo và nút xem shop
+                    const storePageLink = `/Product/Store?id=${store.id}`;
+                    document.getElementById('storeLinkDedicated').href = storePageLink;
+                    document.getElementById('viewStoreButton').href = storePageLink;
+
+                    // Cập nhật Seller ID cho chức năng chat
+                    app.sellerId = store.id; 
+                } else {
+                     // Ẩn section nếu không có thông tin store
+                    document.getElementById('dedicated-store-section').style.display = 'none';
+                }
             },
             renderProductReviews: function(data) {
                 // Hiển thị danh sách đánh giá
@@ -687,6 +786,10 @@
                                     <p>${review.content}</p>
                                     <span class="ltn__comment-reply-btn">${new Date(review.createdAt).toLocaleDateString('vi-VN')}</span>
                                     ${review.shopResponse ? `<div class="shop-response" style="margin-top:8px; color: #2e8b57;"><b>Phản hồi shop:</b> ${review.shopResponse}</div>` : ''}
+                                    ${review.imageUrl ? `
+                                    <div class="review-image" style="margin-top:10px;">
+                                        <img src="${url.baseUrl}/img/Reviews/${review.imageUrl}" alt="Hình ảnh đánh giá" style="max-width: 150px; border-radius: 5px; cursor: pointer;" onclick="window.open(this.src)">
+                                    </div>` : ''}
                                 </div>
                             </div>
                         `;

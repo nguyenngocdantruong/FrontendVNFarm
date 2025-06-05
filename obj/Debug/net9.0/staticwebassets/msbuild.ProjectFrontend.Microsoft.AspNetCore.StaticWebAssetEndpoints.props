@@ -9756,17 +9756,17 @@
       <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"w9z34kbrqc"},{"Name":"integrity","Value":"sha256-VJmOJx4xgkgvMQ4w/LsPC4hLL6iF0JJjsXHp8i8cTM8="},{"Name":"label","Value":"_content/ProjectFrontend/Custom/endpoints.js"}]]]></EndpointProperties>
       <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"259"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022VJmOJx4xgkgvMQ4w/LsPC4hLL6iF0JJjsXHp8i8cTM8=\u0022"},{"Name":"Last-Modified","Value":"Wed, 21 May 2025 09:12:06 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/ProjectFrontend/Custom/Enum.4be30b8px7.js">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Custom\Enum.js'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"4be30b8px7"},{"Name":"integrity","Value":"sha256-0MiOmLwkCl32ErzRf0CC5hx4AFqaheFG3tcE5PMsT7k="},{"Name":"label","Value":"_content/ProjectFrontend/Custom/Enum.js"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"317"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u00220MiOmLwkCl32ErzRf0CC5hx4AFqaheFG3tcE5PMsT7k=\u0022"},{"Name":"Last-Modified","Value":"Thu, 05 Jun 2025 10:46:43 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProjectFrontend/Custom/Enum.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Custom\Enum.js'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-rtheZi\u002B5qRSixouWVOyE\u002BfQ7Zdob6da5ToBm6kYGiBk="}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"272"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022rtheZi\u002B5qRSixouWVOyE\u002BfQ7Zdob6da5ToBm6kYGiBk=\u0022"},{"Name":"Last-Modified","Value":"Wed, 23 Apr 2025 09:25:11 GMT"}]]]></ResponseHeaders>
-    </StaticWebAssetEndpoint>
-    <StaticWebAssetEndpoint Include="_content/ProjectFrontend/Custom/Enum.qq1ymplz4e.js">
-      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Custom\Enum.js'))</AssetFile>
-      <Selectors><![CDATA[[]]]></Selectors>
-      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"qq1ymplz4e"},{"Name":"integrity","Value":"sha256-rtheZi\u002B5qRSixouWVOyE\u002BfQ7Zdob6da5ToBm6kYGiBk="},{"Name":"label","Value":"_content/ProjectFrontend/Custom/Enum.js"}]]]></EndpointProperties>
-      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"272"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u0022rtheZi\u002B5qRSixouWVOyE\u002BfQ7Zdob6da5ToBm6kYGiBk=\u0022"},{"Name":"Last-Modified","Value":"Wed, 23 Apr 2025 09:25:11 GMT"}]]]></ResponseHeaders>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-0MiOmLwkCl32ErzRf0CC5hx4AFqaheFG3tcE5PMsT7k="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"no-cache"},{"Name":"Content-Length","Value":"317"},{"Name":"Content-Type","Value":"text/javascript"},{"Name":"ETag","Value":"\u00220MiOmLwkCl32ErzRf0CC5hx4AFqaheFG3tcE5PMsT7k=\u0022"},{"Name":"Last-Modified","Value":"Thu, 05 Jun 2025 10:46:43 GMT"}]]]></ResponseHeaders>
     </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/ProjectFrontend/Custom/EnumService.avfom26o36.js">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Custom\EnumService.js'))</AssetFile>

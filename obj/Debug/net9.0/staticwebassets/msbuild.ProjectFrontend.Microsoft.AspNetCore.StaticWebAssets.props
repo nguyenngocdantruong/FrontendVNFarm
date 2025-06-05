@@ -14646,8 +14646,8 @@
       <RelatedAsset></RelatedAsset>
       <AssetTraitName></AssetTraitName>
       <AssetTraitValue></AssetTraitValue>
-      <Fingerprint>qq1ymplz4e</Fingerprint>
-      <Integrity>rtheZi+5qRSixouWVOyE+fQ7Zdob6da5ToBm6kYGiBk=</Integrity>
+      <Fingerprint>4be30b8px7</Fingerprint>
+      <Integrity>0MiOmLwkCl32ErzRf0CC5hx4AFqaheFG3tcE5PMsT7k=</Integrity>
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
       <OriginalItemSpec>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\Custom\Enum.js'))</OriginalItemSpec>

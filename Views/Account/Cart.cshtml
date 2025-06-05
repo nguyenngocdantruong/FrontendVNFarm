@@ -163,7 +163,7 @@
                         cartHTML += `
                         <tr class="cart-item-row" data-product-id="${product.id}" data-shop-id="${shopCart.shopId}" data-item-key="${itemKey}" data-cart-item-id="${item.id}">
                             <td class="cart-product-remove">
-                                <a href="javascript:void(0)" class="remove-item" onclick="app.removeItem(${shopCart.shopId}, ${product.id})">x</a>
+                                <a href="javascript:void(0)" class="remove-item" onclick="app.removeItem(${item.id})">x</a>
                             </td>
                             <td class="cart-product-image">
                                 <a href="/Products/Detail/${product.id}"><img src="${url.baseUrl}/img/Products/${product.imageUrl}" alt="${product.name}"></a>
@@ -374,33 +374,29 @@
                 input.value = quantity;
                 this.updateQuantity(cartItemId, productId, quantity);
             },
-            removeItem: function(shopId, productId) {
+            removeItem: function(cartItemId) {
                 if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?')) {
-                    cartService.delete(`${shopId}/${productId}`)
+                    cartService.delete(`items/${cartItemId}`)
                         .then(response => {
                             if (response && response.success) {
-                                // Xóa sản phẩm khỏi danh sách đã chọn
-                                const itemKey = `${shopId}_${productId}`;
-                                delete this.selectedItems[itemKey];
-                                
                                 // Xóa sản phẩm khỏi dữ liệu giỏ hàng
-                                const shopCartIndex = this.cart.shopCarts.findIndex(sc => sc.shopId === shopId);
-                                if (shopCartIndex !== -1) {
-                                    const shopCart = this.cart.shopCarts[shopCartIndex];
-                                    const itemIndex = shopCart.cartItems.findIndex(ci => ci.productId === productId);
+                                for (let i = 0; i < this.cart.shopCarts.length; i++) {
+                                    const shopCart = this.cart.shopCarts[i];
+                                    const itemIndex = shopCart.cartItems.findIndex(ci => ci.id === cartItemId);
                                     
                                     if (itemIndex !== -1) {
                                         shopCart.cartItems.splice(itemIndex, 1);
                                         
                                         // Nếu không còn sản phẩm nào trong cửa hàng, xóa cửa hàng khỏi giỏ hàng
                                         if (shopCart.cartItems.length === 0) {
-                                            this.cart.shopCarts.splice(shopCartIndex, 1);
+                                            this.cart.shopCarts.splice(i, 1);
                                         }
                                         
                                         // Cập nhật lại giao diện
                                         this.renderCart();
                                         this.updateOrderSummary();
                                         Toast.success("Đã xóa sản phẩm khỏi giỏ hàng");
+                                        break;
                                     }
                                 }
                             } else {
@@ -410,7 +406,7 @@
                         .catch(error => {
                             console.error("Lỗi khi xóa sản phẩm:", error);
                             Toast.error("Đã xảy ra lỗi khi xóa sản phẩm");
-                        });
+                        })
                 }
             }
         }

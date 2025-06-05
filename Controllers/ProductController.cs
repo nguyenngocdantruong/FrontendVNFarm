@@ -29,6 +29,17 @@ namespace ProjectFrontend.Controllers
         {
             return View();
         }
+        public IActionResult Store(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                return View();
+            }
+        }
     }
 
 }

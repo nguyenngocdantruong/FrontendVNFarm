@@ -1,15 +1,12 @@
-@{
-    Layout = "_LayoutAdmin";
-    ViewBag.Title = "Chi Tiết Người Dùng";
-}
+@{ Layout = "_LayoutAdmin"; ViewBag.Title = "Chi Tiết Người Dùng"; }
 
 <div class="page-content">
-    <!-- Start Container Fluid -->
-    <div class="container-xxl">
-         <div class="row">
+  <!-- Start Container Fluid -->
+  <div class="container-xxl">
+    <div class="row">
       <div class="col-lg-4 h-100">
-                   <div class="card overflow-hidden">
-                        <div class="card-body">
+        <div class="card overflow-hidden">
+          <div class="card-body">
             <div
               class="bg-primary profile-bg rounded-top p-5 position-relative mx-n3 mt-n3"
             >
@@ -18,14 +15,14 @@
                 alt=""
                 class="avatar-lg border border-light border-3 rounded-circle position-absolute top-100 start-0 translate-middle ms-5"
               />
-                             </div>
-                             <div class="mt-4 pt-3">
+            </div>
+            <div class="mt-4 pt-3">
               <h4 id="user-fullname" class="mb-1">
                 Đang tải ...<i
                   class="bx bxs-badge-check text-success align-middle"
                 ></i>
               </h4>
-                                  <div class="mt-2">
+              <div class="mt-2">
                 <a id="user-username" href="#!" class="link-primary fs-15"
                   >@@nguyenvana_2024</a
                 >
@@ -37,208 +34,174 @@
                   <span class="text-dark fw-semibold">Điện thoại: </span
                   ><span id="user-phone">0987654321</span>
                 </p>
-                                  </div>
-                             </div>
-                        </div>
-                   </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
-                   <div class="card h-100">
+        <div class="card h-100">
           <div
             class="card-header d-flex align-items-center justify-content-between"
           >
-                             <div>
-                                  <h4 class="card-title">Thông Tin Khách Hàng</h4>
-                             </div>
-                             <div>
+            <div>
+              <h4 class="card-title">Thông Tin Khách Hàng</h4>
+            </div>
+            <div>
               <span
                 id="user-status-badge"
                 class="badge bg-success-subtle text-success px-2 py-1"
                 >Đang Hoạt Động</span
               >
-                             </div>
-                        </div>
-                        <div class="card-body py-2">
-                             <div class="table-responsive">
-                                  <table class="table mb-0">
+            </div>
+          </div>
+          <div class="card-body py-2">
+            <div class="table-responsive">
+              <table class="table mb-0">
                 <tbody id="user-info-table">
-                                            <tr>
-                                                 <td class="px-0">
+                  <tr>
+                    <td class="px-0">
                       <p
                         class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"
                       >
-                        Mã Khách Hàng:
+                        Email:
                       </p>
-                                                 </td>
-                    <td id="user-id" class="text-dark fw-medium px-0">
-                      Đang tải...
                     </td>
-                                            </tr>
-                                            <tr>
-                                                 <td class="px-0">
-                      <p
-                        class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"
-                      >
-                        Email Hóa Đơn:
-                      </p>
-                                                 </td>
                     <td
                       id="user-billing-email"
                       class="text-dark fw-medium px-0"
                     >
                       nguyenvana@gmail.com
                     </td>
-                                            </tr>
-                                            <tr>
-                                                 <td class="px-0">
+                  </tr>
+                  <tr>
+                    <td class="px-0">
                       <p
                         class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"
                       >
                         Địa Chỉ Giao Hàng:
                       </p>
-                                                 </td>
-                    <td id="user-address" class="text-dark fw-medium px-0">
-                      123 Đường ABC, Quận 1, TP.HCM
                     </td>
-                                            </tr>
-                                            <tr>
-                                                 <td class="px-0">
+                    <td id="user-address" class="text-dark fw-medium px-0">
+                      Không có
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="px-0">
                       <p
                         class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"
                       >
                         Ngôn Ngữ:
                       </p>
-                                                 </td>
+                    </td>
                     <td id="user-language" class="text-dark fw-medium px-0">
                       Tiếng Việt
                     </td>
-                                            </tr>
-                                            <tr>
-                                                 <td class="px-0">
+                  </tr>
+                  <tr>
+                    <td class="px-0">
                       <p
                         class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"
                       >
                         Mã Hóa Đơn Gần Nhất:
                       </p>
-                                                 </td>
+                    </td>
                     <td id="user-last-invoice" class="text-dark fw-medium px-0">
                       #HD2540
                     </td>
-                                            </tr>
-                                            <tr>
-                                                 <td class="px-0">
+                  </tr>
+                  <tr>
+                    <td class="px-0">
                       <p
                         class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"
                       >
                         Vai Trò:
                       </p>
-                                                 </td>
+                    </td>
                     <td id="user-role" class="text-dark fw-medium px-0">
                       Người Dùng
                     </td>
-                                            </tr>
-                                            <tr>
-                                                 <td class="px-0">
+                  </tr>
+                  <tr>
+                    <td class="px-0">
                       <p
                         class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"
                       >
                         Ngày Đăng Ký:
                       </p>
-                                                 </td>
+                    </td>
                     <td
                       id="user-register-date"
                       class="text-dark fw-medium px-0"
                     >
                       01/01/2024
                     </td>
-                                            </tr>
-                                            <tr>
-                                                 <td class="px-0">
+                  </tr>
+                  <tr>
+                    <td class="px-0">
                       <p
                         class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark"
                       >
                         Tỉnh/Thành:
                       </p>
-                                                 </td>
+                    </td>
                     <td id="user-city" class="text-dark fw-medium px-0">
                       TP.HCM
                     </td>
-                                            </tr>
-                                       </tbody>
-                                  </table>
-                             </div>
-                        </div>
-                   </div>
-              </div>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="col-lg-8 h-100">
-                   <div class="row">
-                        <div class="col-lg-4">
-                             <div class="card">
-                                  <div class="card-body">
-                                       <div class="d-flex align-items-center justify-content-between">
-                                            <div>
-                    <h4 class="card-title mb-2 d-flex align-items-center gap-2">
-                      Tổng giao dịch
-                    </h4>
-                    <p class="text-muted fw-medium fs-22 mb-0">0</p>
-                                            </div>
-                                            <div>
-                                                 <div class="avatar-md bg-primary bg-opacity-10 rounded">
-                      <iconify-icon
-                        icon="solar:bill-list-bold-duotone"
-                        class="fs-32 text-primary avatar-title"
-                      ></iconify-icon>
-                                                 </div>
-                                            </div>
-                                       </div>
-                                  </div>
-                             </div>
-                        </div>
-                        <div class="col-lg-4">
-                             <div class="card">
-                                  <div class="card-body">
-                                       <div class="d-flex align-items-center justify-content-between">
-                                            <div>
+        <div class="row">
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
                     <h4 class="card-title mb-2 d-flex align-items-center gap-2">
                       Tổng Đơn Hàng
                     </h4>
-                                                 <p class="text-muted fw-medium fs-22 mb-0">219</p>
-                                            </div>
-                                            <div>
-                                                 <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                    <p class="text-muted fw-medium fs-22 mb-0 tong-don-hang">219</p>
+                  </div>
+                  <div>
+                    <div class="avatar-md bg-primary bg-opacity-10 rounded">
                       <iconify-icon
                         icon="solar:box-bold-duotone"
                         class="fs-32 text-primary avatar-title"
                       ></iconify-icon>
-                                                 </div>
-                                            </div>
-                                       </div>
-                                  </div>
-                             </div>
-                        </div>
-                        <div class="col-lg-4">
-                             <div class="card">
-                                  <div class="card-body">
-                                       <div class="d-flex align-items-center justify-content-between">
-                                            <div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div class="card">
+              <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between">
+                  <div>
                     <h4 class="card-title mb-2 d-flex align-items-center gap-2">
                       Tổng Chi Tiêu
                     </h4>
-                                                 <p class="text-muted fw-medium fs-22 mb-0">2.189.000đ</p>
-                                            </div>
-                                            <div>
-                                                 <div class="avatar-md bg-primary bg-opacity-10 rounded">
+                    <p class="text-muted fw-medium fs-22 mb-0 tong-chi-tieu">2.189.000đ</p>
+                  </div>
+                  <div>
+                    <div class="avatar-md bg-primary bg-opacity-10 rounded">
                       <iconify-icon
                         icon="solar:chat-round-money-bold-duotone"
                         class="fs-32 text-primary avatar-title"
                       ></iconify-icon>
-                                                 </div>
-                                            </div>
-                                       </div>
-                                  </div>
-                             </div>
-                        </div>
-                   </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <div class="card table-card rounded h-100 border-0">
           <div
@@ -270,8 +233,8 @@
                 </div>
               </div>
             </div>
-                        </div>
-                        <div class="card-body">
+          </div>
+          <div class="card-body">
             <!-- Thanh tìm kiếm và lọc -->
             <div class="row mb-3">
               <div class="col-lg-8 col-sm-6">
@@ -308,8 +271,8 @@
                     <th scope="col">Giá Trị</th>
                     <th scope="col">Trạng Thái</th>
                     <th scope="col">Hành Động</th>
-                                            </tr>
-                                       </thead>
+                  </tr>
+                </thead>
                 <tbody id="recent-orders-table">
                   <tr>
                     <td colspan="6" class="text-center">
@@ -323,7 +286,7 @@
                         <span>Đang tải dữ liệu...</span>
                       </div>
                     </td>
-                                            </tr>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -437,49 +400,47 @@
                         </div>
                    </div>
         </div> -->
+      </div>
+    </div>
 
-        
-              </div>
-         </div>
-
-         <!-- Thông tin cửa hàng (nếu có) -->
-         <div class="row mt-4">
-              <div class="col-12">
-                   <div class="card">
+    <!-- Thông tin cửa hàng (nếu có) -->
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card">
           <div
             class="card-header d-flex justify-content-between align-items-center"
           >
-                             <h4 class="card-title">Thông Tin Cửa Hàng</h4>
+            <h4 class="card-title">Thông Tin Cửa Hàng</h4>
             <span class="badge bg-success-subtle text-success px-2 py-1"
               >Đã Xác Thực</span
             >
-                        </div>
-                        <div class="card-body store-info">
-                             <div class="row">
-                                  <div class="col-lg-4" id="store-info">
-                                       <div class="d-flex">
-                                            <div class="flex-shrink-0">
+          </div>
+          <div class="card-body store-info">
+            <div class="row">
+              <div class="col-lg-4" id="store-info">
+                <div class="d-flex">
+                  <div class="flex-shrink-0">
                     <img
                       src="~/custom/no-image.webp"
                       alt="Store Image"
                       class="img-fluid rounded"
                       style="width: 120px; height: 120px; object-fit: cover"
                     />
-                                            </div>
-                                            <div class="flex-grow-1 ms-3">
-                                                 <h4 class="mt-0">Nông Sản Việt</h4>
-                                                 <p class="text-muted mb-2">Cửa hàng nông sản sạch</p>
-                                                 <div class="d-flex align-items-center mb-2">
-                                                      <div class="d-flex text-warning">
-                                                           <i class="bx bxs-star"></i>
-                                                           <i class="bx bxs-star"></i>
-                                                           <i class="bx bxs-star"></i>
-                                                           <i class="bx bxs-star"></i>
-                                                           <i class="bx bxs-star-half"></i>
-                                                      </div>
-                                                      <span class="ms-2">4.5 (124 đánh giá)</span>
-                                                 </div>
-                                                 <div class="mb-2">
+                  </div>
+                  <div class="flex-grow-1 ms-3">
+                    <h4 class="mt-0">Nông Sản Việt</h4>
+                    <p class="text-muted mb-2">Cửa hàng nông sản sạch</p>
+                    <div class="d-flex align-items-center mb-2">
+                      <div class="d-flex text-warning">
+                        <i class="bx bxs-star"></i>
+                        <i class="bx bxs-star"></i>
+                        <i class="bx bxs-star"></i>
+                        <i class="bx bxs-star"></i>
+                        <i class="bx bxs-star-half"></i>
+                      </div>
+                      <span class="ms-2">4.5 (124 đánh giá)</span>
+                    </div>
+                    <div class="mb-2">
                       <span class="badge bg-info-subtle text-info me-1"
                         >Rau Củ</span
                       >
@@ -489,65 +450,65 @@
                       <span class="badge bg-info-subtle text-info"
                         >Đặc Sản</span
                       >
-                                                 </div>
-                                            </div>
-                                       </div>
-                                  </div>
-                                  <div class="col-lg-4" id="store-contact">
-                                       <h5 class="fs-14">Thông Tin Liên Hệ</h5>
-                                       <div class="table-responsive">
-                                            <table class="table table-borderless mb-0">
-                                                 <tbody>
-                                                      <tr>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-4" id="store-contact">
+                <h5 class="fs-14">Thông Tin Liên Hệ</h5>
+                <div class="table-responsive">
+                  <table class="table table-borderless mb-0">
+                    <tbody>
+                      <tr>
                         <th scope="row" style="width: 120px">Email:</th>
-                                                           <td>nongsanviet@gmail.com</td>
-                                                      </tr>
-                                                      <tr>
-                                                           <th scope="row">Điện thoại:</th>
-                                                           <td>0987654321</td>
-                                                      </tr>
-                                                      <tr>
-                                                           <th scope="row">Địa chỉ:</th>
-                                                           <td>456 Đường XYZ, Quận 2, TP.HCM</td>
-                                                      </tr>
-                                                      <tr>
-                                                           <th scope="row">Giờ mở cửa:</th>
-                                                           <td>07:00 - 21:00</td>
-                                                      </tr>
-                                                 </tbody>
-                                            </table>
-                                       </div>
-                                  </div>
-                                  <div class="col-lg-4" id="store-statistic">
-                                       <h5 class="fs-14">Thống Kê Cửa Hàng</h5>
-                                       <div class="d-flex flex-wrap gap-3">
+                        <td>nongsanviet@gmail.com</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Điện thoại:</th>
+                        <td>0987654321</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Địa chỉ:</th>
+                        <td>456 Đường XYZ, Quận 2, TP.HCM</td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Giờ mở cửa:</th>
+                        <td>07:00 - 21:00</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div class="col-lg-4" id="store-statistic">
+                <h5 class="fs-14">Thống Kê Cửa Hàng</h5>
+                <div class="d-flex flex-wrap gap-3">
                   <div
                     class="bg-light rounded p-2 text-center"
                     style="min-width: 100px"
                   >
-                                                 <h5 class="mb-1">167</h5>
-                                                 <p class="text-muted mb-0">Sản phẩm</p>
-                                            </div>
+                    <h5 class="mb-1">167</h5>
+                    <p class="text-muted mb-0">Sản phẩm</p>
+                  </div>
                   <div
                     class="bg-light rounded p-2 text-center"
                     style="min-width: 100px"
                   >
-                                                 <h5 class="mb-1">3.2k</h5>
-                                                 <p class="text-muted mb-0">Lượt bán</p>
-                                            </div>
+                    <h5 class="mb-1">3.2k</h5>
+                    <p class="text-muted mb-0">Lượt bán</p>
+                  </div>
                   <div
                     class="bg-light rounded p-2 text-center"
                     style="min-width: 100px"
                   >
-                                                 <h5 class="mb-1">94%</h5>
-                                                 <p class="text-muted mb-0">Đánh giá tốt</p>
-                                            </div>
-                                       </div>
-                                       <div class="mt-4">
+                    <h5 class="mb-1">94%</h5>
+                    <p class="text-muted mb-0">Đánh giá tốt</p>
+                  </div>
+                </div>
+                <div class="mt-4">
                   <h5 class="fs-14 mb-3">
                     Chứng Nhận <i class="bx bxs-badge-check text-success"></i>
                   </h5>
-                                            <div class="d-flex flex-wrap gap-2">
+                  <div class="d-flex flex-wrap gap-2">
                     <span class="badge bg-success-subtle text-success"
                       >VietGAP</span
                     >
@@ -557,42 +518,42 @@
                     <span class="badge bg-success-subtle text-success"
                       >HACCP</span
                     >
-                                            </div>
-                                       </div>
-                                  </div>
-                             </div>
-                        </div>
-                        <div class="card-footer border-top gap-1 hstack">
-                             <a href="#!" class="btn btn-primary w-100">Xem Cửa Hàng</a>
-                             <a href="#!" class="btn btn-light w-100">Quản Lý</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer border-top gap-1 hstack">
+            <a href="#!" class="btn btn-primary w-100">Xem Cửa Hàng</a>
+            <a href="#!" class="btn btn-light w-100">Quản Lý</a>
             <a
               href="#!"
               class="btn btn-soft-dark d-inline-flex align-items-center justify-content-center rounded avatar-sm"
               ><i class="bx bx-edit-alt fs-18"></i
             ></a>
-                        </div>
-                   </div>
-              </div>
-         </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <!-- End Container Fluid -->
+  </div>
+  <!-- End Container Fluid -->
 
-    <!-- ========== Footer Start ========== -->
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12 text-center">
+  <!-- ========== Footer Start ========== -->
+  <footer class="footer">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12 text-center">
           &copy; VNFarm. Được phát triển bởi
           <iconify-icon
             icon="iconamoon:heart-duotone"
             class="fs-18 align-middle text-danger"
           ></iconify-icon>
           <a href="#" class="fw-bold footer-text" target="_blank">VNFarm</a>
-                </div>
-            </div>
         </div>
-    </footer>
-    <!-- ========== Footer End ========== -->
+      </div>
+    </div>
+  </footer>
+  <!-- ========== Footer End ========== -->
 </div>
 
 <style>
@@ -741,7 +702,8 @@
                 item.classList.add("active");
 
                 // Cập nhật bộ lọc
-                this.orderFilter.status = parseInt(item.getAttribute("data-value")) ?? -999;
+                this.orderFilter.status =
+                  parseInt(item.getAttribute("data-value")) ?? -999;
                 this.orderFilter.page = 1; // Reset về trang 1
                 this.loadRecentOrders();
               });
@@ -881,7 +843,9 @@
           // Cập nhật dữ liệu
           this.orderData.items = response.data || [];
           this.orderData.totalItems = response.totalCount || 0;
-          this.orderData.totalPages = Math.ceil(this.orderData.totalItems / this.orderFilter.pageSize) || 1;
+          this.orderData.totalPages =
+            Math.ceil(this.orderData.totalItems / this.orderFilter.pageSize) ||
+            1;
 
           // Hiển thị đơn hàng
           this.renderRecentOrders();
@@ -1002,8 +966,6 @@
 
       // Thông tin trong bảng
       const tableRows = document.querySelectorAll("#user-info-table tr");
-      // Mã khách hàng
-      document.querySelector("#user-id").textContent = `#KH${user.id}`;
       // Email hóa đơn
       tableRows[1].querySelector("td.text-dark").textContent = user.email;
       // Địa chỉ
@@ -1038,9 +1000,6 @@
         statusBadge.textContent = "Không Hoạt Động";
       }
 
-      // Hiển thị phương thức thanh toán
-      this.renderPaymentMethods();
-
       // Nếu người dùng là người bán, hiển thị thông tin cửa hàng
       if (user.store) {
         this.renderStoreInfo(user.store);
@@ -1066,17 +1025,8 @@
           const stats = statsResponse.data;
 
           // Cập nhật UI
-          document.querySelector(
-            ".row .col-lg-4:nth-child(1) .card-body .fw-medium"
-          ).textContent = stats.transactionCount || 0;
-
-          document.querySelector(
-            ".row .col-lg-4:nth-child(2) .card-body .fw-medium"
-          ).textContent = stats.orderCount || 0;
-
-          document.querySelector(
-            ".row .col-lg-4:nth-child(3) .card-body .fw-medium"
-          ).textContent = this.formatCurrency(stats.totalRevenue || 0);
+          document.querySelector(".tong-don-hang").textContent = stats.orderCount || 0;
+          document.querySelector(".tong-chi-tieu").textContent = this.formatCurrency(stats.totalRevenue || 0);
         }
       } catch (error) {
         console.error("Lỗi khi tải thống kê người dùng:", error);
@@ -1102,94 +1052,6 @@
         default:
           return "text-secondary bg-secondary-subtle";
       }
-    },
-
-    // Hiển thị danh sách phương thức thanh toán
-    renderPaymentMethods: function () {
-      if (
-        !this.userData ||
-        !this.userData.paymentMethods ||
-        this.userData.paymentMethods.length === 0
-      ) {
-        // Thêm thông tin "Không có phương thức thanh toán" vào bảng
-        const paymentRow = document.createElement("tr");
-        paymentRow.innerHTML = `
-                    <td class="px-0">
-                        <p class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark">Phương Thức Thanh Toán: </p>
-                    </td>
-                    <td class="text-dark fw-medium px-0">Không có phương thức thanh toán nào</td>
-                `;
-        document.querySelector(".table tbody").appendChild(paymentRow);
-        return;
-      }
-
-      // Thêm danh sách phương thức thanh toán
-      const paymentRow = document.createElement("tr");
-      paymentRow.innerHTML = `
-                <td class="px-0">
-                    <p class="d-flex mb-0 align-items-center gap-1 fw-semibold text-dark">Phương Thức Thanh Toán: </p>
-                </td>
-                <td class="text-dark fw-medium px-0">
-                    <div class="payment-methods-list">
-                    </div>
-                </td>
-            `;
-      document.querySelector(".table tbody").appendChild(paymentRow);
-
-      const paymentMethodsList = paymentRow.querySelector(
-        ".payment-methods-list"
-      );
-
-      this.userData.paymentMethods.forEach((method, index) => {
-        let paymentTypeIcon = "";
-        let paymentTypeName = "";
-
-        switch (method.paymentType) {
-          case 1:
-            paymentTypeIcon = '<i class="bx bxs-bank text-primary"></i>';
-            paymentTypeName = "Chuyển khoản ngân hàng";
-            break;
-          case 2:
-            paymentTypeIcon = '<i class="bx bxs-credit-card text-info"></i>';
-            paymentTypeName = "Thẻ tín dụng/ghi nợ";
-            break;
-          case 3:
-            paymentTypeIcon = '<i class="bx bxl-paypal text-primary"></i>';
-            paymentTypeName = "PayPal";
-            break;
-          case 4:
-            paymentTypeIcon = '<i class="bx bxs-wallet text-success"></i>';
-            paymentTypeName = "Ví điện tử";
-            break;
-          default:
-            paymentTypeIcon = '<i class="bx bx-money text-secondary"></i>';
-            paymentTypeName = "Khác";
-        }
-
-        const methodElement = document.createElement("div");
-        methodElement.className =
-          "payment-method-item d-flex align-items-center mb-2";
-        methodElement.innerHTML = `
-                    <span class="me-2">${paymentTypeIcon}</span>
-                    <div>
-                        <div class="fw-medium">${method.cardName} - ${
-          method.accountHolderName
-        }</div>
-                        <div class="text-muted small">${paymentTypeName} - ${this.maskAccountNumber(
-          method.accountNumber
-        )}</div>
-                    </div>
-                `;
-
-        paymentMethodsList.appendChild(methodElement);
-
-        // Thêm dấu phân cách, trừ item cuối cùng
-        if (index < this.userData.paymentMethods.length - 1) {
-          const divider = document.createElement("hr");
-          divider.className = "my-2";
-          paymentMethodsList.appendChild(divider);
-        }
-      });
     },
 
     // Ẩn một phần số tài khoản
@@ -1255,16 +1117,16 @@
       const storeSection = document.querySelector(".card-body.store-info");
 
       // Phần 1: Thông tin cơ bản và logo cửa hàng
-      const storeInfoColumn = storeSection.querySelector(
-        "#store-info"
-      );
+      const storeInfoColumn = storeSection.querySelector("#store-info");
       if (storeInfoColumn) {
         storeInfoColumn.innerHTML = `
                     <div class="d-flex">
                         <div class="flex-shrink-0">
                             <img src="${`${url.baseUrl}/img/Stores/${store.logoUrl}`}" alt="Store Logo" 
                                 class="img-fluid rounded" style="width: 120px; height: 120px; object-fit: cover;"
-                                onerror="this.src='${url.baseUrl}/img/Stores/default.jpg'" id="store-logo">
+                                onerror="this.src='${
+                                  url.baseUrl
+                                }/img/Stores/default.jpg'" id="store-logo">
                         </div>
                         <div class="flex-grow-1 ms-3">
                             <h4 class="mt-0">${
@@ -1303,9 +1165,7 @@
       }
 
       // Phần 2: Thông tin liên hệ
-      const storeContactColumn = storeSection.querySelector(
-        "#store-contact"
-      );
+      const storeContactColumn = storeSection.querySelector("#store-contact");
       if (storeContactColumn) {
         storeContactColumn.innerHTML = `
                     <h5 class="fs-14">Thông Tin Liên Hệ</h5>
@@ -1339,9 +1199,7 @@
       }
 
       // Phần 3: Thống kê cửa hàng
-      const storeStatsColumn = storeSection.querySelector(
-        "#store-statistic"
-      );
+      const storeStatsColumn = storeSection.querySelector("#store-statistic");
       if (storeStatsColumn) {
         // Hiển thị thông tin chủ cửa hàng
         storeStatsColumn.innerHTML = `

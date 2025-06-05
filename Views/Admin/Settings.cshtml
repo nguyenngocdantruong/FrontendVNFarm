@@ -1,5 +1,6 @@
 @{
     Layout = "_LayoutAdmin";
+    ViewBag.Title = "Cài Đặt";
 }
 
 <div class="page-content">
@@ -46,30 +47,48 @@
                                             <h5 class="card-title">Thông Tin Cá Nhân</h5>
                                         </div>
                                         <div class="card-body">
-                                            <form>
+                                            <form id="adminProfileForm" enctype="multipart/form-data">
                                                 <div class="row mb-3">
                                                     <div class="col-md-4">
                                                         <div class="text-center">
-                                                            <img src="~/assets/images/users/avatar-1.jpg" class="rounded-circle mb-3" width="150" height="150" alt="avatar">
-                                                            <button type="button" class="btn btn-primary btn-sm">Đổi Ảnh Đại Diện</button>
+                                                            <img id="adminAvatarPreview" src="~/assets/images/users/avatar-1.jpg" class="rounded-circle mb-3" width="150" height="150" alt="avatar">
+                                                            <input type="file" name="ImageFile" id="adminImageFile" class="form-control mb-2" accept="image/*">
+                                                            <input type="hidden" name="ImageUrl" id="adminImageUrl">
                                                         </div>
                                                     </div>
                                                     <div class="col-md-8">
                                                         <div class="mb-3">
                                                             <label class="form-label">Họ và Tên</label>
-                                                            <input type="text" class="form-control" value="Nguyễn Văn A">
+                                                            <input type="text" class="form-control" name="FullName" id="adminFullName" required>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label">Email</label>
-                                                            <input type="email" class="form-control" value="admin@example.com">
+                                                            <input type="email" class="form-control" name="Email" id="adminEmail" readonly required>
                                                         </div>
                                                         <div class="mb-3">
                                                             <label class="form-label">Số Điện Thoại</label>
-                                                            <input type="tel" class="form-control" value="0123456789">
+                                                            <input type="tel" class="form-control" name="PhoneNumber" id="adminPhoneNumber" required>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <label class="form-label">Địa chỉ</label>
+                                                            <input type="text" class="form-control" name="Address" id="adminAddress">
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+                                                <fieldset>
+                                                    <strong>Thay đổi mật khẩu</strong>
+                                                    <div class="row">
+                                                        <div class="col-md-12">
+                                                            <label>Mật khẩu mới (để trống nếu không thay đổi):</label>
+                                                            <input type="password" name="PasswordNew" id="adminPasswordNew" class="form-control mb-2">
+                                                            <label>Xác nhận mật khẩu mới:</label>
+                                                            <input type="password" name="ConfirmPassword" id="adminConfirmPassword" class="form-control">
+                                                        </div>
+                                                    </div>
+                                                </fieldset>
+                                                <div class="btn-wrapper mt-3">
+                                                    <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+                                                </div>
                                             </form>
                                         </div>
                                     </div>
@@ -180,5 +199,90 @@
             </div>
         </div>
     </div>
-</div> 
+</div>
+
+<script type="module">
+import {BaseService} from "/Custom/BaseService.js";
+import url from "/Custom/endpoints.js";
+import Toast from "/Custom/Toast_Seller.js";
+
+// Lấy token và id admin từ localStorage
+const token = localStorage.getItem('accessToken');
+const adminId = localStorage.getItem('id');
+
+if (token && adminId) {
+    const userUrl = url.base + "/Users";
+    const baseService = new BaseService(userUrl, token);
+    // Lấy thông tin admin
+    baseService.fetchApi("/user-info?userId=" + adminId, 'POST', token).then(response => {
+        if (response && response.success && response.data) {
+            const userData = response.data;
+            document.getElementById('adminFullName').value = userData.fullName || '';
+            document.getElementById('adminEmail').value = userData.email || '';
+            document.getElementById('adminPhoneNumber').value = userData.phoneNumber || '';
+            document.getElementById('adminAddress').value = userData.address || '';
+            document.getElementById('adminImageUrl').value = userData.imageUrl || '';
+            // Hiển thị ảnh đại diện nếu có
+            if (userData.imageUrl) {
+                document.getElementById('adminAvatarPreview').src = `${url.baseUrl}/img/Users/${userData.imageUrl}`;
+            }
+        }
+    }).catch(error => {
+        console.error("Lỗi khi lấy thông tin admin:", error);
+        Toast.error("Lỗi khi lấy thông tin admin!");
+    });
+
+    // Xử lý xem trước ảnh khi chọn file
+    document.getElementById('adminImageFile').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                document.getElementById('adminAvatarPreview').src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Xử lý submit form
+    document.getElementById('adminProfileForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const fullName = document.getElementById('adminFullName').value.trim();
+        const email = document.getElementById('adminEmail').value.trim();
+        const phoneNumber = document.getElementById('adminPhoneNumber').value.trim();
+        const address = document.getElementById('adminAddress').value.trim();
+        const passwordNew = document.getElementById('adminPasswordNew').value;
+        const confirmPassword = document.getElementById('adminConfirmPassword').value;
+        if (!fullName) { Toast.error("Vui lòng nhập họ và tên!"); return; }
+        if (!email) { Toast.error("Vui lòng nhập email!"); return; }
+        if (!phoneNumber) { Toast.error("Vui lòng nhập số điện thoại!"); return; }
+        if (passwordNew && passwordNew !== confirmPassword) {
+            Toast.error("Mật khẩu mới và xác nhận mật khẩu không khớp!");
+            return;
+        }
+        const formData = new FormData();
+        formData.append('Id', adminId);
+        formData.append('FullName', fullName);
+        formData.append('Email', email);
+        formData.append('PhoneNumber', phoneNumber);
+        formData.append('Address', address);
+        formData.append('ImageUrl', document.getElementById('adminImageUrl').value);
+        if (passwordNew) formData.append('PasswordNew', passwordNew);
+        const imageFile = document.getElementById('adminImageFile').files[0];
+        if (imageFile) formData.append('ImageFile', imageFile);
+        baseService.fetchApi(`/${adminId}`, 'PUT', formData, true)
+            .then(response => {
+                if (response && response.success) {
+                    Toast.success("Cập nhật thông tin thành công!");
+                } else {
+                    Toast.error(response?.message || "Cập nhật thông tin thất bại!");
+                }
+            })
+            .catch(error => {
+                console.error("Lỗi khi cập nhật thông tin:", error);
+                Toast.error("Lỗi khi cập nhật thông tin!");
+            });
+    });
+}
+</script> 
     
